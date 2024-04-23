@@ -19,7 +19,7 @@
 				</div>
 				<div class="box-body">
 					<form action="{{route('admin/calibrations_sticker2')}}" style='with:100%;' name ='filter_form' class='filter_form'>
-                    @csrf
+                    {{-- @csrf --}}
 					{{-- {!! Form::open(['action'=>route('admin/calibrations_sticker2'),'method'=>'GET','style'=>'with:100%;','name'=>'filter_form','class'=>'filter_form']) !!} --}}
 
 					<div class="row">
@@ -40,6 +40,10 @@
 							<input type="submit" value="excel" id="excel_hidden" name="excel_hidden" class="hidden"/>
 								<input type="submit" value="pdf" id="pdf_hidden" name="pdf_hidden" class="hidden"/>
 						</div>
+						<div class="form-group col-md-1 col-lg-1 ">
+							<a class="btn btn-primary" href="{{route('admin.calibration.index')}}" style="margin-top:25px;margin-right:10px">Reset</a>
+						</div>
+
 						<div class="form-group col-md-2">
 							{!! Form::submit(__('equicare.generate_stickers'),['class' => 'btn btn-primary btn-flat','style'=>'margin-top:25px;',
 								'name' => 'action',
@@ -71,9 +75,11 @@
 							</tr>
 						</thead>
 						<tbody>
+							{{-- @dd($calibrations->count()) --}}
 							@if (isset($calibrations) && count($calibrations) > 0)
 							@php($count = 0)
 							@foreach ($calibrations as $calibration)
+							{{-- @dd($calibration->equipment) --}}
 							@php($count++)
 							<tr>
 								<td> {{ $count }} </td>
@@ -166,9 +172,14 @@
 							alert('{{__("equicare.select_other_hospital")}}');
 						}
 						$('.select2_equipment').append('<option val=""></option>');
-						for(key in data.equipments){
-							$('.select2_equipment').append('<option val="'+key+'">'+data.equipments[key]+'</option>');
-						}
+						$('.select2_equipment').select2({
+							data:data.equipments,
+							placeholder: "@lang('equicare.equipment_id')"
+						});
+						// for(key in data.equipments){
+						// 	console.log(key,data.equipments[key]);
+						// 	$('.select2_equipment').append('<option val="'+key+'">'+data.equipments[key]+'</option>');
+						// }
 					}
 				});
 				}

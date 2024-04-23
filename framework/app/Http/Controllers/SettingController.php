@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Setting;
 use Exception;
 use Illuminate\Http\Request;
+use Validator;
 
 class SettingController extends Controller {
 
@@ -19,12 +20,12 @@ class SettingController extends Controller {
 		$date_settings=explode(',',$request->date_settings);
 		$env = $this->getEnvContent();
 		$rows = explode("\n", $env);
-		$unwanted = "date_settings";
+		$unwanted = "date_settings|date_convert";
 		$cleanArray = preg_grep("/$unwanted/i", $rows, PREG_GREP_INVERT);
 		$cleanString = implode("\n", $cleanArray);
 		
 		$date_settings="\ndate_settings=$date_settings[0]
-		date_convert=$date_settings[1]";
+        date_convert=$date_settings[1]";
 		$env = $cleanString . $date_settings;
 		
 		try {
@@ -51,6 +52,15 @@ class SettingController extends Controller {
 	 * @return \Illuminate\Http\Response
 	 */
 	public function post(Request $request) {
+		$validator = Validator::make($request->all(), [
+			'logo'=>'image|mimes:jpeg,png,jpg,gif',
+		]
+	);
+		if ($validator->fails()) {
+			return redirect()->back()
+				->withInput($request->all())
+				->withErrors($validator);
+		}
 		$this->check_role();
 
 		// dd($request->all());

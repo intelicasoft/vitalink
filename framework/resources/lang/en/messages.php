@@ -7,65 +7,65 @@ return [
      * Shared translations.
      *
      */
-    'title' => 'Instalador de Laravel',
-    'next' => 'Siguiente Paso',
-    'finish' => 'Instalar',
+    'title' => 'Laravel Installer',
+    'next' => 'Next Step',
+    'finish' => 'Install',
 
 
     /**
      *
-     * Traducciones de la página de inicio.
+     * Home page translations.
      *
      */
     'welcome' => [
-        'title'   => 'Bienvenido al Instalador',
-        'message' => 'Bienvenido al asistente de configuración.',
+        'title'   => 'Welcome To The Installer',
+        'message' => 'Welcome to the setup wizard.',
     ],
 
 
     /**
      *
-     * Traducciones de la página de requisitos.
+     * Requirements page translations.
      *
      */
     'requirements' => [
-        'title' => 'Requisitos',
+        'title' => 'Requirements',
     ],
 
 
     /**
      *
-     * Traducciones de la página de permisos.
+     * Permissions page translations.
      *
      */
     'permissions' => [
-        'title' => 'Permisos',
+        'title' => 'Permissions',
     ],
 
 
     /**
      *
-     * Traducciones de la página de entorno.
+     * Environment page translations.
      *
      */
     'environment' => [
-        'title' => 'Configuración de Entorno',
-        'save' => 'Guardar .env',
-        'success' => 'Se han guardado los ajustes de su archivo .env.',
-        'errors' => 'No se puede guardar el archivo .env. Por favor, créelo manualmente.',
+        'title' => 'Environment Settings',
+        'save' => 'Save .env',
+        'success' => 'Your .env file settings have been saved.',
+        'errors' => 'Unable to save the .env file, Please create it manually.',
     ],
     
-    'install' => 'Instalar',
+    'install' => 'Install',
 
 
     /**
      *
-     * Traducciones de la página final.
+     * Final page translations.
      *
      */
     'final' => [
-        'title' => 'Finalizado',
-        'finished' => 'La aplicación se ha instalado correctamente.',
-        'exit' => 'Haga clic aquí para salir',
+        'title' => 'Finished',
+        'finished' => 'Application has been successfully installed.',
+        'exit' => 'Click here to exit',
     ],
 ];

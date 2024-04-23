@@ -24,14 +24,15 @@ class HospitalRequest extends FormRequest {
 	 */
 	public function rules(Request $request) {
 		
+		
 			$rules=[
-			'name' => 'required',
+			'name' => 'required|unique:hospitals,name,'.$request->id,
 			'email' => 'required',
 			'contact_person' => 'required',
 			'phone_no' => 'required|numeric|min:6',
 			'mobile_no' => 'required|numeric|min:10',
 			'address' => 'required',
-	     	'slug'=>'required|unique:hospitals,slug,'.$request->id,
+	     	'slug'=>'required|max:8|unique:hospitals,slug,'.$request->id,
 			];
 			return $rules;
 		}
@@ -40,7 +41,7 @@ class HospitalRequest extends FormRequest {
 			'mobile_no.required' => 'The Mobile number field is required.',
 			'phone_no.required' => 'The Phone number field is required.',
 			'slug.required'=>'The Short Name Is Required',
-			'slug.max'=>'The Short Name Contain Maximum 6 Character',
+			'slug.max'=>'The Short Name Contain Maximum 8 Character',
 			'slug.unique'=>'The Short Name Should be Unique',
 		];
 	}

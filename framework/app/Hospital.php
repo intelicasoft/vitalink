@@ -18,4 +18,12 @@ class Hospital extends Model {
 	public function setSlugAttribute($value) {
 		$this->attributes['slug'] = strtoupper($value);
 	}
+	public function users()
+	{
+		return $this->belongsToMany(User::class);
+	}
+	public function scopeHospital($query)
+	{
+		return $query->whereIn('id', auth()->user()->hospitals->pluck('id')->toArray());
+	}
 }

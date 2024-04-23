@@ -10,13 +10,15 @@
 @endsection
 @section('content')
 <div class="row">
+        {{-- @dd(Auth::user()->permissions) --}}
+
 	<div class="col-md-12">
 		<div class="box box-primary">
 			<div class="box-header">
 				<h4 class="box-title">@lang('equicare.maintenance_cost')
-					@can('Create Maintenance Cost')
+					@if(Auth::user()->hasDirectPermission('Create Maintenance Cost'))
 					<a href="{{ route('maintenance_cost.create') }}" class="btn btn-primary btn-flat">@lang('equicare.add_new')</a>
-					@endcan
+					@endif
 				</h4>
 			</div>
 			<div class="box-body">
@@ -50,14 +52,14 @@
 								<td> {{ $text }} </td>
 			                        <td >
 										{!! Form::open(['url' => 'admin/maintenance_cost/'.$cost->id,'method'=>'DELETE','class'=>'form-inline']) !!}
-											@can('Edit Maintenance Cost')
+										      @if(Auth::user()->hasDirectPermission('Edit Maintenance Cost'))
 											<a href="{{ route('maintenance_cost.edit',$cost->id) }}" class="btn bg-purple btn-sm btn-flat" title="@lang('equicare.edit')"><i class="fa fa-edit"></i>  </a>
-											@endcan &nbsp;
+											@endif &nbsp;
 				                            <input type="hidden" name="id" value="{{ $cost->id }}">
 				                            <button class="btn btn-view btn-info btn-sm btn-flat" type="button" title="@lang('equicare.view')"  data-id="{{ $cost->id }}"><span class="fa fa-eye" aria-hidden="true"></span></button>
-				                            @can('Delete Maintenance Cost')
-				                            <button class="btn btn-warning btn-sm btn-flat" type="submit" onclick="return confirm('@lang('equicare.are_you_sure')')" title="@lang('equicare.delete')"><span class="fa fa-trash-o" aria-hidden="true"></span></button>
-				                            @endcan
+					      		    @if(Auth::user()->hasDirectPermission('Delete Maintenance Cost'))
+				                            	<button class="btn btn-warning btn-sm btn-flat" type="submit" onclick="return confirm('@lang('equicare.are_you_sure')')" title="@lang('equicare.delete')"><span class="fa fa-trash-o" aria-hidden="true"></span></button>
+				                            @endif
 				                        {!! Form::close() !!}
 
 									</td>
@@ -88,7 +90,7 @@
 	<script src="{{ asset('assets/js/datetimepicker.js') }}" type="text/javascript"></script>
 	<script type="text/javascript">
 	$(function(){
-		$('.btn-view').on('click',function(){
+		$(document).on('click','.btn-view',function(){
 			$btn = $(this);
 			id = $btn.data('id');
 			$.ajax({

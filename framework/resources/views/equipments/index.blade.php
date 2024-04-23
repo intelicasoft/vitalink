@@ -66,9 +66,9 @@
 		<div class="box box-primary">
 			<div class="box-header with-border">
 				<h4 class="box-title">@lang('equicare.manage_equipments')
-					@can('Create Equipments')
+					@if (\Auth::user()->hasDirectPermission('Create Equipments'))
 					<a href="{{ route('equipments.create') }}" class="btn btn-primary btn-flat">@lang('equicare.add_new')</a></h4>
-					@endcan
+					@endif
 					<div class="export-btns">
 					{!! Form::label('excel_hidden',__('equicare.export_excel'),['class' => 'btn btn-success btn-flat excel','name'=>'action','tabindex'=>1]) !!}
 					{!! Form::label('pdf_hidden',__('equicare.export_pdf'),['class' => 'btn btn-primary btn-flat pdf','name'=>'action','tabindex'=>2]) !!}
@@ -94,17 +94,23 @@
 								<th> @lang('equicare.order_date') </th>
 								<th> @lang('equicare.installation_date') </th>
 								<th> @lang('equicare.warranty_date') </th>
-								@if(Auth::user()->can('Edit Equipments') || Auth::user()->can('Delete Equipments'))
+								@if(Auth::user()->hasDirectPermission('Edit Equipments') || Auth::user()->hasDirectPermission('Delete Equipments'))
 								<th> @lang('equicare.action') </th>
 								@endif
 							</tr>
 						</thead>
 						<tbody>
 							@if (isset($equipments))
+							{{-- @dd($equipments) --}}
 							@foreach ($equipments as $key => $equipment)
 							<tr>
 								<td> {{ $key+1 }} </td>
-								<td><img loading="lazy" src="{{ asset('/uploads/qrcodes/'.$equipment->id.'.png') }}" width="80px" /></td>
+								@php
+								// dd( (\App\QrGenerate::where('id',$equipment->qr_id)->first() !=null) ? (\App\QrGenerate::where('id',$equipment->qr_id)->first()->uid) : '');
+								// \App\Equipment::select('*')->delete();
+								$u_e_id = (\App\QrGenerate::where('id',$equipment->qr_id)->first() !=null ? (\App\QrGenerate::where('id',$equipment->qr_id)->first()->uid) : '')
+								@endphp
+								<td><img loading="lazy" src="{{ asset('/uploads/qrcodes/qr_assign/'.$u_e_id.'.png') }}" width="80px" /></td>
 								<td> {{ ucfirst($equipment->name) }} </td>
 								<td>{{ $equipment->short_name }}</td>
 								<td>{{ $equipment->user?ucfirst($equipment->user->name):'-' }}</td>
@@ -123,23 +129,29 @@
 									}
 									$uids = implode('/',$uids);
 								@endphp
-								<td>{{ $uids }}</td>
+								{{-- <td>{{ $uids }}</td> --}}
+								<td>{{$equipment->unique_id ?? ''}}</td>
 								<td>{{ date_change($equipment->date_of_purchase)?? '-' }}</td>
 								<td>{{ date_change($equipment->order_date)?? '-' }}</td>
 								<td>{{ date_change($equipment->date_of_installation)??'-' }}</td>
 								<td>{{ date_change($equipment->warranty_due_date)??'-' }}</td>
-								@if(Auth::user()->can('Edit Equipments') || Auth::user()->can('Delete Equipments'))
+								@if(Auth::user()->hasDirectPermission('Edit Equipments') || Auth::user()->hasDirectPermission('Delete Equipments'))
 								<td class="text-nowrap">
 									{!! Form::open(['url' => 'admin/equipments/'.$equipment->id,'method'=>'DELETE','class'=>'form-inline']) !!}
-									@can('Edit Equipments')
+									@if(Auth::user()->hasDirectPermission('Edit Equipments'))
 									<a href="{{ route('equipments.edit',$equipment->id) }}" class="btn bg-purple btn-sm btn-flat marginbottom" title="@lang('equicare.edit')"><i class="fa fa-edit"></i></a>
+									@endif
 									<a target="_blank" href="{{ route('equipments.history',$equipment->id) }}" class="btn bg-success btn-sm btn-flat marginbottom" title="@lang('equicare.history')"><i class="fa fa-history"></i></a>
-									@endcan
-									<a href="#" class="btn bg-success btn-sm btn-flat marginbottom" title="@lang('equicare.qr_code')" data-uniqueid="{{$equipment->unique_id}}" data-url="{{ asset('uploads/qrcodes/'.$equipment->id.'.png') }}" data-toggle="modal" data-target="#qr-modal"><i class="fa fa-qrcode"></i></a>
+									@php
+									// \App\Equipment::select('*')->delete();
+									$u_e_id = (\App\QrGenerate::where('id',$equipment->qr_id)->first() !=null ? (\App\QrGenerate::where('id',$equipment->qr_id)->first()->uid) : '')
+
+									@endphp
+									<a href="#" class="btn bg-success btn-sm btn-flat marginbottom" title="@lang('equicare.qr_code')" data-uniqueid="{{$equipment->unique_id}}" data-url="{{ asset('uploads/qrcodes/qr_assign/'.$u_e_id.'.png') }}" data-toggle="modal" data-target="#qr-modal"><i class="fa fa-qrcode"></i></a>
 									<input type="hidden" name="id" value="{{ $equipment->id }}">
-									@can('Delete Equipments')
+									@if(Auth::user()->hasDirectPermission('Delete Equipments'))
 									<button class="btn btn-warning btn-sm btn-flat marginbottom" type="submit" onclick="return confirm('@lang('equicare.are_you_sure')')" title="@lang('equicare.delete')"><span class="fa fa-trash-o" aria-hidden="true"></span></button>
-									@endcan
+									@endif
 									{!! Form::close() !!}
 								</td>
 								@endif
@@ -165,7 +177,7 @@
 								<th> @lang('equicare.order_date') </th>
 								<th> @lang('equicare.installation_date') </th>
 								<th> @lang('equicare.warranty_date') </th>
-								@if(Auth::user()->can('Edit Equipments') || Auth::user()->can('Delete Equipments'))
+								@if(Auth::user()->hasDirectPermission('Edit Equipments') || Auth::user()->hasDirectPermission('Delete Equipments'))
 								<th> @lang('equicare.action') </th>
 								@endif
 							</tr>

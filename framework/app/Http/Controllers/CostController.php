@@ -12,7 +12,7 @@ class CostController extends Controller {
 	public function index() {
 		$this->availibility('View Maintenance Cost');
 		$index['page'] = 'maintenance_cost';
-		$index['maintenance_costs'] = Cost::all();
+		$index['maintenance_costs'] = Cost::query()->Hospital()->get();
 
 		return view('maintenance_cost.index', $index);
 	}
@@ -20,7 +20,7 @@ class CostController extends Controller {
 	public function create() {
 		$this->availibility('Create Maintenance Cost');
 		$index['page'] = 'maintenance_cost';
-		$index['hospitals'] = Hospital::pluck('name', 'id');
+		$index['hospitals'] = Hospital::query()->Hospital()->pluck('name', 'id');
 
 		return view('maintenance_cost.create', $index);
 	}
@@ -36,11 +36,12 @@ class CostController extends Controller {
 			$cost->tp_mobile = $request->tp_mobile;
 		}
 		$cost->equipment_ids = json_encode($request->equipments);
-		
-		// $cost->start_dates = json_encode($request->start_dates);
-		 $cost->start_dates = !empty($request->start_dates) ? date('Y-m-d', strtotime(json_encode($request->start_dates))) : null;
-		// $cost->end_dates = json_encode($request->end_dates);
-		 $cost->end_dates = !empty($request->end_dates) ? date('Y-m-d', strtotime(json_encode($request->end_dates))) : null;
+		// dd(json_encode($request->start_dates));
+		$cost->start_dates = json_encode($request->start_dates);
+		// dd(!empty($request->start_dates) ? date('Y-m-d', strtotime(json_encode($request->start_dates))) : null);
+		//  $cost->start_dates = !empty($request->start_dates) ? date('Y-m-d', strtotime(json_encode($request->start_dates))) : null;
+		$cost->end_dates = json_encode($request->end_dates);
+		//  $cost->end_dates = !empty($request->end_dates) ? date('Y-m-d', strtotime(json_encode($request->end_dates))) : null;
 		$cost->costs = json_encode($request->cost);
 		$cost->save();
 		return redirect('admin/maintenance_cost')->with('flash_message', 'Maintenance Cost Data created');
@@ -49,7 +50,7 @@ class CostController extends Controller {
 	public function edit(Cost $maintenance_cost) {
 		$page = 'maintenance_cost';
 
-		$hospitals = Hospital::pluck('name', 'id');
+		$hospitals = Hospital::query()->Hospital()->pluck('name', 'id');
 		$equipments = Equipment::where('hospital_id', $maintenance_cost->hospital_id)->pluck('unique_id', 'id')->toArray();
 		return view('maintenance_cost.edit', compact('maintenance_cost', 'page', 'equipments', 'hospitals'));
 	}
@@ -66,11 +67,10 @@ class CostController extends Controller {
 		}
 		
 		$cost->equipment_ids = json_encode($request->equipments);
-		// $cost->start_dates = json_encode($request->start_dates);
-		// $cost->end_dates = json_encode($request->end_dates);
-		$cost->start_dates = !empty($request->start_dates) ? date('Y-m-d', strtotime(json_encode($request->start_dates))) : null;
-		// $cost->end_dates = json_encode($request->end_dates);
-		 $cost->end_dates = !empty($request->end_dates) ? date('Y-m-d', strtotime(json_encode($request->end_dates))) : null;
+		$cost->start_dates = json_encode($request->start_dates);
+		$cost->end_dates = json_encode($request->end_dates);
+		// $cost->start_dates = !empty($request->start_dates) ? date('Y-m-d', strtotime(json_encode($request->start_dates))) : null;
+		//  $cost->end_dates = !empty($request->end_dates) ? date('Y-m-d', strtotime(json_encode($request->end_dates))) : null;
 		$cost->costs = json_encode($request->cost);
 		$cost->save();
 		return redirect('admin/maintenance_cost')->with('flash_message', 'Maintenance Cost Data updated');
@@ -89,14 +89,19 @@ class CostController extends Controller {
 	}
 
 	public static function availibility($method) {
-		$r_p = \Auth::user()->getPermissionsViaRoles()->pluck('name')->toArray();
-		if (\Auth::user()->hasPermissionTo($method)) {
+		// $r_p = \Auth::user()->getPermissionsViaRoles()->pluck('name')->toArray();
+		if (\Auth::user()->hasDirectPermission($method)) {
 			return true;
-		} elseif (!in_array($method, $r_p)) {
-			abort('401');
 		} else {
-			return true;
+			abort('401');
 		}
+		// if (\Auth::user()->hasDirectPermission($method)) {
+		// 	return true;
+		// } elseif (!in_array($method, $r_p)) {
+		// 	abort('401');
+		// } else {
+		// 	return true;
+		// }
 	}
 	public function get_info(Request $request) {
 		$data['cost'] = Cost::find($request->id);

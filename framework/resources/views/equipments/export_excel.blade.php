@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	@dd('test')
+	{{-- @dd('test') --}}
 	<title>@lang('equicare.equipments_excel')</title>
 </head>
 <body>

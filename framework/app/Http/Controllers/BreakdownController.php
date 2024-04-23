@@ -11,23 +11,62 @@ use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Validator;
-
+use Maatwebsite\Excel\Concerns\FromView;
+use Maatwebsite\Excel\Concerns\FromCollection;
+use Illuminate\Contracts\View\View;
+use Excel;
+use Illuminate\Support\Collection;
+use PDF;
 class BreakdownController extends Controller {
 
 	public function index() {
 		$this->availibility('View Breakdown Maintenance');
 		$index['page'] = 'breakdown_maintenance';
-		$index['b_maintenance'] = CallEntry::where('call_type', 'breakdown')->latest()->get();
+		$index['b_maintenance'] = CallEntry::where('call_type', 'breakdown')->Hospital()->latest()->get();
 		$index['users'] = User::pluck('name', 'id');
 		return view('call_breakdowns.index', $index);
 	}
+	public function export($type){
+		$breakdown = CallEntry::where('call_type','breakdown')->latest()->Hospital()->get();
+		// dd($breakdown);
+		if ($type == 'excel') {
+			return Excel::download(new class($breakdown) implements FromView
+            {
+                public function __construct($collection)
+                {
+                    $this->collection = $collection;
+                }
 
+                public function view(): View
+                {
+                    return view('call_breakdowns.export_excel')->with('b_maintenance', $this->collection);
+                }
+            }, time(). '_breakdown.xlsx');
+			// return Excel::download(new class ($breakdown) implements FromCollection {
+			// 	public function __construct($collection)
+			// 	{
+			// 		$this->collection = $collection;
+			// 	}
+			// 	public function collection()
+			// 	{
+			// 		return $this->collection;
+			// 	}
+			// }, time() . '_breakdown.xlsx');
+
+		} else {
+			//dd($equipments);
+			$pdf = PDF::loadView('call_breakdowns.export_pdf', ['breakdowns' => $breakdown])->setPaper('a4', 'landscape');
+			return $pdf->download(time() . '_breakdown.pdf');
+		}
+        
+	}
+    
 	public function create() {
 		$this->availibility('Create Breakdown Maintenance');
 		$index['page'] = 'breakdown_maintenance';
-		$index['unique_ids'] = Equipment::pluck('unique_id', 'id')->toArray();
+		$index['unique_ids'] = Equipment::query()->Hospital()->pluck('unique_id', 'id')->toArray();
 		$index['departments'] = Department::select('id', \DB::raw('CONCAT(short_name,"(",name,")") as department'))->pluck('department', 'id')->toArray();
-		$index['hospitals'] = Hospital::pluck('name', 'id')->toArray();
+		$index['hospitals'] = Hospital::query()->Hospital()->pluck('name', 'id')->toArray();
 		return view('call_breakdowns.create', $index);
 	}
 
@@ -60,9 +99,9 @@ class BreakdownController extends Controller {
 		$index['page'] = 'breakdown_maintenance';
 
 		$index['breakdown'] = CallEntry::find($id);
-		$index['hospitals'] = Hospital::pluck('name', 'id')->toArray();
+		$index['hospitals'] = Hospital::query()->Hospital()->pluck('name', 'id')->toArray();
 
-		$index['unique_ids'] = Equipment::where('hospital_id', $index['breakdown']->equipment->hospital_id)
+		$index['unique_ids'] = Equipment::query()->where('hospital_id', $index['breakdown']->equipment->hospital_id)
 			->pluck('unique_id', 'id')
 			->toArray();
 
@@ -157,15 +196,18 @@ class BreakdownController extends Controller {
 	}
 	public function attend_call(Request $request) {
 		$breakdown = CallEntry::findOrFail($request->b_id);
-
 		$validator = Validator::make($request->all(), [
-			'call_attend_date_time' => 'required',
+			'call_attend_date_time' => 'required|after_or_equal:'.$breakdown->call_register_date_time,
 			'user_attended' => 'required',
 			'service_rendered' => 'required',
 			'remarks' => 'required',
 			'working_status' => 'required',
 
-		]);
+		],
+		[
+			'call_attend_date_time.after_or_equal' => 'The Call Attend Date and Time must be after or equal to  Call Register Date Time: ' . \Carbon\Carbon::parse($breakdown->call_register_date_time)->format('Y-m-d H:i:s'),
+		]
+	);
 		if ($validator->fails()) {
 			return redirect()
 				->back()
@@ -193,13 +235,17 @@ class BreakdownController extends Controller {
 		$breakdown = CallEntry::findOrFail($request->b_id);
 
 		$validator = Validator::make($request->all(), [
-			'call_complete_date_time' => 'required',
+			'call_complete_date_time' => 'required|after_or_equal:'.$breakdown->call_attend_date_time,
 			'service_rendered' => 'required',
 			'remarks' => 'required',
 			'working_status' => 'required',
 			'sign_of_engineer' => 'mimes:jpg,jpeg,png,pdf|file',
 			'sign_stamp_of_incharge' => 'mimes:jpg,jpeg,png,pdf|file',
-		]);
+		],
+		[
+			'call_complete_date_time.after_or_equal' => 'The Call Complete Date and Time must be after or equal to  Call Attend Date Time: ' . \Carbon\Carbon::parse($breakdown->call_attend_date_time)->format('Y-m-d H:i:s'),
+		]
+	);
 		if ($validator->fails()) {
 			return redirect('admin/call/breakdown_maintenance')
 				->withInput($request->all())
@@ -208,23 +254,25 @@ class BreakdownController extends Controller {
 		}
 
 		if ($request->hasFile('sign_of_engineer')) {
+			$destinationPath = 'uploads/sign_of_enginner';
 			$file = $request->file('sign_of_engineer');
 			$name = 'engineer' . time() . $file->getClientOriginalName();
 
 			if (!is_null($breakdown->sign_of_engineer) && file_exists('uploads/' . $breakdown->sign_of_engineer)) {
-				unlink(public_path('uploads/') . $breakdown->sign_of_engineer);
+					unlink('uploads/sign_of_enginner/'.$breakdown->sign_of_engineer);
 			}
-			$file->move(public_path('/uploads'), $name);
+		  $file->move($destinationPath, $name);
 			$breakdown->sign_of_engineer = $name;
 		}
 		if ($request->hasFile('sign_stamp_of_incharge')) {
+			$destinationPath = 'uploads/sign_stamp_of_incharge';
 			$file = $request->file('sign_stamp_of_incharge');
 			$name = 'incharge' . time() . $file->getClientOriginalName();
 
 			if (!is_null($breakdown->sign_stamp_of_incharge) && file_exists('uploads/' . $breakdown->sign_stamp_of_incharge)) {
-				unlink(public_path('uploads/') . $breakdown->sign_stamp_of_incharge);
+				unlink('uploads/sign_stamp_of_incharge/'.$breakdown->sign_stamp_of_incharge);
 			}
-			$file->move(public_path('/uploads'), $name);
+		  $file->move($destinationPath, $name);
 			$breakdown->sign_stamp_of_incharge = $name;
 		}
 
@@ -239,13 +287,18 @@ class BreakdownController extends Controller {
 	}
 
 	public static function availibility($method) {
-		$r_p = Auth::user()->getPermissionsViaRoles()->pluck('name')->toArray();
-		if (Auth::user()->hasPermissionTo($method)) {
+		// $r_p = Auth::user()->getPermissionsViaRoles()->pluck('name')->toArray();
+		if (\Auth::user()->hasDirectPermission($method)) {
 			return true;
-		} elseif (!in_array($method, $r_p)) {
-			abort('401');
 		} else {
-			return true;
+			abort('401');
 		}
+		// if (Auth::user()->hasDirectPermission($method)) {
+		// 	return true;
+		// } elseif (!in_array($method, $r_p)) {
+		// 	abort('401');
+		// } else {
+		// 	return true;
+		// }
 	}
 }

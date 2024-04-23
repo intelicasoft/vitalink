@@ -11,13 +11,23 @@
 @section('content')
 <div class="row">
 	<div class="col-md-12">
+	
+					
 		<div class="box box-primary">
+			
+
 			<div class="box-header">
 				<h4 class="box-title">@lang('equicare.breakdown_maintenance')
-					@can('Create Breakdown Maintenance')
+					@if(Auth::user()->hasDirectPermission('Create Breakdown Maintenance'))
 					<a href="{{ route('breakdown_maintenance.create') }}" class="btn btn-primary btn-flat">@lang('equicare.add_new')</a>
-					@endcan
+					@endif
 				</h4>
+					<div class="export-btns" style="display:inline-block;float:right;">
+					<a class="btn btn-primary" href="{{route('breakdown.export','excel')}}" target="_blank">@lang('equicare.export_excel')</a>
+					<a class="btn btn-success" href="{{route('breakdown.export','pdf')}}">@lang('equicare.export_pdf')</a>
+					</div>
+				
+					
 			</div>
 			<div class="box-body">
 				<div class="table-responsive overflow_x_unset">
@@ -52,9 +62,9 @@
 								<td>
 									{{ $breakdown->call_register_date_time? date('Y-m-d h:i A', strtotime($breakdown->call_register_date_time)) : '-' }}
 								</td>
-								<td>{{$breakdown->user_attended?$breakdown->user_attended_fn->name:'-'}}</td>
+								<td>{{$breakdown->user_attended_fn?$breakdown->user_attended_fn->name:'-'}}</td>
 								<td>
-									{{$breakdown->user_attended?date('Y-m-d H:i A',strtotime($breakdown->call_attend_date_time)):'-'}}
+									{{$breakdown->user_attended_fn?date('Y-m-d H:i A',strtotime($breakdown->call_attend_date_time)):'-'}}
 								</td>
 								<td>
 									{{$breakdown->call_complete_date_time?date('Y-m-d H:i A',strtotime($breakdown->call_complete_date_time)):'-'}}
@@ -68,12 +78,12 @@
 										</button>
 
 										<ul class="dropdown-menu custom" role="menu">
-											@can('Edit Breakdown Maintenance')
+											@if(Auth::user()->hasDirectPermission('Edit Breakdown Maintenance'))
 											<li>
 												<a href="{{ route('breakdown_maintenance.edit',$breakdown->id) }}" class=""
 													title="@lang('equicare.edit')"><i class="fa fa-edit purple-color" ></i> @lang('equicare.edit') </a>
 											</li>
-											@endcan
+											@endif
 											<li>
 												@if(is_null($breakdown->call_attend_date_time))
 												<a href="#attend_modal" data-target="#attend_modal" data-toggle="modal"
@@ -94,7 +104,7 @@
 												</a>
 											</li>
 											@endif
-											@can('Delete Breakdown Maintenance')
+											@if(Auth::user()->hasDirectPermission('Delete Breakdown Maintenance'))
 											<li>
 												<a class="" href="javascript:document.getElementById('form1').submit();"
 													onclick="return confirm('@lang('equicare.are_you_sure')')" title="@lang('equicare.delete')"><span
@@ -103,7 +113,7 @@
 												</a>
 
 											</li>
-											@endcan
+											@endif
 										</ul>
 									</div>
 									<form action ="{{url('admin/call/breakdown_maintenance/'.$breakdown->id)}}"
@@ -273,11 +283,11 @@
 						]) !!}
 						{{ Form::hidden('b_id',null,['class'=>'b_id']) }}
 
-						<a class="view_image_sign_of_engineer"
+						{{-- <a class="view_image_sign_of_engineer"
 							href="{{ isset($breakdown_c) && $breakdown_c->sign_of_engineer !=null?url('uploads/',$breakdown_c->sign_of_engineer) :'' }}"
 							target="_blank">
 							view
-						</a>
+						</a> --}}
 					</div>
 					<div class="form-group col-md-6">
 						{!! Form::label('sign_stamp_of_incharge', __('equicare.sign_stamp_of_incharge')) !!}
@@ -287,9 +297,9 @@
 						]) !!}
 
 
-						<a class="view_image_sign_stamp_of_incharge" href="" target="_blank">
+						{{-- <a class="view_image_sign_stamp_of_incharge" href="" target="_blank">
 							view
-						</a>
+						</a> --}}
 
 					</div>
 					<input type="hidden" name="id" class="id" value="">
@@ -325,7 +335,7 @@
 
 						@endif
 
-							$('.call_complete_date_time').datetimepicker({
+							$('.call_attend_date_time').datetimepicker({
 									format: 'Y-MM-D hh:mm A',
 								});
 

@@ -114,7 +114,7 @@
 						</div>
 						<div class="form-group col-md-6">
 							<label for="service_engineer_no"> @lang('equicare.service_engineer_number') </label>
-							<input type="text" name="service_engineer_no" class="form-control"
+							<input type="text" name="service_engineer_no" class="form-control phone"
 							value="{{ $equipment->service_engineer_no }}" />
 						</div>
 						<div class="form-group col-md-6">

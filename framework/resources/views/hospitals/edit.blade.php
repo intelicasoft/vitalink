@@ -45,12 +45,12 @@
 						</div>
 						<div class="form-group col-md-6">
 							<label for="phone_no"> @lang('equicare.phone') </label>
-							<input type="text" name="phone_no" class="form-control"
+							<input type="text" name="phone_no" class="form-control phone"
 							value="{{ $hospital->phone_no }}" />
 						</div>
 						<div class="form-group col-md-6">
 							<label for="mobile_no"> @lang('equicare.mobile') </label>
-							<input type="text" name="mobile_no" class="form-control"
+							<input type="text" name="mobile_no" class="form-control phone"
 							value="{{ $hospital->mobile_no }}" />
 						</div>
 						<div class="form-group col-md-6">

@@ -10,15 +10,15 @@
 @endsection
 
 @section('content')
-	
 	<div class="row">
 		<div class="col-md-12">
 			<div class="box box-primary">
 			<div class="box-header">
 				<h4 class="box-title">@lang('equicare.manage_hospitals')
-						@can('Create Hospitals')
+						@if(
+							Auth::user()->hasDirectPermission('Create Hospitals'))
 							<a href="{{ route('hospitals.create') }}" class="btn btn-primary btn-flat">@lang('equicare.add_new')</a></h4>
-						@endcan
+						@endif
 
 				</div>
 
@@ -33,7 +33,7 @@
 								<th> @lang('equicare.slug') </th>
 								<th> @lang('equicare.phone') </th>
 								<th> @lang('equicare.mobile') </th>
-								@if(Auth::user()->can('Edit Hospitals') || Auth::user()->can('Delete Hospitals'))
+								@if(Auth::user()->hasDirectPermission('Edit Hospitals') || Auth::user()->hasDirectPermission('Delete Hospitals'))
 								<th> @lang('equicare.action')</th>
 								@endif
 							</tr>
@@ -55,16 +55,23 @@
 							<td> {{ $hospital->slug ?? '-' }}</td>
 							<td> {{ $hospital->phone_no ?? '-'}} </td>
 							<td> {{ $hospital->mobile_no ?? '-'}} </td>
-							@if(Auth::user()->can('Edit Hospitals') || Auth::user()->can('Delete Hospitals'))
-                        	<td>
+							@if(
+							Auth::user()->hasDirectPermission('Edit Hospitals') || Auth::user()->hasDirectPermission('Delete Hospitals'))
+                        	<td class="text-nowrap">
 								{!! Form::open(['url' => 'admin/hospitals/'.$hospital->id,'method'=>'DELETE','class'=>'form-inline']) !!}
-									@can('Edit Hospitals')
+									{{-- @can('Edit Hospitals') --}}
+									@if(Auth::user()->hasDirectPermission('Edit Hospitals'))
 									<a href="{{ route('hospitals.edit',$hospital->id) }}" class="btn bg-purple btn-sm btn-flat" title="@lang('equicare.edit')"><i class="fa fa-edit"></i>  </a>
-									@endcan &nbsp;
+									{{-- @endcan  --}}
+									&nbsp;
+		                            @endif
 		                            <input type="hidden" name="id" value="{{ $hospital->id }}">
-		                            @can('Delete Hospitals')
+									@if(Auth::user()->hasDirectPermission('Delete Hospitals'))
+
+		                            {{-- @can('Delete Hospitals') --}}
 		                            <button class="btn btn-warning btn-sm btn-flat" type="submit" onclick="return confirm('@lang('equicare.are_you_sure')')" title="@lang('equicare.delete')"><span class="fa fa-trash-o" aria-hidden="true"></span></button>
-		                            @endcan
+		                            {{-- @endcan --}}
+		                            @endif
 		                        {!! Form::close() !!}
 							</td>
 							@endif
@@ -81,7 +88,7 @@
 								<th> @lang('equicare.slug') </th>
 								<th> @lang('equicare.phone') </th>
 								<th> @lang('equicare.mobile') </th>
-								@if(Auth::user()->can('Edit Hospitals') || Auth::user()->can('Delete Hospitals'))
+								@if(Auth::user()->hasDirectPermission('Edit Hospitals') || Auth::user()->hasDirectPermission('Delete Hospitals'))
 								<th> @lang('equicare.action')</th>
 								@endif
 							</tr>

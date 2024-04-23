@@ -27,7 +27,7 @@
 					<div class="form-group col-md-4">
 						<label for="department"> @lang('equicare.hospital') </label>
 
-						{!! Form::select('hospital',array_unique($hospitals)??[],null,['class'=>'form-control
+						{!! Form::select('hospital',$hospitals??[],null,['class'=>'form-control
 						hospital_select2','placeholder'=>'Select']) !!}
 					</div>
 					<div class="form-group col-md-4">
@@ -113,7 +113,9 @@
 							</div>
 						</div>
 						<div class="form-group col-md-12">
-							<input type="hidden" name="equip_id" id="equip_id" value="" />
+							<input type="hidden" name="equip_id" id="equip_id" value="{{old('equip_id')}}" />
+							<input type="hidden" name="hospital_id" id="hospital_id" value="{{old('hospital_id')}}" />
+							<input type="hidden" name="department_id" id="department_id" value="{{old('department_id')}}" />
 							<input type="submit" value="@lang('equicare.submit')" class="btn btn-primary btn-flat">
 						</div>
 					</div>
@@ -157,8 +159,27 @@
 	$('.call_register_date_time').datetimepicker({
 		sideBySide: true,
 	})
+	@if ($errors->any())
+				
+        const setSelectValues = () => {
+            if ("{{ old('hospital_id') }}") {
+                $('.hospital_select2').val("{{ old('hospital_id') }}").trigger('change'); 
+            }   
+            if ("{{ old('department_id') }}" && "{{ old('hospital_id') }}" == '') {
+                $('.department_select2').val("{{ old('department_id') }}").trigger('change'); 
+            }   
+            if ("{{ old('equip_id') }}" && "{{ old('hospital_id') }}" == '' && "{{ old('department_id') }}" == '') {
+                $('.unique_id_select2').val("{{ old('equip_id') }}").trigger('change');  
+            }  
+        };
+				setTimeout(() => {
+                setSelectValues();
+        }, 500);
+  @endif
+
 	$('.unique_id_select2').on('change',function(){
 		var value = $(this).val();
+		// console.log(value,'test');
 		$('#equip_id').val(value);
 		var equip_name = $('.equip_name');
 		var hospitals = $('.hospital_select2');
@@ -216,7 +237,8 @@
 	});
 
 	$('.hospital_select2').on('change',function(){
-		var value = $(this).val();
+		    var value = $(this).val();
+				$('#hospital_id').val(value);
 				var equip_name = $('.equip_name');
 				var hospitals = $('.hospital_select2');
 				var department = $('.department_select2');
@@ -241,7 +263,7 @@
 
 						data:{'id' : value },
 						success:function(data){
-							console.log(data);
+							// console.log(data);
 							department.empty();
 							unique_id.empty();
 			    		if (data.department) {
@@ -278,7 +300,9 @@
 				     	placeholder: '{{__("equicare.select_option")}}',
 				     	allowClear: true
 				     });
-
+						 if ("{{ old('department_id') }}") {
+                $('.department_select2').val("{{ old('department_id') }}").trigger('change'); 
+            } 
 				 }
 				});
 				}
@@ -286,7 +310,8 @@
 
 
 	$('.department_select2').on('change',function(){
-		var value = $(this).val();
+				var value = $(this).val();
+				$('#department_id').val(value);
 				var equip_name = $('.equip_name');
 				var hospitals = $('.hospital_select2');
 
@@ -324,6 +349,7 @@
 			    					'<option value="'+k+'">'+v+'</option>'
 			    					);
 			    			});
+								
 			    		}
 
 				     $('.unique_id_select2').select2({
@@ -338,6 +364,9 @@
 				     	placeholder: '{{__("equicare.select_option")}}',
 				     	allowClear: true
 				     });
+						 if ("{{ old('equip_id') }}") {
+                $('.unique_id_select2').val("{{ old('equip_id') }}").trigger('change');  
+           		}  
 
 				 }
 				});

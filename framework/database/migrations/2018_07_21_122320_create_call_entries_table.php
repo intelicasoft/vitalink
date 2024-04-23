@@ -17,7 +17,7 @@ class CreateCallEntriesTable extends Migration {
 			$table->integer('equip_id')->nullable();
 			$table->string('call_type')->nullable(); // breakdown/prventive
 			$table->string('call_handle')->nullable(); //Internal/external
-			$table->integer('report_no')->nullable();
+			$table->string('report_no')->nullable();
 			$table->date('next_due_date')->nullable();
 			$table->timestamp('call_register_date_time')->nullable();
 			$table->timestamp('call_attend_date_time')->nullable();
@@ -30,6 +30,7 @@ class CreateCallEntriesTable extends Migration {
 			$table->string('sign_of_engineer')->nullable();
 			$table->string('sign_stamp_of_incharge')->nullable();
 			$table->boolean('is_contamination')->nullable();
+			$table->boolean('from_api')->default(0);
 			$table->SoftDeletes();
 			$table->timestamps();
 		});

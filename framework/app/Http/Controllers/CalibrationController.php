@@ -15,7 +15,7 @@ class CalibrationController extends Controller {
 		$this->availibility('View Calibrations');
 
 		$index['page'] = 'calibrations';
-		$index['calibrations'] = Calibration::all();
+		$index['calibrations'] = Calibration::query()->Hospital()->get();
 		$index['users'] = User::pluck('name', 'id');
 		return view('calibrations.index', $index);
 	}
@@ -23,9 +23,9 @@ class CalibrationController extends Controller {
 	public function create() {
 		$this->availibility('Create Calibrations');
 		$index['page'] = 'calibrations';
-		$index['unique_ids'] = Equipment::pluck('unique_id', 'id')->toArray();
+		$index['unique_ids'] = Equipment::query()->Hospital()->pluck('unique_id', 'id')->toArray();
 		$index['departments'] = Department::select('id', \DB::raw('CONCAT(short_name,"(",name,")") as department'))->pluck('department', 'id')->toArray();
-		$index['hospitals'] = Hospital::pluck('name', 'id')->toArray();
+		$index['hospitals'] = Hospital::query()->Hospital()->pluck('name', 'id')->toArray();
 		return view('calibrations.create', $index);
 	}
 
@@ -57,7 +57,7 @@ class CalibrationController extends Controller {
 		$this->availibility('Edit Calibrations');
 		$index['page'] = 'calibrations';
 		$index['calibration'] = Calibration::findOrFail($id);
-		$index['hospitals'] = Hospital::pluck('name', 'id')->toArray();
+		$index['hospitals'] = Hospital::query()->Hospital()->pluck('name', 'id')->toArray();
 
 		$index['unique_ids'] = Equipment::where('hospital_id', $index['calibration']->equipment->hospital_id)
 			->pluck('unique_id', 'id')
@@ -74,6 +74,7 @@ class CalibrationController extends Controller {
 		$calibration->equip_id = $request->unique_id;
 		$calibration->certificate_no = $request->certificate_no;
 		$calibration->company = $request->company;
+		$calibration->contact_person = $request->contact_person;
 		$calibration->contact_person_no = $request->contact_person_no;
 		$calibration->engineer_no = $request->engineer_no;
 		$calibration->traceability_certificate_no = $request->traceability_certificate_no;
@@ -98,13 +99,18 @@ class CalibrationController extends Controller {
 		return redirect('admin/calibration')->with('flash_message', 'Calibration deleted	');
 	}
 	public static function availibility($method) {
-		$r_p = \Auth::user()->getPermissionsViaRoles()->pluck('name')->toArray();
-		if (\Auth::user()->hasPermissionTo($method)) {
+		// $r_p = \Auth::user()->getPermissionsViaRoles()->pluck('name')->toArray();
+		if (\Auth::user()->hasDirectPermission($method)) {
 			return true;
-		} elseif (!in_array($method, $r_p)) {
-			abort('401');
 		} else {
-			return true;
+			abort('401');
 		}
+		// if (\Auth::user()->hasDirectPermission($method)) {
+		// 	return true;
+		// } elseif (!in_array($method, $r_p)) {
+		// 	abort('401');
+		// } else {
+		// 	return true;
+		// }
 	}
 }

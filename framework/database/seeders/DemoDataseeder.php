@@ -11,11 +11,12 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-use App\Models\User;
+use App\User;
 use Faker\Factory;
 use Illuminate\Support\Arr;
 use Faker;
 use QrCode;
+use App\QrGenerate;
 class DemoDataseeder extends Seeder {
 
 	/**
@@ -29,7 +30,7 @@ class DemoDataseeder extends Seeder {
 		$hospital_suffix = ['Hospital', 'Medical', 'Care', 'Medicare', 'Dental', 'Clinic', 'Trust', 'Org'];
 
 		// 15 duplicate records
-		for ($i = 1; $i <= 15; $i++) {
+		for ($i = 1; $i <= 5; $i++) {
 
 			/**
 			 * Dummy Hospital Create code below
@@ -45,6 +46,9 @@ class DemoDataseeder extends Seeder {
 				'slug'=>$faker->unique()->text(6),
 			]);
 			$hospital->save();
+			$user = User::find(1);
+			$user->hospitals()->sync([1,2,3,4,5]);
+			// $user->save();
 
 			/**
 			 * Dummy Department Create code below
@@ -58,6 +62,7 @@ class DemoDataseeder extends Seeder {
 			/**
 			 * Dummy Equipment Create code below
 			 */
+			
 			$equipment = Equipment::create([
 				'name' => $faker->company,
 				'company' => $faker->company,
@@ -80,23 +85,55 @@ class DemoDataseeder extends Seeder {
 				->where('department', $equipment->department)
 				->count();
 			$equipment_number = sprintf("%02d", $equipment_number + 1);
-
+			$equipment->unique_id = "";
 			$hospital = Hospital::where('id', $equipment->hospital_id)->first();
-			if ($hospital != "") {
-				$unique_id = $hospital->slug . '/' . $equipment->department . '/' . $equipment->short_name . '/' . $equipment_number;
+			if ($hospital != "")
+			// {
+			//     $unique_id = $hospital->slug . '/' . $equipment->department . '/' . $equipment->short_name . '/' . $equipment_number;
 
+			//     $equipment->unique_id = $unique_id;
+			// }
+			{
+				$unique_id = $hospital->slug . '/' . $equipment->department . '/' . $equipment->short_name . '/' . $equipment_number;
+				$label_name = $hospital->slug . '/' . $equipment->department . '/' . $equipment->short_name . '/';
+				$equipment_last = Equipment::where('unique_id', 'like', $label_name . '%')->orderBy('unique_id', 'desc')->first();
+				if ($equipment_last) {
+					$last_label_no = explode('/', $equipment_last->unique_id);
+					$last_label_no = end($last_label_no);
+					$equipment_number = sprintf("%02d", ((int)$last_label_no) + 1);
+					$unique_id = $label_name . $equipment_number;
+				} else {
+					$unique_id = $label_name . "01";
+				}
 				$equipment->unique_id = $unique_id;
 			}
+			// $equipment_number = Equipment::where('hospital_id', $equipment->hospital_id)
+			// 	->where('name', trim($equipment->name))
+			// 	->where('short_name', $equipment->short_name)
+			// 	->where('department', $equipment->department)
+			// 	->count();
+			// $equipment_number = sprintf("%02d", $equipment_number + 1);
+
+			// $hospital = Hospital::where('id', $equipment->hospital_id)->first();
+			// if ($hospital != "") {
+			// 	$unique_id = $hospital->slug . '/' . $equipment->department . '/' . $equipment->short_name . '/' . $equipment_number;
+
+			// 	$equipment->unique_id = $unique_id;
+			// }
+			$qr = new QrGenerate;
+            $qr->assign_to = $equipment->id;
+            $qr->uid = Str::random(11);
+            $qr->save();
+			$equipment->qr_id = $qr->id;
+            // $equipment->save();
 			$equipment->save();
 			$id=$equipment->id;
-			if(extension_loaded('imagick')){
-				// Generate QR Code
-				$url = url('/')."/equipments/history/".$id;
-				$image=QrCode::format('png')->size(300)->generate('http://localhost/equicares/public/uploads/qrcodes/'.$id.'.png');
-			}
-
+            $url = url('/') . "/scan/qr/" . $qr->uid;
+						$qrFilePath = base_path('../uploads/qrcodes/qr_assign/' . $qr->uid . '.png');
+            \QrCode::format('png')->size(300)->generate($url, $qrFilePath);
+		
+						
 			if ($i % 2 == 0) {
-
 				/**
 				 * Dummy Breakdown/Preventive Maintenance code below
 				 */

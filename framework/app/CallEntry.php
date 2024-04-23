@@ -25,4 +25,10 @@ class CallEntry extends Model {
 	public function user_attended_fn() {
 		return $this->belongsTo('App\User', 'user_attended');
 	}
+	public function scopeHospital($query)
+	{
+		return
+			$query->join('equipments','call_entries.equip_id','=','equipments.id')->whereIn('equipments.hospital_id', auth()->user()->hospitals->pluck('id')->toArray())->select('call_entries.*');
+	}
+
 }
