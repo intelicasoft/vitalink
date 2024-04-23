@@ -44,7 +44,7 @@
 							<label for="name"> @lang('equicare.name') </label>
 							<input type="text" name="name" class="form-control"/>
 						</div>
-						<div class="form-group col-md-12">
+						{{-- <div class="form-group col-md-12">
 							<label for="permissions[]" > @lang('equicare.permissions') </label>
 
 
@@ -52,20 +52,24 @@
 								<input type="checkbox" name="check_all" id="check_all"/>
 								<label for="check_all"> @lang('equicare.check_all')</label>
 								<br/>
-
-							@if (isset($permissions))
-								<div class="row">
-								@foreach ($permissions as $permission)
-								<div class="col-md-4 checkbox">
-									<label for="permissions[]" class="form-check-label">
-									<input type="checkbox" name="permissions[]" class="" value="{{ $permission->id }}" />
-										 {{ $permission->name }} </label><br/>
-									</div>
-								@endforeach
+								@if (isset($permissions))
+									<div class="row">
+									@foreach ($permissions as $permission)
+									<div class="col-md-4 checkbox">
+										<label for="permissions[]" class="form-check-label">
+										<input type="checkbox" name="permissions[]" class="" value="{{ $permission->id }}" />
+											 {{ $permission->name }} </label><br/>
+										</div>
+									@endforeach
+								</div>
+								@endif
 							</div>
-							@endif
-							</div>
-						</div>
+						</div> --}}
+						@if (isset($permissions) && $permissions->count() > 0)
+                               @include('user_role_permission.table_create')
+            @endif  
+                              
+						
 
 						<div class="form-group col-md-6">
 							<input type="submit" value="@lang('equicare.submit')" class="btn btn-primary btn-flat"/>

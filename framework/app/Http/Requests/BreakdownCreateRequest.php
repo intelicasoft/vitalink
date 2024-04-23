@@ -25,6 +25,7 @@ class BreakdownCreateRequest extends FormRequest {
 			'call_handle' => 'required',
 			'report_no' => 'required_if:call_handle,==,external',
 			'call_register_date_time' => 'required|date',
+			'next_due_date' => 'date|after:call_register_date_time',
 			'working_status' => 'required',
 			'nature_of_problem' => 'required',
 		];

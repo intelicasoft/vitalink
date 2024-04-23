@@ -104,7 +104,7 @@
 								</div>
 								<div class="form-group col-md-4">
 									<label for="tp_email"> @lang('equicare.email') </label>
-									<input type="text" id="tp_email" name="tp_email" class="{{ $errors->has('tp_email')?'is-invalid ':'' }}form-control" value="{{ $maintenance_cost->tp_email??old('tp_email') }}" />
+									<input type="email" id="tp_email" name="tp_email" class="{{ $errors->has('tp_email')?'is-invalid ':'' }}form-control" value="{{ $maintenance_cost->tp_email??old('tp_email') }}" />
 									@if ($errors->has('tp_email'))
 									<strong class="invalid-feedback">
 										<span>{{ $errors->first('tp_email') }}
@@ -149,7 +149,7 @@
 								@endif
 							</div>
 							<div class="form-group col-md-3">
-								{!! Form::text('cost[]',old('cost.'.$i),['class'=>$errors->has('cost.'.$i)?'is-invalid cost form-control':'form-control cost','placeholder'=>__('equicare.enter_cost'),'autocomplete'=>'off']) !!}
+								{!! Form::number('cost[]',old('cost.'.$i),['class'=>$errors->has('cost.'.$i)?'is-invalid cost form-control':'form-control cost','placeholder'=>__('equicare.enter_cost'),'autocomplete'=>'off']) !!}
 								@if ($errors->has('cost.'.$i))
 								<strong class="invalid-feedback">
 									<span>{{ $errors->first('cost.'.$i) }}
@@ -161,22 +161,47 @@
 						</div>
 						@endforeach
 						@else
+						{{-- @dd($equipments) --}}
 						{{-- {{dd($maintenance_cost->equipment_ids)}} --}}
-						{{-- {{dd($maintenance_cost->equipments)}} --}}
 						@foreach(json_decode($maintenance_cost->costs, TRUE) as $key => $cost)
+						{{-- @dd(json_decode($maintenance_cost->start_dates,TRUE)) --}}
 						<div class="row no-gutters">
-							<div class="form-group col-md-3">
-								
-								{!! Form::select('equipments[]',$equipments??[],json_decode($maintenance_cost->equipment_ids,TRUE)[$key],['class'=>'form-control select2_equipments','id'=>'equipments1']) !!}
+							{{-- <div class="form-group col-md-3">
+								@if(isset(json_decode($maintenance_cost->equipment_ids,TRUE)[$key]))
+								{!! Form::select('equipments[]',$equipments ?? [],json_decode($maintenance_cost->equipment_ids,TRUE)[$key],['class'=>'form-control select2_equipments','id'=>'equipments1']) !!}
+								@else
+								{!! Form::select('equipments[]',$equipments ?? [],null,['class'=>'form-control select2_equipments','id'=>'equipments1']) !!}
+								@endif
 							</div>
 							<div class="form-group col-md-3">
+								@if(isset(json_decode($maintenance_cost->start_dates,TRUE)[$key]))
 								{!! Form::text('start_dates[]',date_change(date('Y-m-d',strtotime(json_decode($maintenance_cost->start_dates,TRUE)[$key]))),['class'=>'form-control start_dates','placeholder'=>__('equicare.enter_start_date'),'id'=>'start_dates1','autocomplete'=>'off']) !!}
+								@else
+								{!! Form::text('start_dates[]',date_change(date('Y-m-d')),['class'=>'form-control start_dates','placeholder'=>__('equicare.enter_start_date'),'id'=>'start_dates1','autocomplete'=>'off']) !!}
+								@endif
 							</div>
-							<div class="form-group col-md-3">
+							 <div class="form-group col-md-3">
+								@if(isset(json_decode($maintenance_cost->end_dates,TRUE)[$key]))
 								{!! Form::text('end_dates[]',date_change(date('Y-m-d',strtotime(json_decode($maintenance_cost->end_dates,TRUE)[$key]))),['class'=>'form-control end_dates','placeholder'=>__('equicare.enter_end_date'),'id'=>'end_dates1','autocomplete'=>'off']) !!}
-							</div>
+								@else
+								{!! Form::text('end_dates[]',date_change(date('Y-m-d')),['class'=>'form-control end_dates','placeholder'=>__('equicare.enter_end_date'),'id'=>'end_dates1','autocomplete'=>'off']) !!}
+								@endif
+							</div> --}}
+							
+
+						<div class="form-group col-md-3">
+							{!! Form::select('equipments[]', $equipments ?? [], isset(json_decode($maintenance_cost->equipment_ids, true)[$key]) ? json_decode($maintenance_cost->equipment_ids, true)[$key] : null, ['class' => 'form-control select2_equipments', 'id' => 'equipments1']) !!}
+						</div>
+
+						<div class="form-group col-md-3">
+							{!! Form::text('start_dates[]', decode_dates($maintenance_cost->start_dates, $key), ['class' => 'form-control start_dates', 'placeholder' => __('equicare.enter_start_date'), 'id' => 'start_dates1', 'autocomplete' => 'off']) !!}
+						</div>
+
+						<div class="form-group col-md-3">
+							{!! Form::text('end_dates[]', decode_dates($maintenance_cost->end_dates, $key), ['class' => 'form-control end_dates', 'placeholder' => __('equicare.enter_end_date'), 'id' => 'end_dates1', 'autocomplete' => 'off']) !!}
+						</div>
 							<div class="form-group col-md-3">
-								{!! Form::text('cost[]',$cost,['class'=>'form-control','placeholder'=>__('equicare.enter_cost')]) !!}
+								{!! Form::number('cost[]',$cost,['class'=>'form-control','placeholder'=>__('equicare.enter_cost')]) !!}
 							</div>
 						</div>
 						@endforeach
@@ -246,7 +271,7 @@
 				' <input type="text" name="end_dates[]" id="end_dates'+$i+'" class="form-control end_dates" placeholder="{{__("equicare.enter_end_date")}}">	'+
 				' </div>  '  +
 				' <div class="form-group col-md-3">  '  +
-				' 	{!! Form::text('cost[]',null,['class'=>'form-control','placeholder'=>'{{__("equicare.enter_cost")}}']) !!}  '  +
+				' 	{!! Form::number('cost[]',null,['class'=>'form-control','placeholder'=>'{{__("equicare.enter_cost")}}']) !!}  '  +
 				' </div>  ' +
 				' </div> ');
 			$('#equipments'+$i).select2({
@@ -276,7 +301,7 @@
 			e.preventDefault();
 			$(this).parent().siblings('.add_row_equipments').children('.row :last').remove();
 		});
-		setTimeout(loadEquipAjax,500);
+		// setTimeout(loadEquipAjax,500);
 		$('select[name=hospital_id]').on('change',function(){
 			var hospital_id = $(this).val();
 			$.ajax({
@@ -296,7 +321,7 @@
 						for(n in data.equipments){
 							console.log(n);
 							$('.select2_equipments').select2('destroy');
-							if(n == {{ json_decode($maintenance_cost->equipment_ids,TRUE)[$key] }}){
+							if(n == {{ json_decode($maintenance_cost->equipment_ids,TRUE)[$key] ?? '' }}){
 							$('.select2_equipments').append(
 								'<option value='+n+' selected>'+data.equipments[n]+'</option>'
 								);

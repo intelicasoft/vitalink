@@ -16,7 +16,9 @@ use App\Http\Controllers\CalibrationController;
 use App\Http\Controllers\CostController;
 use App\Http\Controllers\StickerController;
 use App\Http\Controllers\SettingController;
-use App\Http\Controllers\data\DataBrandController;
+use App\Http\Controllers\QrController;
+use App\Http\Controllers\QrScanController;
+use Illuminate\Support\Facades\Artisan;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -29,6 +31,13 @@ use App\Http\Controllers\data\DataBrandController;
  */
 
 Auth::routes();
+Route::get('/clear-optimize-cache', function () {
+    Artisan::call('optimize:clear');
+    return 'Optimization cache cleared successfully';
+});
+ Route::get('php-info', function() {
+   		 return phpinfo();
+	});
 
 Route::get('install', [LaravelWebInstaller::class,'index']);
 Route::post('installed', [LaravelWebInstaller::class,'install']);
@@ -36,6 +45,7 @@ Route::get('installed', [LaravelWebInstaller::class,'index']);
 Route::get('migrate', [LaravelWebInstaller::class,'db_migration']);
 Route::get('migration', [LaravelWebInstaller::class,'migration']);
 Route::get('/equipments/history/{equipment}', [EquipmentController::class,'history'])->name('equipments.history');
+Route::get('/scan/qr/{equipment}', [EquipmentController::class,'history_qr']);
 
 Route::group(['middleware' => ['installed_or_not', 'auth']], function () {
     Route::get('/', [HomeController::class,'index'])->name('home');
@@ -51,10 +61,6 @@ Route::group(['middleware' => ['installed_or_not', 'auth']], function () {
     Route::resource('admin/roles', RoleController::class);
     Route::resource('admin/permissions', PermissionController::class);
     Route::resource('admin/hospitals', HospitalController::class);
-  
-    Route::resource('admin/brands', DataBrandController::class);
-  
-    //Route::resource('admin/accessories', DataAccesoriesController::class);
 
     Route::get('/admin/equipment/qr/{id}', [EquipmentController::class,'qr'])->name('equipments.qr');
     Route::get('/admin/equipment/qr-image/{id}', [EquipmentController::class,'qr_image'])->name('equipments.qrimage');
@@ -115,9 +121,23 @@ Route::group(['middleware' => ['installed_or_not', 'auth']], function () {
     Route::post('admin/mail-settings', [SettingController::class,'mailSettings']);
     Route::get('admin/delete_logo/{logo}', [SettingController::class,'deleteLogo']);
     Route::get('admin/calibrations_sticker/get_equipment', [StickerController::class,'get_equipment_ajax']);
-    Route::get('admin/calibrations_sticker', [StickerController::class,'index']);
+    Route::get('admin/calibrations_sticker', [StickerController::class,'index'])->name('admin.calibration.index');
     Route::get('admin/calibrations_sticker2', [StickerController::class,'post'])->name('admin/calibrations_sticker2');
     Route::get('admin/calibrations_sticker/{id}', [StickerController::class,'single_sticker']);
     //date settings
     Route::post('admin/date-settings',[SettingController::class,'date_settings'])->name('date_settings');
+    Route::get('admin/qr',[QrController::class,'index'])->name('qr.index');
+    Route::get('admin/qr-assigned',[QrController::class,'qr_assigned'])->name('qr-assigned');
+    Route::get('admin/qr-create',[QrController::class,'create'])->name('qr.create');
+    Route::delete('admin/qr-delete/{id}',[QrController::class,'destroy'])->name('qr.delete');
+    Route::post('admin/qr-generate',[QrController::class,'qr_generate'])->name('qr_generate');
+    Route::get('admin/qr-scan',[QrScanController::class,'index'])->name('qr_scan.index');
+    Route::get('admin/qr-scan/{id}',[QrScanController::class,'assign_equipment'])->name('qr_scan.index');
+    Route::get('admin/qr-sticker/{type}',[QrController::class,'qr_sticker'])->name('qr_sticker');
+    Route::get('admin/breakdown-export/{type}', [BreakdownController::class, 'export'])->name('breakdown.export');
+    Route::get('admin/preventive-export/{type}', [PreventiveController::class, 'export'])->name('preventive.export');
+    Route::post('admin/role-permissions',[RoleController::class, 'role_permissions'])->name('role_permissions');
+    Route::post('admin/user-permissions',[UserController::class, 'user_permissions'])->name('user_permissions');
+  
+   
 });

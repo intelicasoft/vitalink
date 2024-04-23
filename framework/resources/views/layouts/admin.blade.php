@@ -141,9 +141,8 @@
           </a>
         </li>
 
-        <li class="{{ $page=='hospitals'?'active':'' }}">
-          {{-- <a href="{{ url('/admin/equipments') }}"> --}}
-            <a href="{{ url('/admin/hospitals') }}">
+        <li class="{{ $page=='equipments'?'active':'' }}">
+          <a href="{{ url('/admin/equipments') }}">
             <i class="fa fa-stethoscope"></i> <span>Equipos Clinicos</span>
           </a>
         </li>
@@ -183,13 +182,6 @@
         </li>
 
         <li class="{{ $page=='hospitals'?'active':'' }}">
-          {{-- <a href="{{ url('/admin/maintenances') }}"> --}}
-            <a href="{{ url('/admin/hospitals') }}">
-            <i class="fa fa-gear"></i> <span>Mantenimientos</span>
-          </a>
-        </li>
-
-        <li class="{{ $page=='hospitals'?'active':'' }}">
           {{-- <a href="{{ url('/admin/tickets') }}"> --}}
             <a href="{{ url('/admin/hospitals') }}">
             <i class="fa fa-ticket"></i> <span>Tickets</span>
@@ -215,11 +207,7 @@
           </a>
         </li>
 
-        <li class="{{ $page=='equipments'?'active':'' }}">
-          <a href="{{ url('/admin/equipments') }}">
-            <i class="fa fa-wrench"></i> <span>@lang('equicare.equipments')</span>
-          </a>
-        </li>
+        
         
         @if($page == "breakdown_maintenance" || $page == "preventive_maintenance")
             @php($class="treeview menu-open")
@@ -233,7 +221,7 @@
 
          <li class="{{ $class }} {{ $active }}">
           <a href="#" class="">
-            <i class="fa fa-phone"></i> <span>@lang('equicare.call_entries')</span>
+            <i class="fa fa-gear"></i> <span>Mantenimientos</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
@@ -361,6 +349,11 @@
             </span>
           </a>
           <ul class="treeview-menu" {{ $menu }}>
+            <li class="{{ $page=='users'?'active':'' }}">
+              <a href="{{ url('admin/permissions') }}">
+                <i class="fa fa-user"></i> @lang('equicare.user_permission')
+              </a>
+            </li>
             <li class="{{ $page=='users'?'active':'' }}">
               <a href="{{ url('admin/users') }}">
                 <i class="fa fa-user"></i> @lang('equicare.users')

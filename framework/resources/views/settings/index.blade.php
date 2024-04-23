@@ -31,11 +31,12 @@
 						</h4>
 					</div>
 					<div class="box-body">
+						@include ('errors.list')
 						{!! Form::open(['url'=>'admin/settings','method'=>'POST','files'=>true]) !!}
 						<div class="row">
 							<div class="form-group col-md-6">
 								{!! Form::label('company',__('equicare.company')) !!}
-								{!! Form::text('company',$setting->company??null,['class' => 'form-control']) !!}
+								{!! Form::text('company',old('company')??$setting->company??null,['class' => 'form-control']) !!}
 							</div>
 							<div class="form-group col-md-6">
 								{!! Form::label('logo',__('equicare.logo_upload')) !!}
@@ -142,7 +143,7 @@
 							{!! Form::label('date_settings',__('equicare.date_settings')) !!}
 							<br>
 						
-							<select name="date_settings">
+							<select name="date_settings" required>
 								<option value="">--Select--</option>
 								<option value="dd-mm-yyyy,d-m-Y" {{env('date_settings')=='dd-mm-yyyy' ? 'selected' : '' }}> dd-mm-yyyy</option>
 								<option value="mm-dd-yyyy,m-d-Y" {{env('date_settings')=='mm-dd-yyyy' ? 'selected' : ''}}>mm-dd-yyyy</option>

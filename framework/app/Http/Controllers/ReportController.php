@@ -10,7 +10,10 @@ use Excel;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use PDF;
+// use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\FromCollection;
+// use Illuminate\Contracts\View\View;
 
 
 
@@ -23,12 +26,14 @@ class ReportController extends Controller {
 	public function time_indicator() {
 		$this->availibility('View Time Indicator Report');
 		$index['page'] = 'reports/time_indicator';
-		$index['hospitals'] = Hospital::pluck('name', 'id');
-		$index['equipments'] = Equipment::pluck('unique_id', 'id');
+		$index['hospitals'] = Hospital::query()->Hospital()->pluck('name', 'id');
+		$index['equipments'] = Equipment::query()->Hospital()->pluck('unique_id', 'id');
 
-		$index['call_entries'] = CallEntry::leftJoin('equipments', 'call_entries.equip_id', '=', 'equipments.id')
-			->leftJoin('hospitals', 'equipments.hospital_id', '=', 'hospitals.id')
-			->select('*')
+		// $index['call_entries'] = CallEntry::leftJoin('equipments', 'call_entries.equip_id', '=', 'equipments.id')
+		// 	->leftJoin('hospitals', 'equipments.hospital_id', '=', 'hospitals.id')
+		// 	->select('*')
+		// 	->paginate(10);
+		$index['call_entries'] = CallEntry::query()->Hospital()
 			->paginate(10);
 		return view('reports.time_indicator', $index);
 	}
@@ -37,8 +42,8 @@ class ReportController extends Controller {
 		$this->availibility('View Time Indicator Report');
 		$index['page'] = 'reports/time_indicator';
 
-		$index['hospitals'] = Hospital::pluck('name', 'id');
-		$index['equipments'] = Equipment::pluck('unique_id', 'id');
+		$index['hospitals'] = Hospital::query()->Hospital()->pluck('name', 'id');
+		$index['equipments'] = Equipment::query()->Hospital()->pluck('unique_id', 'id');
 		$index['hospital'] = $request->hospital;
 		$index['equipment_selected'] = $request->equipment;
 		$index['call_type'] = $request->call_type;
@@ -47,9 +52,7 @@ class ReportController extends Controller {
 		$index['to_date'] = $request->to_date;
 		$from_date = date('Y-m-d H:i', strtotime($request->from_date));
 		$to_date = date('Y-m-d H:i', strtotime($request->to_date));
-		$call_entries = CallEntry::leftJoin('equipments', 'call_entries.equip_id', '=', 'equipments.id')
-			->leftJoin('hospitals', 'equipments.hospital_id', '=', 'hospitals.id')
-			->select('*');
+		$call_entries = CallEntry::query()->Hospital();
 		if (isset($request->hospital) && $request->hospital != "") {
 			$call_entries->where('equipments.hospital_id', $request->hospital);
 		}
@@ -77,16 +80,28 @@ class ReportController extends Controller {
 			// 		$sheet->loadView('reports.export_time_indicator_excel')->with('call_entries', $call_entries);
 			// 	});
 			// })->download('xlsx');
-			return Excel::download(new class($call_entries) implements FromCollection{
+			return Excel::download(new class($call_entries) implements FromView
+            {
                 public function __construct($collection)
                 {
                     $this->collection = $collection;
                 }
-                public function collection()
+
+                public function view(): View
                 {
-                    return $this->collection;
+                    return view('reports.export_time_indicator_excel')->with('call_entries', $this->collection);
                 }
-            }, time() . 'Time_indicator.xlsx');
+            }, time(). 'Time_indicator.xlsx');
+			// return Excel::download(new class($call_entries) implements FromCollection{
+      //           public function __construct($collection)
+      //           {
+      //               $this->collection = $collection;
+      //           }
+      //           public function collection()
+      //           {
+      //               return $this->collection;
+      //           }
+      //       }, time() . 'Time_indicator.xlsx');
 		} elseif (isset($request->pdf_hidden)) {
 
 			$call_entries = $call_entries->get();
@@ -104,27 +119,27 @@ class ReportController extends Controller {
 				$equipments_filter = Equipment::where('hospital_id', $request->hospital_id)
 					->pluck('unique_id', 'id');
 			} else {
-				$equipments_filter = Equipment::pluck('unique_id', 'id');
+				$equipments_filter = Equipment::query()->Hospital()->pluck('unique_id', 'id');
 			}
 		}
 		return response()->json(['equipments_filter' => $equipments_filter], 200);
 	}
 
 	public function equipment_report() {
-		$this->availibility('View Time Indicator Report');
+		$this->availibility('View Equipments Report');
 		$index['page'] = 'reports/equipments';
-		$index['hospitals'] = Hospital::pluck('name', 'id');
-		$index['call_entries'] = CallEntry::paginate(10);
+		$index['hospitals'] = Hospital::query()->Hospital()->pluck('name', 'id');
+		$index['call_entries'] = CallEntry::query()->Hospital()->paginate(10);
 		return view('reports.equipment_report', $index);
 	}
 
 	public function equipment_report_post(Request $request) {
 		$index['page'] = 'reports/equipments';
-		$index['hospitals'] = Hospital::pluck('name', 'id');
+		$index['hospitals'] = Hospital::query()->Hospital()->pluck('name', 'id');
 		$index['hospital'] = $request->hospital;
 		$index['working_status'] = $request->working_status;
 		$index['excel'] = $request->excel;
-		$call_entries = CallEntry::select('*');
+		$call_entries = CallEntry::query()->Hospital();
 
 		if (isset($request->working_status)) {
 			$call_entries->where('working_status', $request->working_status);
@@ -149,16 +164,28 @@ class ReportController extends Controller {
 			// 		$sheet->loadView('reports.export_equipment_excel')->with('call_entries', $call_entries);
 			// 	});
 			// })->download('xlsx');
-			return Excel::download(new class($call_entries) implements FromCollection{
+			return Excel::download(new class($call_entries) implements FromView
+            {
                 public function __construct($collection)
                 {
                     $this->collection = $collection;
                 }
-                public function collection()
+
+                public function view(): View
                 {
-                    return $this->collection;
+                    return view('reports.export_equipment_excel')->with('call_entries', $this->collection);
                 }
-            }, time() . 'report.xlsx');
+            }, time(). 'report.xlsx');
+			// return Excel::download(new class($call_entries) implements FromCollection{
+      //           public function __construct($collection)
+      //           {
+      //               $this->collection = $collection;
+      //           }
+      //           public function collection()
+      //           {
+      //               return $this->collection;
+      //           }
+      //       }, time() . 'report.xlsx');
 		} elseif (isset($request->pdf_hidden)) {
 
 			$call_entries = $call_entries->get();
@@ -172,13 +199,18 @@ class ReportController extends Controller {
 	}
 
 	public static function availibility($method) {
-		$r_p = Auth::user()->getPermissionsViaRoles()->pluck('name')->toArray();
-		if (Auth::user()->hasPermissionTo($method)) {
+		if (\Auth::user()->hasDirectPermission($method)) {
 			return true;
-		} elseif (!in_array($method, $r_p)) {
-			abort('401');
 		} else {
-			return true;
+			abort('401');
 		}
+		// $r_p = Auth::user()->getPermissionsViaRoles()->pluck('name')->toArray();
+		// if (Auth::user()->hasDirectPermission($method)) {
+		// 	return true;
+		// } elseif (!in_array($method, $r_p)) {
+		// 	abort('401');
+		// } else {
+		// 	return true;
+		// }
 	}
 }

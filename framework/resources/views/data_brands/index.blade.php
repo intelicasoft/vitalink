@@ -17,10 +17,9 @@
 			<div class="box-header">
 				<h4 class="box-title"> Manejar Marcas
 						@can('Create brands')
-							{{-- <a href="{{ route('data_brands.create') }}" class="btn btn-primary btn-flat">Agregar</a></h4> --}}
-                            <a href="/" class="btn btn-primary btn-flat">Agregar</a></h4>
+                            <a href="{{ route('brands.create') }}" class="btn btn-primary btn-flat">Agregar</a></h4>
                         @endcan
-
+						<a href="{{ route('brands.create') }}" class="btn btn-primary btn-flat">Agregar</a></h4>
 				</div>
 
 				<div class="box-body table-responsive">
@@ -75,7 +74,7 @@
 								<th> Nombre</th>
 								<th> Tipo de Marca </th>
 								<th> Descripcion </th>
-								@if(Auth::user()->can('Edit Hospitals') || Auth::user()->can('Delete Hospitals'))
+								@if(Auth::user()->can('Edit Brands') || Auth::user()->can('Delete Brands'))
 								<th> @lang('equicare.action')</th>
 								@endif
 							</tr>

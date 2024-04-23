@@ -15,6 +15,12 @@ class Calibration extends Model {
 		return $this->belongsTo('App\Equipment', 'equip_id')->withTrashed();
 	}
 	public function user() {
-		return $this->belongsTo('App\User', 'user_id');
+		return $this->belongsTo('App\User', 'user_id')->withTrashed();
 	}
+	public function scopeHospital($query)
+	{
+		return
+			$query->join('equipments', 'calibrations.equip_id', '=', 'equipments.id')->whereIn('equipments.hospital_id', auth()->user()->hospitals->pluck('id')->toArray())->select('calibrations.*');
+	}
+
 }

@@ -101,13 +101,18 @@ class PermissionController extends Controller {
 				'Permission "' . $permission->name . '" Deleted!');
 	}
 	public static function availibility($method) {
-		$r_p = \Auth::user()->getPermissionsViaRoles()->pluck('name')->toArray();
-		if (\Auth::user()->hasPermissionTo($method)) {
+		// $r_p = \Auth::user()->getPermissionsViaRoles()->pluck('name')->toArray();
+		if (\Auth::user()->hasDirectPermission($method)) {
 			return true;
-		} elseif (!in_array($method, $r_p)) {
-			abort('401');
 		} else {
-			return true;
+			abort('401');
 		}
+		// if (\Auth::user()->hasDirectPermission($method)) {
+		// 	return true;
+		// } elseif (!in_array($method, $r_p)) {
+		// 	abort('401');
+		// } else {
+		// 	return true;
+		// }
 	}
 }

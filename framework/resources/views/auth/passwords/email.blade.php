@@ -6,14 +6,14 @@
     <a href="{{ url('/') }}"><img src="{{ asset('assets/1x/login-logo.png') }}"></a>
   </div>
   <!-- /.login-logo -->
-        <div class="login-box-body "style="border-radius: 10px;border: 2px solid #8A2BE2; ">
+        <div class="login-box-body">
                     @if (session('status'))
                         <div class="alert alert-success" role="alert">
                             {{ session('status') }}
                         </div>
                     @endif
 
-                    <form method="POST" action="{{ route('password.email') }}" aria-label="{{ __('Reset Password') }}" >
+                    <form method="POST" action="{{ route('password.email') }}" aria-label="{{ __('Reset Password') }}">
                         @csrf
 
                         <div class="form-group has-feedback">
@@ -31,7 +31,7 @@
                         </div>
 
                         <div class="form-group">
-                                <button type="submit" class="btn btn-primary btn-flat" >
+                                <button type="submit" class="btn btn-primary btn-flat">
                                     @lang('equicare.send_reset_link')
                                 </button>
                         </div>

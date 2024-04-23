@@ -28,16 +28,22 @@
 <body>
 	<div class="container">
 		<div class="card">
-			<img src="{{ asset('/uploads/qrcodes/'.$calibration->equipment->id.'.png') }}" style="float:right; padding:5px; width:100px;">
+			@php
+								// \App\Equipment::select('*')->delete();
+								$u_e_id = (\App\QrGenerate::where('id',$calibration->equipment->qr_id)->first() !=null ? (\App\QrGenerate::where('id',$calibration->equipment->qr_id)->first()->uid) : '')
+								
+								@endphp
+								{{-- @dd(asset('/uploads/qrcodes/qr_assign/'.$u_e_id.'.png')) --}}
+			<img src="{{ asset('/uploads/qrcodes/qr_assign/'.$u_e_id.'.png') }}" style="float:right; padding:5px; width: 100px;">
 			<span><b>@lang('equicare.equipment_id') </b> : {{ $calibration->equipment->unique_id}}</span><br/>
 			<span><b>@lang('equicare.equipment_name')</b> : {{ $calibration->equipment->name}}</span>
 			<br>
 			<span><b>@lang('equicare.date_pm')</b> :
 				
-				{{-- {{ $calibration->equipment->call_entry ? date('Y-m-d',strtotime($calibration->equipment->pm->call_register_date_time)): '-'}} --}}
+				{{ $calibration->equipment->pm ? date('Y-m-d',strtotime($calibration->equipment->pm->call_register_date_time)): '-'}}
 			
 				
-				{{ date_change($calibration->equipment->pm->call_register_date_time ?? '')}}
+				{{-- {{ date_change($calibration->equipment->pm->call_register_date_time ?? '')}} --}}
 			</span>
 			<br/>
 			<span><b>@lang('equicare.due_pm')</b> :

@@ -15,9 +15,9 @@
 			<div class="box box-primary">
 			<div class="box-header">
 					<h4 class="box-title">@lang('equicare.manage_users')
-							@can('Create Users')
+					   @if(Auth::user()->hasDirectPermission('Create Users'))
 								<a href="{{ route('users.create') }}" class="btn btn-primary btn-flat">@lang('equicare.add_new')</a>
-							@endcan
+						@endif	
 					</h4>
 				</div>
 				<div class="box-body table-responsive">
@@ -27,10 +27,9 @@
 								<th> # </th>
 								<th> @lang('equicare.name') </th>
 								<th> @lang('equicare.email') </th>
-								<th> @lang('equicare.phone') </th>
 								<th> @lang('equicare.created_on') </th>
 								<th> @lang('equicare.role') </th>
-								@if(Auth::user()->can('Edit Users') || Auth::user()->can('Delete Users'))
+								@if(Auth::user()->hasDirectPermission('Edit Users') || Auth::user()->hasDirectPermission('Delete Users'))
 								<th> @lang('equicare.action')</th>
 								@endif
 							</tr>
@@ -48,20 +47,19 @@
 							<td> {{ $count }} </td>
 							<td> {{ ucfirst($user->name) }} </td>
 							<td> {{  $user->email }}</td>
-							<td> {{  $user->phone }}</td>
 							<td> {{ $user->created_at->diffForHumans() }}</td>
 							<td> {{ $user->roles->pluck('name')->toArray()[0] ?? '' }} </td>
-							@if(Auth::user()->can('Edit Users') || Auth::user()->can('Delete Users'))
+							@if(Auth::user()->hasDirectPermission('Edit Users') || Auth::user()->hasDirectPermission('Delete Users'))
                         <td class="todo-list">
 								<div class="tools">
 									{!! Form::open(['url' => 'admin/users/'.$user->id,'method'=>'DELETE','class'=>'form-inline']) !!}
-										@can('Edit Users')
+									   @if(Auth::user()->hasDirectPermission('Edit Users'))
 										<a href="{{ route('users.edit',$user->id) }}" class="btn bg-purple btn-sm btn-flat" title="@lang('equicare.edit')"><i class="fa fa-edit"></i>  </a>
-										@endcan &nbsp;
+										@endif &nbsp;
 			                            <input type="hidden" name="id" value="{{ $user->id }}">
-			                            @can('Delete Users')
+			                           @if(Auth::user()->hasDirectPermission('Delete Users'))
 			                            <button class="btn btn-warning btn-sm btn-flat" type="submit" onclick="return confirm('@lang('equicare.are_you_sure')')" title="@lang('equicare.delete')"><span class="fa fa-trash-o" aria-hidden="true"></span></button>
-			                            @endcan
+			                            @endif
 			                        {!! Form::close() !!}
 								</div>
 							</td>
@@ -75,10 +73,9 @@
 								<th> # </th>
 								<th> @lang('equicare.name') </th>
 								<th> @lang('equicare.email') </th>
-								<th> @lang('equicare.phone') </th>
 								<th> @lang('equicare.created_on') </th>
 								<th> @lang('equicare.role') </th>
-								@if(Auth::user()->can('Edit Users') || Auth::user()->can('Delete Users'))
+								@if(Auth::user()->hasDirectPermission('Edit Users') || Auth::user()->hasDirectPermission('Delete Users'))
 								<th> @lang('equicare.action')</th>
 								@endif
 							</tr>

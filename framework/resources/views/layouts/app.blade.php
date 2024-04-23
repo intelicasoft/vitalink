@@ -26,10 +26,10 @@
         }
     </style>
 </head>
-<body class="hold-transition login-page "style="background-color: white">
+<body class="hold-transition login-page">
     <div id="app">
 
-    <main class="content" >
+    <main class="content">
         @yield('content')
     </main>
     </div>

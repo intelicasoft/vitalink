@@ -1,18 +1,22 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Hospital;
 use App\Http\Requests\HospitalRequest;
 use Auth;
 use Illuminate\Http\Request;
+use App\User;
 
-class HospitalController extends Controller {
+class HospitalController extends Controller
+{
 	/**
 	 * Display a listing of the resource.
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
-	public function index() {
+	public function index()
+	{
 		$this->availibility('View Hospitals');
 		$index['page'] = 'hospitals';
 		$index['hospitals'] = Hospital::all();
@@ -25,7 +29,8 @@ class HospitalController extends Controller {
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
-	public function create() {
+	public function create()
+	{
 		$this->availibility('Create Hospitals');
 		$index['page'] = 'hospitals';
 
@@ -38,7 +43,8 @@ class HospitalController extends Controller {
 	 * @param  \Illuminate\Http\Request  $request
 	 * @return \Illuminate\Http\Response
 	 */
-	public function store(HospitalRequest $request) {
+	public function store(HospitalRequest $request)
+	{
 		$hospital = new Hospital;
 		$hospital->name = $request->name;
 		$hospital->email = $request->email;
@@ -55,6 +61,9 @@ class HospitalController extends Controller {
 		}
 
 		$hospital->save();
+		User::where('select_all', 1)->get()->each(function ($user) use ($hospital) {
+			$user->hospitals()->attach($hospital->id);
+		});
 		return redirect('admin/hospitals')->with('flash_message', 'Hospital "' . $hospital->name . '" created');
 	}
 
@@ -64,7 +73,8 @@ class HospitalController extends Controller {
 	 * @param  \App\Hospital  $hospital
 	 * @return \Illuminate\Http\Response
 	 */
-	public function edit($id) {
+	public function edit($id)
+	{
 		$this->availibility('Edit Hospitals');
 		$index['page'] = 'hospitals';
 		$index['hospital'] = Hospital::findOrFail($id);
@@ -78,7 +88,8 @@ class HospitalController extends Controller {
 	 * @param  \App\Hospital  $hospital
 	 * @return \Illuminate\Http\Response
 	 */
-	public function update(HospitalRequest $request, $id) {
+	public function update(HospitalRequest $request, $id)
+	{
 		$hospital = Hospital::findOrFail($id);
 		$hospital->name = $request->name;
 		$hospital->email = $request->email;
@@ -98,26 +109,46 @@ class HospitalController extends Controller {
 	 * @param  \App\Hospital  $hospital
 	 * @return \Illuminate\Http\Response
 	 */
-	public function destroy($id) {
+	public function destroy($id)
+	{
+		$this->availibility('Delete Hospitals');
 		$hospital = Hospital::findOrFail($id);
 		$hospital->delete();
 
 		return redirect('admin/hospitals')->with('flash_message', 'Hospital "' . $hospital->name . '" deleted');
 	}
-	public static function availibility($method) {
-		$r_p = \Auth::user()->getPermissionsViaRoles()->pluck('name')->toArray();
-		if (\Auth::user()->hasPermissionTo($method)) {
+	public static function availibility($method)
+	{
+		// $r_p = \Auth::user()->getPermissionsViaRoles()->pluck('name')->toArray();
+		if (\Auth::user()->hasDirectPermission($method)) {
 			return true;
-		} elseif (!in_array($method, $r_p)) {
-			abort('401');
 		} else {
-			return true;
+			abort('401');
 		}
+		// if (\Auth::user()->hasDirectPermission($method)) {
+		// 	return true;
+		// } elseif (!in_array($method, $r_p)) {
+		// 	abort('401');
+		// } else {
+		// 	return true;
+		// }
 	}
-	public static function recursive($yourString) {
+	public static function recursive($yourString)
+	{
 		if (strpos($yourString, " ") === false) {
-			$vowels = array("a", "e", "i", "o", "u", "A", "E", "I", "O", "U",
-				" ");
+			$vowels = array(
+				"a",
+				"e",
+				"i",
+				"o",
+				"u",
+				"A",
+				"E",
+				"I",
+				"O",
+				"U",
+				" "
+			);
 			$yourString = str_replace($vowels, "", $yourString);
 			$only_one_word = substr($yourString, 0, 1);
 			$only_one_word .= substr($yourString, 1, 1);
@@ -135,12 +166,23 @@ class HospitalController extends Controller {
 			$check_first_two_char_of_words = Hospital::where('slug', $first_char_after_space)->first();
 			if ($check_first_two_char_of_words == "") {
 				$result = $first_char_after_space;
-			}else{
+			} else {
 				$result = "";
 			}
 			if ($result == "") {
-				$vowels = array("a", "e", "i", "o", "u", "A", "E", "I", "O", "U",
-					" ");
+				$vowels = array(
+					"a",
+					"e",
+					"i",
+					"o",
+					"u",
+					"A",
+					"E",
+					"I",
+					"O",
+					"U",
+					" "
+				);
 				$yourString = str_replace($vowels, "", $yourString);
 				$count = 1;
 				for ($i = 1; $i <= strlen($yourString); $i++) {

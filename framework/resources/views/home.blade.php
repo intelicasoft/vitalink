@@ -12,13 +12,10 @@
 <style>
     .red{ border-left: 5px solid red; }
 </style>
-
-{{-- homeblade es para los cuadros informativos en home --}}
 <div class="row ">
-    
    <div class="col-lg-3 col-xs-6 ">
       <!-- small box -->
-      @php $count=0;  $count = \App\Hospital::all()->count(); @endphp
+      @php $count=0;  $count = \App\Hospital::query()->Hospital()->count(); @endphp
         <div class="small-box bg-green">
             <div class="inner">
                 <h3>{{ $count }}</h3>
@@ -34,7 +31,7 @@
     </div>
     <div class="col-lg-3 col-xs-6">
         <!-- small box -->
-        @php $count=0; $count = \App\Equipment::all()->count(); @endphp
+        @php $count=0; $count = \App\Equipment::query()->Hospital()->count(); @endphp
         <div class="small-box bg-yellow">
             <div class="inner">
                 <h3>{{ $count }}</h3>
@@ -50,7 +47,7 @@
     </div>
 
     <div class="col-lg-3 col-xs-6">
-        @php $count=0; $count =\App\CallEntry::where('call_type','breakdown')->count(); @endphp
+        @php $count=0; $count =\App\CallEntry::where('call_type','breakdown')->Hospital()->count(); @endphp
         <div class="small-box bg-aqua">
             <div class="inner">
                 <h3>{{ $count }}</h3>
@@ -65,7 +62,7 @@
         </div>
     </div>
     <div class="col-lg-3 col-xs-6">
-        @php $count=0; $count =\App\CallEntry::where('call_type','preventive')->count(); @endphp
+        @php $count=0; $count =\App\CallEntry::where('call_type','preventive')->Hospital()->count(); @endphp
         <div class="small-box bg-teal">
             <div class="inner">
                 <h3>{{$count}}</h3>
@@ -80,7 +77,7 @@
         </div>
     </div>
      <div class="col-lg-3 col-xs-6">
-        @php $count=0; $count = \App\Calibration::all()->count(); @endphp
+        @php $count=0; $count = \App\Calibration::query()->Hospital()->count(); @endphp
         <div class="small-box bg-red">
             <div class="inner">
                 <h3>{{ $count }}</h3>
@@ -111,7 +108,7 @@
     </div>
     <div class="col-lg-3 col-xs-6">
         @php($date = date('Y-m-d',strtotime('+15 days')))
-        @php($preventive_reminder_count = \App\CallEntry::where('call_type','preventive')->where('next_due_date','<=',$date)->count())
+        @php($preventive_reminder_count = \App\CallEntry::where('call_type','preventive')->where('next_due_date','<=',$date)->Hospital()->count())
         <div class="small-box bg-purple {{ $preventive_reminder_count > 0 ? 'red':''}}">
             <div class="inner">
                 <h3>{{ $preventive_reminder_count  }}</h3>
@@ -127,7 +124,7 @@
         
     </div>
     <div class="col-lg-3 col-xs-6">
-        @php($calibrations_reminder_count = \App\Calibration::where('due_date','<=',$date)->count())
+        @php($calibrations_reminder_count = \App\Calibration::where('due_date','<=',$date)->Hospital()->count())
         <div class="small-box bg-gray-active {{ $calibrations_reminder_count > 0 ? 'red':''}}">
             <div class="inner">
                 
@@ -142,77 +139,10 @@
             </a>
         </div>
     </div>
-    <div class="col-lg-3 col-xs-6">
-        @php($calibrations_reminder_count = \App\Calibration::where('due_date','<=',$date)->count())
-        <div class="small-box bg-gray-active {{ $calibrations_reminder_count > 0 ? 'red':''}}">
-            <div class="inner">
-                
-                <h3>{{ $calibrations_reminder_count }}</h3>
-                <p>Tickets Abiertos</p>
-            </div>
-            <div class="icon">
-                <i class="fa fa-clock-o"></i>
-            </div>
-            <a href="{{ url('admin/reminder/calibration') }}" class="small-box-footer">@lang('equicare.more_info')
-                <i class="fa fa-arrow-circle-right"></i>
-            </a>
-        </div>
-    </div>
 </div>
 <div class="box">
     <div class="box-header with-border">
-        <h4 class="box-title">REPORTE: INDICADOR DE REVISIONES DEL MES</h4>
-    </div>
-    <div class="box-body">
-        <div class="row">
-            <div class="col-md-12" id="chart-container">
-
-
-                <canvas id="myChart">
-                    @lang('equicare.call_entries_chart_render')
-                </canvas>
-
-            </div>
-        </div>
-    </div>
-</div>
-<div class="box">
-    <div class="box-header with-border">
-        <h4 class="box-title">REPORTE: REVISIONES DEL DIA DE AYER</h4>
-    </div>
-    <div class="box-body">
-        <div class="row">
-            <div class="col-md-12" id="chart-container">
-
-
-                <canvas id="myChart">
-                    @lang('equicare.call_entries_chart_render')
-                </canvas>
-
-            </div>
-        </div>
-    </div>
-</div>
-<div class="box">
-    <div class="box-header with-border">
-        <h4 class="box-title">REPORTE: INDICADOR CIERRE DE TICKET EN 72 HORAS</h4>
-    </div>
-    <div class="box-body">
-        <div class="row">
-            <div class="col-md-12" id="chart-container">
-
-
-                <canvas id="myChart">
-                    @lang('equicare.call_entries_chart_render')
-                </canvas>
-
-            </div>
-        </div>
-    </div>
-</div>
-<div class="box">
-    <div class="box-header with-border">
-        <h4 class="box-title">REPORTE: TICKETS POR MES</h4>
+        <h4 class="box-title">@lang('equicare.call_entries_chart')</h4>
     </div>
     <div class="box-body">
         <div class="row">

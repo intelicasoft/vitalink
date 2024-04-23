@@ -9,7 +9,6 @@
 <li class="breadcrumb-item"><a href="{{ url('admin/equipments') }}">@lang('equicare.equipments') </a></li>
 <li class="active">@lang('equicare.create')</li>
 @endsection
-
 @section('content')
 	<div class="row">
 		<div class="col-md-12">
@@ -113,16 +112,16 @@
 						</div>
 						<div class="form-group col-md-6">
 							<label for="service_engineer_no"> @lang('equicare.service_engineer_number')</label>
-							<input type="text" name="service_engineer_no" class="form-control"
+							<input type="text" name="service_engineer_no" class="form-control phone"
 							value="{{ old('service_engineer_no') }}" />
 						</div>
 						<div class="form-group col-md-6">
 							<label> @lang('equicare.critical') </label><br/>
 							<label>
-							<input type="radio" value="1" name="is_critical">
+							<input type="radio" value="1" name="is_critical" @if(old('is_critical') == '1') checked @endif>
 							@lang('equicare.yes')	</label> &nbsp;
 							<label>
-							<input type="radio" value="0" name="is_critical">
+							<input type="radio" value="0" name="is_critical" @if(old('is_critical') == '0') checked @endif @if(!old('is_critical')) checked @endif>
 							@lang('equicare.no')
 							</label>
 						</div>
@@ -131,6 +130,7 @@
 							<textarea rows="2" name="notes" class="form-control"
 							>{{ old('notes') }}</textarea>
 						</div>
+						<input type="hidden" name="qr_id" value="{{request('qr_id')}}"/>
 						<div class="form-group col-md-12">
 							<input type="submit" value="@lang('equicare.submit')" class="btn btn-primary btn-flat"/>
 						</div>

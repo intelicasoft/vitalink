@@ -1,4 +1,4 @@
-date_change(<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
 	<title>@lang('equicare.equipment_pdf')</title>
@@ -31,7 +31,7 @@ margin: 10px;
 	.container-fluid{
 		width:100%;
 	}
-}
+
 
 </style>
 </head>
@@ -49,6 +49,7 @@ margin: 10px;
 					<tr>
 						<th> # </th>
 						<th> @lang('equicare.name') </th>
+						<th> @lang('equicare.qr') </th>
 						<th> @lang('equicare.short_name') </th>
 						<th> @lang('equicare.user') </th>
 						<th> @lang('equicare.company') </th>
@@ -65,9 +66,11 @@ margin: 10px;
 				</thead>
 				<tbody>
 					@foreach ($chunk as $key => $equipment)
+					@php($u_e_id = (\App\QrGenerate::where('id',$equipment->qr_id)->first() !=null ? (\App\QrGenerate::where('id',$equipment->qr_id)->first()->uid): ''));
 					<tr>
 						<td> {{ $key+1 }} </td>
 						<td> {{ ucfirst($equipment->name) }} </td>
+						<td><img loading="lazy" src="{{ asset('/uploads/qrcodes/qr_assign/'.$u_e_id.'.png') }}" width="80px" /></td>
 						<td>{{ $equipment->short_name }}</td>
 						<td>{{ $equipment->user?ucfirst($equipment->user->name):'-' }}</td>
 						<td>{{ $equipment->company?? '-' }}</td>
@@ -89,6 +92,7 @@ margin: 10px;
 					<tr>
 						<th> # </th>
 						<th> @lang('equicare.name') </th>
+						<th> @lang('equicare.qr') </th>
 						<th> @lang('equicare.short_name') </th>
 						<th> @lang('equicare.user') </th>
 						<th> @lang('equicare.company') </th>

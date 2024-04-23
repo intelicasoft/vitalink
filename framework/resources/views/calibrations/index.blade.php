@@ -14,9 +14,9 @@
 		<div class="box box-primary">
 			<div class="box-header">
 				<h4 class="box-title">@lang('equicare.calibrations')
-					@can('Create Calibrations')
+                    @if(Auth::user()->hasDirectPermission('Create Calibrations'))
 					<a href="{{ route('calibration.create') }}" class="btn btn-primary btn-flat">@lang('equicare.add_new')</a>
-					@endcan
+					@endif
 				</h4>
 			</div>
 			<div class="box-body">
@@ -32,7 +32,7 @@
 								<th> @lang('equicare.certificate-no') </th>
 								<th> @lang('equicare.company') </th>
 								<th> @lang('equicare.contact_person') </th>
-								@if(Auth::user()->can('Edit Calibrations') || Auth::user()->can('Delete Calibrations'))
+								@if(Auth::user()->hasDirectPermission('Edit Calibrations') || Auth::user()->hasDirectPermission('Delete Calibrations'))
 								<th> @lang('equicare.action') </th>
 								@endif
 							</tr>
@@ -55,20 +55,20 @@
 								<td>
 									{!! Form::open(['url' =>
 									'admin/calibration/'.$calibration->id,'method'=>'DELETE','class'=>'form-inline']) !!}
-									@can('Edit Calibrations')
+									@if(Auth::user()->hasDirectPermission('Edit Calibrations'))
 									<a href="{{ route('calibration.edit',$calibration->id) }}" class="btn bg-purple btn-sm btn-flat" title="@lang('equicare.edit')"><i class="fa fa-edit"></i> </a>
-									@endcan &nbsp;
+									@endif &nbsp;
 									
 									@if(isset($calibration->calibration_certificate))
 									<a href="{{asset($calibration->calibration_certificate)}}" target="_blank" download class="btn btn-success btn-sm btn-flat" title="@lang('equicare.calibration_certificate')"><span class="fa fa-download" aria-hidden="true"></span></a>  &nbsp;
 									@endif
 
 									<input type="hidden" name="id" value="{{ $calibration->id }}">
-									@can('Delete Calibrations')
+									@if(Auth::user()->hasDirectPermission('Delete Calibrations'))
 									<button class="btn btn-warning btn-sm btn-flat" type="submit"
 										onclick="return confirm('@lang('equicare.are_you_sure')')" title="@lang('equicare.delete')"><span
 											class="fa fa-trash-o" aria-hidden="true"></span></button>
-									@endcan
+									@endif
 									{!! Form::close() !!}
 
 								</td>
@@ -87,7 +87,7 @@
 								<th> @lang('equicare.certificate-no') </th>
 								<th> @lang('equicare.company') </th>
 								<th> @lang('equicare.contact_person') </th>
-								@if(Auth::user()->can('Edit Calibrations') || Auth::user()->can('Delete Calibrations'))
+								@if(Auth::user()->hasDirectPermission('Edit Calibrations') || Auth::user()->hasDirectPermission('Delete Calibrations'))
 								<th> @lang('equicare.action') </th>
 								@endif
 							</tr>

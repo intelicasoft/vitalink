@@ -26,7 +26,7 @@ class CalibrationRequest extends FormRequest {
 			'due_date' => 'required',
 			'contact_person_no' => 'numeric|nullable|min:6',
 			'engineer_no' => 'numeric|nullable',
-			'calibration_certificate' => 'nullable|mimes:jpg,jpeg,png,pdf,doc,docx',
+			'calibration_certificate' => 'nullable|mimes:jpg,jpeg,png,pdf,doc,docx|max:10240',
 		];
 	}
 	public function messages() {

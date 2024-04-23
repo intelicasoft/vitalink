@@ -8,12 +8,33 @@ use App\Http\Requests\DepartmentRequest;
 class DepartmentController extends Controller {
 
 	public function index() {
+		$this->availibility('View Departments');
 		$data['page'] = 'departments';
 		$data['departments'] = Department::all();
 		return view('departments.index', $data);
 	}
+	public static function availibility($method)
+    {
+
+    // $r_p = \Auth::user()->getPermissionsViaRoles()->pluck('name')->toArray();
+			if (\Auth::user()->hasDirectPermission($method)) {
+				return true;
+			} else {
+				abort('401');
+			}
+
+        // if (\Auth::user()->hasDirectPermission($method)) {
+
+        //     return true;
+        // } elseif (!in_array($method, $r_p)) {
+        //     abort('401');
+        // } else {
+        //     return true;
+        // }
+    }
 
 	public function create() {
+		$this->availibility('Create Departments');
 		$data['page'] = 'departments';
 		return view('departments.create', $data);
 	}
@@ -30,6 +51,7 @@ class DepartmentController extends Controller {
 	}
 
 	public function edit($id) {
+		$this->availibility('Edit Departments');
 		$data['page'] = 'departments';
 		$data['department'] = Department::findOrFail($id);
 		return view('departments.edit', $data);
@@ -47,6 +69,7 @@ class DepartmentController extends Controller {
 	}
 
 	public function destroy($id) {
+		$this->availibility('Delete Departments');
 		$department = Department::findOrFail($id);
 		$department->delete();
 

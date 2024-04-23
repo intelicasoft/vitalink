@@ -22,7 +22,7 @@ class UserCreateRequest extends FormRequest {
 	public function rules() {
 		return [
 			'name' => 'required|max:150',
-			'email' => 'required|unique:users,email,' . $this->id,
+			'email' => 'required|unique:users,email,' . $this->id . ',id,deleted_at,NULL',
 			'password' => 'required|confirmed',
 			'role' => 'required',
 		];

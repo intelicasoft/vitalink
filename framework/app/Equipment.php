@@ -4,7 +4,7 @@ namespace App;
 use App\Department;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
+use Auth;
 class Equipment extends Model {
 	use SoftDeletes;
 	protected $table = 'equipments';
@@ -13,7 +13,7 @@ class Equipment extends Model {
 		'name', 'short_name', 'user_id', 'hospital_id', 'company', 'model',
 		'sr_no', 'unique_id', 'department', 'order_date', 'date_of_purchase'
 		, 'date_of_installation', 'warranty_due_date', 'service_engineer_no'
-		, 'is_criticle', 'notes',
+		, 'is_critical', 'notes','qr_id'
 	];
 
 	public function hospital() {
@@ -45,4 +45,10 @@ class Equipment extends Model {
 	public function calibration() {
 		return $this->hasOne('App\Calibration', 'equip_id', 'id');
 	}
+	public function scopeHospital($query)
+	{
+		return
+			$query->whereIn('hospital_id', auth()->user()->hospitals->pluck('id')->toArray());
+	}
+	
 }

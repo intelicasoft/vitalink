@@ -21,7 +21,7 @@
             <th>@lang('equicare.by')</th>
             @php
               if($cost->cost_by =='tp'){
-                $text = @lang('equicare.third_party');
+                $text = trans('equicare.third_party');
               }else{
                 $text = isset(\App\Setting::first()->company)?\App\Setting::first()->company:config('app.name');
               }

@@ -32,6 +32,7 @@ class CreateEquipmentTable extends Migration {
 			$table->string('service_engineer_no')->nullable();
 			$table->boolean('is_critical')->nullable();
 			$table->text('notes')->nullable();
+			$table->string('qr_id')->nullable();
 			$table->SoftDeletes();
 			$table->timestamps();
 		});

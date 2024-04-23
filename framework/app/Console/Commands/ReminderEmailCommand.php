@@ -53,12 +53,13 @@ class ReminderEmailCommand extends Command {
 		$users = User::whereHas('role', function ($q) {
 			$q->where('name', 'Admin');
 		})->get();
-
+		
 		if ($preventive_reminder->count() && $this->email_setup()) {
 			Notification::send($users, new PreventiveMaintenanceReminderEmail($preventive_reminder));
 		}
-
+		
 		if ($calibrations_reminder->count() && $this->email_setup()) {
+			
 			Notification::send($users, new CalibrationsReminderEmail($calibrations_reminder));
 		}
 	}

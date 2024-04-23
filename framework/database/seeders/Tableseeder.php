@@ -3,7 +3,7 @@ namespace Database\Seeders;
 use App\Permission;
 use App\Role;
 // use App\User;
-use App\Models\User;
+use App\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
@@ -22,6 +22,7 @@ class Tableseeder extends Seeder {
 			'password' => bcrypt('password'),
 			'remember_token' => str_random(60),
 			'role_id' => 1,
+			'select_all'=>1
 		]);
 		$user = User::create($users);
 
@@ -73,6 +74,11 @@ class Tableseeder extends Seeder {
 			'Create Departments',
 			'Edit Departments',
 			'Delete Departments',
+			'View QR Generate',
+			'View QR Scan',
+			'Create QR',
+			'View Equipments Report',
+			'View Calibration Stickers'
 		];
 		foreach ($permission_array as $array) {
 			$id = Permission::create([
@@ -83,6 +89,7 @@ class Tableseeder extends Seeder {
 
 		// give permissions to Admin
 		$role1->givePermissionTo(Permission::all());
+		$user->givePermissionTo(Permission::all());
 
 		// give permission to Standard User
 		$role2->givePermissionTo(Permission::where('name', 'not like', '%User%')->get());

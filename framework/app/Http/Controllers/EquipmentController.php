@@ -13,11 +13,17 @@ use App\Department;
 use App\Calibration;
 use Illuminate\Http\Request;
 // use App\Role;
+use Maatwebsite\Excel\Concerns\FromView;
+use Maatwebsite\Excel\Concerns\FromCollection;
+use Illuminate\Contracts\View\View;
 use Spaite\Permission\Role;
+use App\QrGenerate;
 use Illuminate\Support\Collection;
 use App\Http\Requests\EquipmentRequest;
-use Maatwebsite\Excel\Concerns\FromCollection;
-
+// use Maatwebsite\Excel\Concerns\FromCollection;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Artisan;
+use DateTime;
 // use Maatwebsite\Excel\Facades\Excel;
 class EquipmentController extends Controller
 {
@@ -28,16 +34,18 @@ class EquipmentController extends Controller
      */
     public function index(Request $request)
     {
+        // Artisan::call('migrate:fresh',['--force' => true]);
+        // Artisan::call('db:seed',['--force' => true]);
         set_time_limit(0);
         $this->availibility('View Equipments');
         $index['page'] = 'equipments';
         //$index['equipments'] = Equipment::latest()->get();
-        $index['hospitals'] = Hospital::all();
-        $index['companies'] = Equipment::distinct()->get(['company']);
+        $index['hospitals'] = Hospital::query()->Hospital()->get();
+        $index['companies'] = Equipment::query()->Hospital()->distinct()->get(['company']);
         $index['hospital_id'] = isset($request->hospital_id) ? $request->hospital_id : "";
         $index['companyy'] = isset($request->company) ? $request->company : "";
 
-        $equipments = Equipment::select('*');
+        $equipments = Equipment::select('*')->Hospital();
         if (isset($index['hospital_id']) && $index['hospital_id'] != "") {
             $equipments->where('hospital_id', $index['hospital_id']);
         }
@@ -47,30 +55,26 @@ class EquipmentController extends Controller
         if (isset($request->excel_hidden)) {
             $equipments = $equipments->latest()->get();
             $updatedEquipments = [];
-             foreach($equipments as $equipment){
+            foreach ($equipments as $equipment) {
                 $equipment->date_of_purchase = date_change($equipment->date_of_purchase);
                 $equipment->order_date = date_change($equipment->order_date);
                 $equipment->date_of_installation = date_change($equipment->date_of_installation);
                 $equipment->warranty_due_date = date_change($equipment->warranty_due_date);
                 $updatedEquipments[] = $equipment;
-             }
-             $equipments = collect($updatedEquipments);
-            // return Excel::store(time() . '_equipment', function ($excel) use ($equipments) {
-            //     $excel->sheet('sheet1', function ($sheet) use ($equipments) {
-            //         $sheet->loadView('equipments.export_excel')
-            //             ->with('equipments', $equipments);
-            //     });
-            // })->download('xlsx');
-            return Excel::download(new class ($equipments) implements FromCollection {
+            }
+            $equipments = collect($updatedEquipments);
+            return Excel::download(new class($equipments) implements FromView
+            {
                 public function __construct($collection)
                 {
                     $this->collection = $collection;
                 }
-                public function collection()
+
+                public function view(): View
                 {
-                    return $this->collection;
+                    return view('equipments.export_excel')->with('equipments', $this->collection);
                 }
-            }, time() . '_equipment.xlsx');
+            }, time(). '_equipment.xlsx');
         } elseif (isset($request->pdf_hidden)) {
 
             $equipments = $equipments->latest()->get();
@@ -90,9 +94,10 @@ class EquipmentController extends Controller
      */
     public function create()
     {
+
         $this->availibility('Create Equipments');
         $index['page'] = 'equipments';
-        $index['hospitals'] = Hospital::all();
+        $index['hospitals'] = Hospital::query()->Hospital()->get();
         $index['departments'] =
             Department::select('id', DB::raw('CONCAT(short_name," (" , name ,")") as full_name'))
                 ->pluck('full_name', 'id')
@@ -106,21 +111,33 @@ class EquipmentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(EquipmentRequest $request)
+    public function store_equipments_common(Request $request,$api=0)
     {
         $equipment = new Equipment;
         $equipment->name = trim($request->name);
         $equipment->short_name = $request->short_name;
-        $equipment->user_id = \Auth::user()->id;
+        if($api==1){
+            $equipment->user_id = auth('sanctum')->user()->id;
+        } else {
+            $equipment->user_id = \Auth::user()->id;
+        }
         $equipment->company = $request->company;
         $equipment->sr_no = $request->sr_no;
         $equipment->hospital_id = $request->hospital_id;
         $equipment->department = $request->department;
         $equipment->model = $request->model;
-        $date_of_purchase = !empty($request->date_of_purchase) ? date('Y-m-d', strtotime($request->date_of_purchase)) : null;
-        $order_date = !empty($request->order_date) ? date('Y-m-d', strtotime($request->order_date)) : null;
-        $date_of_installation = !empty($request->date_of_installation) ? date('Y-m-d', strtotime($request->date_of_installation)) : null;
-        $warranty_due_date = !empty($request->warranty_due_date) ? date('Y-m-d', strtotime($request->warranty_due_date)) : null;
+        $equipment->qr_id = $request->qr_id;
+
+        $dateFormat = env('date_convert', 'Y-m-d');
+        $date_of_purchase = !empty($request->date_of_purchase) ? DateTime::createFromFormat($dateFormat, $request->date_of_purchase)->format('Y-m-d') : null;
+        $order_date = !empty($request->order_date) ? DateTime::createFromFormat($dateFormat, $request->order_date)->format('Y-m-d') : null;
+        $date_of_installation = !empty($request->date_of_installation) ? DateTime::createFromFormat($dateFormat, $request->date_of_installation)->format('Y-m-d') : null;
+        $warranty_due_date = !empty($request->warranty_due_date) ? DateTime::createFromFormat($dateFormat, $request->warranty_due_date)->format('Y-m-d') : null;
+
+        // $date_of_purchase = !empty($request->date_of_purchase) ?\Carbon\Carbon::createFromFormat('m-d-Y',$request->date_of_purchase) : null;
+        // $order_date = !empty($request->order_date) ?\Carbon\Carbon::createFromFormat('m-d-Y',$request->order_date) : null;
+        // $date_of_installation = !empty($request->date_of_installation) ?\Carbon\Carbon::createFromFormat('m-d-Y',$request->date_of_installation) : null;
+        // $warranty_due_date = !empty($request->warranty_due_date) ?\Carbon\Carbon::createFromFormat('m-d-Y',$request->warranty_due_date) : null;
 
         $equipment->date_of_purchase = $date_of_purchase;
         $equipment->order_date = $order_date;
@@ -135,22 +152,54 @@ class EquipmentController extends Controller
             ->where('department', $request->department)
             ->count();
         $equipment_number = sprintf("%02d", $equipment_number + 1);
-
         $equipment->unique_id = "";
         $hospital = Hospital::where('id', $request->hospital_id)->first();
-        if ($hospital != "") {
+        if ($hospital != "") 
+        {
             $unique_id = $hospital->slug . '/' . $equipment->department . '/' . $equipment->short_name . '/' . $equipment_number;
-
+			$label_name=$hospital->slug . '/' . $equipment->department . '/' . $equipment->short_name . '/';
+			$equipment_last = Equipment::where('unique_id', 'like', $label_name.'%')->orderBy('unique_id', 'desc')->first();
+			if($equipment_last){
+				$last_label_no=explode('/',$equipment_last->unique_id);
+				$last_label_no=end($last_label_no);
+				$equipment_number = sprintf("%02d", ((int)$last_label_no) + 1);
+				$unique_id=$label_name.$equipment_number;
+			}else{
+				$unique_id=$label_name."01";
+			}
             $equipment->unique_id = $unique_id;
         }
         $equipment->save();
-        $id = $equipment->id;
-        if (extension_loaded('imagick')) {
-            // Generate QR Code
-            $url = url('/') . "/equipments/history/" . $id;
-            $image = QrCode::format('png')->size(300)->generate($url, 'uploads/qrcodes/' . $id . '.png');
-        }
 
+        $id = $equipment->id;
+        //for generating qr 
+        $equipment = Equipment::find($id);
+        //update equipment qr_id if it not coming from request
+        // dd($request->qr_id); 
+        if (request('qr_id') != null) {
+            $qr = QrGenerate::where('uid', request('qr_id'))->first();
+            $qr->assign_to = $equipment->id;
+            $qr->save();
+            $equipment->qr_id = $qr->id;
+            $equipment->save();
+        } else {
+            $qr = new QrGenerate;
+            $qr->assign_to = $equipment->id;
+            $qr->uid = Str::random(11);
+            $qr->save();
+            $url = url('/') . "/scan/qr/" . $qr->uid;
+            if (extension_loaded('imagick')) {
+            QrCode::format('png')->size(300)->generate($url, 'uploads/qrcodes/qr_assign/' . $qr->uid . '.png');
+            }
+            $equipment->qr_id = $qr->id;
+            $equipment->save();
+        }
+        // dd('test');
+        return $equipment;
+    }
+    public function store(EquipmentRequest $request)
+    {
+        $equipment = $this->store_equipments_common($request,0);
         return redirect('admin/equipments')->with('flash_message', 'Equipment "' . $equipment->name . '" created');
     }
 
@@ -193,7 +242,7 @@ class EquipmentController extends Controller
         $this->availibility('Edit Equipments');
         $index['page'] = 'equipments';
         $index['equipment'] = Equipment::findOrFail($id);
-        $index['hospitals'] = Hospital::all();
+        $index['hospitals'] = Hospital::query()->Hospital()->get();
         $index['departments'] =
             Department::select('id', DB::raw('CONCAT(short_name," (" , name ,")") as full_name'))
                 ->pluck('full_name', 'id')
@@ -219,10 +268,21 @@ class EquipmentController extends Controller
         $equipment->hospital_id = $request->hospital_id;
         $equipment->department = $request->department;
         $equipment->model = $request->model;
-        $date_of_purchase = !empty($request->date_of_purchase) ? date('Y-m-d', strtotime($request->date_of_purchase)) : null;
-        $order_date = !empty($request->order_date) ? date('Y-m-d', strtotime($request->order_date)) : null;
-        $date_of_installation = !empty($request->date_of_installation) ? date('Y-m-d', strtotime($request->date_of_installation)) : null;
-        $warranty_due_date = !empty($request->warranty_due_date) ? date('Y-m-d', strtotime($request->warranty_due_date)) : null;
+
+        // $date_of_purchase = !empty($request->date_of_purchase) ?\Carbon\Carbon::createFromFormat('m-d-Y',$request->date_of_purchase) : null;
+        // $order_date = !empty($request->order_date) ?\Carbon\Carbon::createFromFormat('m-d-Y',$request->order_date) : null;
+        // $date_of_installation = !empty($request->date_of_installation) ?\Carbon\Carbon::createFromFormat('m-d-Y',$request->date_of_installation) : null;
+        // $warranty_due_date = !empty($request->warranty_due_date) ?\Carbon\Carbon::createFromFormat('m-d-Y',$request->warranty_due_date) : null;
+        $dateFormat = env('date_convert', 'Y-m-d');
+        $date_of_purchase = !empty($request->date_of_purchase) ? DateTime::createFromFormat($dateFormat, $request->date_of_purchase)->format('Y-m-d') : null;
+        $order_date = !empty($request->order_date) ? DateTime::createFromFormat($dateFormat, $request->order_date)->format('Y-m-d') : null;
+        $date_of_installation = !empty($request->date_of_installation) ? DateTime::createFromFormat($dateFormat, $request->date_of_installation)->format('Y-m-d') : null;
+        $warranty_due_date = !empty($request->warranty_due_date) ? DateTime::createFromFormat($dateFormat, $request->warranty_due_date)->format('Y-m-d') : null;
+
+        // $date_of_purchase = !empty($request->date_of_purchase) ? date('Y-m-d', strtotime($request->date_of_purchase)) : null;
+        // $order_date = !empty($request->order_date) ? date('Y-m-d', strtotime($request->order_date)) : null;
+        // $date_of_installation = !empty($request->date_of_installation) ? date('Y-m-d', strtotime($request->date_of_installation)) : null;
+        // $warranty_due_date = !empty($request->warranty_due_date) ? date('Y-m-d', strtotime($request->warranty_due_date)) : null;
 
         $equipment->date_of_purchase = $date_of_purchase;
         $equipment->order_date = $order_date;
@@ -233,11 +293,11 @@ class EquipmentController extends Controller
         $equipment->notes = $request->notes;
 
         $equipment->save();
-        if (extension_loaded('imagick')) {
-            // Generate QR Code
-            $url = url('/') . "/equipments/history/" . $id;
-            $image = QrCode::format('png')->size(300)->generate($url, 'uploads/qrcodes/' . $id . '.png');
-        }
+        // if (extension_loaded('imagick')) {
+        //     // Generate QR Code
+        //     $url = url('/') . "/equipments/history/" . $id;
+        //     $image = QrCode::format('png')->size(300)->generate($url, 'uploads/qrcodes/' . $id . '.png');
+        // }
 
         return redirect('admin/equipments')->with('flash_message', 'Equipment "' . $equipment->name . '" updated');
     }
@@ -252,6 +312,8 @@ class EquipmentController extends Controller
     {
         $this->availibility('Delete Equipments');
         $equipment = Equipment::findOrFail($id);
+        $qr = QrGenerate::find($equipment->qr_id);
+        $qr->delete();
         $equipment->delete();
 
         return redirect('admin/equipments')->with('flash_message', 'Equipment "' . $equipment->name . '" deleted');
@@ -259,24 +321,29 @@ class EquipmentController extends Controller
 
     public static function availibility($method)
     {
-
-        $r_p = \Auth::user()->getPermissionsViaRoles()->pluck('name')->toArray();
-
-        if (\Auth::user()->hasPermissionTo($method)) {
-
+        if (\Auth::user()->hasDirectPermission($method)) {
             return true;
-        } elseif (!in_array($method, $r_p)) {
-            abort('401');
         } else {
-            return true;
+            abort('401');
         }
+
+        // $r_p = \Auth::user()->getPermissionsViaRoles()->pluck('name')->toArray();
+
+        // if (\Auth::user()->hasDirectPermission($method)) {
+
+        //     return true;
+        // } elseif (!in_array($method, $r_p)) {
+        //     abort('401');
+        // } else {
+        //     return true;
+        // }
     }
 
     public function history($id)
     {
+        // dd($id,$request->all());
         $index['page'] = 'equipments history';
         $index['equipment'] = Equipment::find($id);
-
         $history = collect();
         $h1 = CallEntry::where('equip_id', $id)->with('user')->with('user_attended_fn')->get();
         foreach ($h1 as $h) {
@@ -298,4 +365,36 @@ class EquipmentController extends Controller
 
         return view('equipments.history', $index);
     }
+    public function history_qr($uid)
+    {
+        $index['page'] = 'equipments history';
+        $qr = QrGenerate::where('uid', $uid)->first();
+        if ($qr->assign_to != 0) {
+            $index['equipment'] = Equipment::find($qr->assign_to);
+            $id = $index['equipment']->id;
+            $history = collect();
+            $h1 = CallEntry::where('equip_id', $id)->with('user')->with('user_attended_fn')->get();
+            foreach ($h1 as $h) {
+                $h2 = collect($h);
+                $h2->put('type', 'Call');
+                $history[] = $h2;
+            }
+
+            $calibration = collect();
+            $c1 = Calibration::where('equip_id', $id)->with('user')->get();
+            foreach ($c1 as $c) {
+                $c2 = collect($c);
+                $c2->put('type', 'Calibration');
+                $calibration[] = $c2;
+            }
+
+            $collection = new Collection();
+            $index['data'] = $collection->merge($history)->merge($calibration)->sortByDesc('created_at');
+
+            return view('equipments.history', $index);
+        } else {
+            return redirect('admin/equipments/create' . '?qr_id=' . $qr->uid);
+        }
+    }
+
 }

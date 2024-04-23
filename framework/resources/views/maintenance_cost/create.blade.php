@@ -49,7 +49,7 @@
                             <label>@lang('equicare.type'):</label>
                             <div class="radio iradio">
                                 <label class="login-padding">
-                                    {!! Form::radio('type', 'amc', false, ['class' => $errors->has('type') ? 'is-invalid' : '']) !!} @lang('equicare.annual_cost')
+                                    {!! Form::radio('type', 'amc', false, ['class' => $errors->has('type') ? 'is-invalid' : '','checked']) !!} @lang('equicare.annual_cost')
                                 </label>
                                 <label>
                                     {!! Form::radio('type', 'cmc', false, ['class' => $errors->has('type') ? 'is-invalid' : '']) !!} @lang('equicare.comprehensive_cost')
@@ -67,7 +67,7 @@
                             <label css="margintpop">@lang('equicare.cost_by'):</label>
                             <div class="radio iradio zmargin">
                                 <label class="login-padding">
-                                    {!! Form::radio('cost_by', 'us') !!} @lang('equicare.own_company')
+                                    {!! Form::radio('cost_by', 'us',null,['checked']) !!} @lang('equicare.own_company')
                                 </label>
                                 <label>
                                     {!! Form::radio('cost_by', 'tp', null, ['id' => 'tp']) !!} @lang('equicare.third_party')
@@ -108,7 +108,7 @@
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="tp_email"> @lang('equicare.email') </label>
-                                    <input type="text" id="tp_email" name="tp_email"
+                                    <input type="email" id="tp_email" name="tp_email"
                                         class="{{ $errors->has('tp_email') ? 'is-invalid ' : '' }}form-control"
                                         value="{{ old('tp_email') }}" />
                                     @if ($errors->has('tp_email'))
@@ -128,11 +128,12 @@
                             @foreach (old('cost') as $input)
                                 <div class="row no-gutters">
                                     <div class="form-group col-md-3">
-                                        {!! Form::select('equipments[]', [], old('equipments.' . $i), [
+                                        {!! Form::select('equipments[]',[], old('equipments.' . $i), [
                                             'class' => $errors->has('equipments.' . $i)
                                                 ? 'is-invalid form-control select2_equipments'
                                                 : 'form-control select2_equipments',
                                             'id' => 'equipments' . ($i = 1),
+                                            'required'=>'required',
                                         ]) !!}
                                         @if ($errors->has('equipments.' . $i))
                                             <strong class="invalid-feedback">
@@ -146,6 +147,7 @@
                                             'class' => $errors->has('start_dates.' . $i) ? 'is-invalid start_dates form-control' : 'form-control start_dates',
                                             'placeholder' => __('equicare.enter_start_date'),
                                             'autocomplete' => 'off',
+                                            'required'=>'required',
                                         ]) !!}
                                         @if ($errors->has('start_dates.' . $i))
                                             <strong class="invalid-feedback">
@@ -159,6 +161,7 @@
                                             'class' => $errors->has('end_dates.' . $i) ? 'is-invalid end_dates form-control' : 'form-control end_dates',
                                             'placeholder' => __('equicare.enter_end_date'),
                                             'autocomplete' => 'off',
+                                            'required'=>'required',
                                         ]) !!}
                                         @if ($errors->has('end_dates.' . $i))
                                             <strong class="invalid-feedback">
@@ -168,10 +171,11 @@
                                         @endif
                                     </div>
                                     <div class="form-group col-md-3">
-                                        {!! Form::text('cost[]', old('cost.' . $i), [
+                                        {!! Form::number('cost[]', old('cost.' . $i), [
                                             'class' => $errors->has('cost.' . $i) ? 'is-invalid cost form-control' : 'form-control cost',
                                             'placeholder' => __('equicare.enter_cost'),
                                             'autocomplete' => 'off',
+                                            'required'=>'required',
                                         ]) !!}
                                         @if ($errors->has('cost.' . $i))
                                             <strong class="invalid-feedback">
@@ -189,6 +193,7 @@
                                     {!! Form::select('equipments[]', [], null, [
                                         'class' => 'form-control select2_equipments',
                                         'id' => 'equipments1',
+                                        'required'=>'required',
                                     ]) !!}
                                 </div>
                                 <div class="form-group col-md-3">
@@ -197,6 +202,7 @@
                                         'placeholder' => __('equicare.enter_start_date'),
                                         'id' => 'start_dates1',
                                         'autocomplete' => 'off',
+                                        'required'=>'required',
                                     ]) !!}
                                 </div>
                                 <div class="form-group col-md-3">
@@ -205,10 +211,11 @@
                                         'placeholder' => __('equicare.enter_end_date'),
                                         'id' => 'end_dates1',
                                         'autocomplete' => 'off',
+                                        'required'=>'required',
                                     ]) !!}
                                 </div>
                                 <div class="form-group col-md-3">
-                                    {!! Form::text('cost[]', null, ['class' => 'form-control', 'placeholder' => __('equicare.enter_cost')]) !!}
+                                    {!! Form::number('cost[]', null, ['class' => 'form-control', 'placeholder' => __('equicare.enter_cost'),'required'=>'required']) !!}
                                 </div>
                             </div>
                         @endif
@@ -230,8 +237,25 @@
     </div>
 @endsection
 @section('scripts')
+    
     <script src="{{ asset('assets/js/datetimepicker.js') }}" type="text/javascript"></script>
     <script type="text/javascript">
+    function equipment_old_select(){
+    
+        var oldEquipments = {!! json_encode(old('equipments')) !!};
+        console.log(oldEquipments,'otuside');
+
+        // Loop through each select dropdown with the class 'select2_equipments'
+        $('.select2_equipments').each(function(index, element) {
+        console.log('inside');
+            // Get the corresponding old value from the array
+            var oldValue = oldEquipments[index];
+            // Set the value of the select dropdown to the old value
+            $(element).val(oldValue);
+            // Fire the change event for the select dropdown
+            $(element).trigger('change');
+        });
+}
         $(document).ready(function() {
             @if ($errors->has('tp_name') || $errors->has('tp_email') || $errors->has('tp_mobile'))
                 $('div.tp_details').show();
@@ -274,23 +298,24 @@
                     '<div class="row no-gutters">' +
                     '<div class="form-group col-md-3">  ' +
                     '	<select name="equipments[]" class="form-control select2_equipments" id="equipments' +
-                    $i + '" autocomplete="off">' +
+                    $i + '" autocomplete="off" required>' +
                     '		<option value=""> </option>' +
                     '	</select>' +
                     '</div>  ' +
                     '<div class="form-group col-md-3">  ' +
                     ' <input type="text" name="start_dates[]" id="start_dates' + $i +
-                    '" class="form-control start_dates" placeholder="{{ __('equicare.enter_start_date') }}" autocomplete="off">	' +
+                    '" class="form-control start_dates" placeholder="{{ __('equicare.enter_start_date') }}" autocomplete="off" required>	' +
                     '</div>  ' +
                     '<div class="form-group col-md-3">  ' +
                     ' <input type="text" name="end_dates[]" id="end_dates' + $i +
-                    '" class="form-control end_dates" placeholder="{{ __('equicare.enter_end_date') }}" autocomplete="off">	' +
+                    '" class="form-control end_dates" placeholder="{{ __('equicare.enter_end_date') }}" autocomplete="off" required>	' +
                     ' </div>  ' +
                     ' <div class="form-group col-md-3">  ' +
-                    ' 	{!! Form::text('cost[]', null, [
+                    ' 	{!! Form::number('cost[]', null, [
                         'class' => 'form-control',
                         'placeholder' => 'Enter Cost',
                         'autocomplete' => 'off',
+                        'required'=>'required'
                     ]) !!}  ' +
                     ' </div>  ' +
                     ' </div> ');
@@ -346,11 +371,15 @@
                                 $('.select2_equipments').select2({
                                     placeholder: '{{ __('equicare.select_option') }}',
                                     allowClear: true,
-									
+                                    
                                 
                                 });
                             }
                         }
+                        if ({!! json_encode(old('equipments')) !!} !== null) {
+                            equipment_old_select();
+                        }
+                        // Get the array of old equipment values
                     },
                     error: function(data) {
 

@@ -86,11 +86,11 @@
 					</div>
 					<div class="form-group col-md-4">
 						{!! Form::label('contact_person_no',__('equicare.contact_person_no')) !!}
-						{!! Form::text('contact_person_no',null,['class' => 'form-control']) !!}
+						{!! Form::text('contact_person_no',null,['class' => 'form-control phone']) !!}
 					</div>
 					<div class="form-group col-md-4">
 						{!! Form::label('engineer_no',__('equicare.engineer_no')) !!}
-						{!! Form::text('engineer_no',null,['class' => 'form-control']) !!}
+						{!! Form::text('engineer_no',null,['class' => 'form-control phone']) !!}
 					</div>
 					<div class="form-group col-md-4">
 						{!! Form::label('traceability_certificate_no',__('equicare.traceability_certificate_no')) !!}

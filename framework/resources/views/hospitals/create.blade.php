@@ -15,7 +15,7 @@
 		<div class="col-md-12">
 			<div class="box box-primary">
 			<div class="box-header">
-				<h4 class="box-title">@lang('equicare.create_hospital') </h4>
+				<h4 class="box-title">@lang('equicare.create_hospital')</h4>
 				</div>
 
 				<div class="box-body ">
@@ -45,12 +45,12 @@
 						</div>
 						<div class="form-group col-md-6">
 							<label for="phone_no"> @lang('equicare.phone') </label>
-							<input type="text" name="phone_no" class="form-control"
+							<input type="text" name="phone_no" class="form-control phone"
 							value="{{ old('phone_no') }}" />
 						</div>
 						<div class="form-group col-md-6">
 							<label for="mobile_no"> @lang('equicare.mobile') </label>
-							<input type="text" name="mobile_no" class="form-control"
+							<input type="text" name="mobile_no" class="form-control phone"
 							value="{{ old('mobile_no') }}" />
 						</div>
 						<div class="form-group col-md-6">

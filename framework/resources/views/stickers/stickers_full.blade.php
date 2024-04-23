@@ -46,19 +46,27 @@
 			@php
 			$count++;
 			@endphp
-		<div class="card">
-			<img src="{{ asset('/uploads/qrcodes/'.$calibration->equipment->id.'.png') }}" style="float:right; padding:5px; width: 100px;">
+		    <div class="card">
+				@php
+				// \App\Equipment::select('*')->delete();
+				$u_e_id = (\App\QrGenerate::where('id',$calibration->equipment->qr_id)->first() !=null ? (\App\QrGenerate::where('id',$calibration->equipment->qr_id)->first()->uid) : '')
+
+				@endphp
+								<img src="{{ asset('/uploads/qrcodes/qr_assign/'.$u_e_id.'.png') }}" style="float:right; padding:5px; width: 100px;">
 			<span><b>Equipment ID </b> : {{ $calibration->equipment->unique_id}}</span><br/>
 			<span><b>Equipment Name</b> : {{ $calibration->equipment->name}}</span>
 			<br>
 			<span><b>Date of PM</b> :
+				
+				
 				{{-- {{ $calibration->equipment->call_entry?date('Y-m-d',strtotime($calibration->equipment->pm->call_register_date_time)): '-'}} --}}
-				{{ date_change($calibration->equipment->pm->call_register_date_time)?? '-'}}
+				{{$calibration->equipment->pm ? date_change($calibration->equipment->pm->call_register_date_time): '-'}}
 
 			</span>
 			<br/>
 			<span><b>Due Date of PM</b> :
-				{{ date_change($calibration->equipment->pm->next_due_date)?? '-'}}
+				{{-- {{ date_change($calibration->equipment->pm->next_due_date)?? '-'}} --}}
+				{{($calibration->equipment->pm != null ) ? date_change($calibration->equipment->pm->next_due_date) : '-' }}
 			</span>
 			<br/>
 			<span><b>Calibration Date</b> : {{ date_change($calibration->date_of_calibration)}}

@@ -17,7 +17,7 @@
          <div class="box box-primary">
             <div class="box-header with-border">
                   <h4 class="box-title" style="float:left;">
-                     <b>@lang('equicare.name')</b> : {{$equipment->name}}
+                     <b>@lang('equicare.name')</b> : {{$equipment->name?? ''}}
                      &nbsp;&nbsp;&nbsp;&nbsp;
                   </h4>
                   @if(\Auth::user())

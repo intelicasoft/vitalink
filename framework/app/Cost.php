@@ -13,4 +13,9 @@ class Cost extends Model {
 	public function hospital() {
 		return $this->belongsTo('App\Hospital', 'hospital_id')->withTrashed();
 	}
+	public function scopeHospital($query)
+	{
+		return $query->whereIn('hospital_id', auth()->user()->hospitals->pluck('id')->toArray());
+			
+	}
 }
