@@ -13,7 +13,7 @@ class Equipment extends Model {
 		'name', 'short_name', 'user_id', 'hospital_id', 'company', 'model',
 		'sr_no', 'unique_id', 'department', 'order_date', 'date_of_purchase'
 		, 'date_of_installation', 'warranty_due_date', 'service_engineer_no'
-		, 'is_critical', 'notes','qr_id'
+		, 'is_critical', 'notes','qr_id','brand_id','accesory_id', 'model_id','address','latitude','longitude'
 	];
 
 	public function hospital() {
@@ -21,6 +21,15 @@ class Equipment extends Model {
 	}
 	public function get_department() {
 		return $this->belongsTo('App\Department', 'department')->withTrashed();
+	}
+	public function brand() {
+		return $this->belongsTo('App\Models\DataBrand', 'brand_id')->withTrashed();
+	}
+	public function accesory() {
+		return $this->belongsTo('App\Models\DataAccesories', 'accesory_id')->withTrashed();
+	}
+	public function models() {
+		return $this->belongsTo('App\Models\DataModels', 'model_id')->withTrashed();
 	}
 
 	public function getUniqueIdAttribute($value) {

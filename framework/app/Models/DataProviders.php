@@ -9,6 +9,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class DataProviders extends Model
 {
     use SoftDeletes;
-
+    protected $fillable = [
+        'nombre',
+        'observaciones',
+    ];
     use HasFactory;
 }

@@ -11,6 +11,7 @@ class DataBrand extends Model
     use SoftDeletes;
     protected $fillable = [
         'name',
+        'type', 
         'description',
         'client_id',
         'status',

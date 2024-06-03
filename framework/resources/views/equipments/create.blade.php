@@ -63,6 +63,52 @@
 						</div>
 
 						<div class="form-group col-md-6">
+							<label for="accesory_id"> Accesorio de Repuesto </label>
+							<select name="accesory_id" class="form-control">
+								<option value="">---select---</option>
+								@if(isset($accesories))
+									@foreach ($accesories as $accesory)
+										<option value="{{ $accesory->id }}"
+											{{ old('accesory_id')?'selected':'' }}
+											>{{ $accesory->nombre }}
+										</option>
+									@endforeach
+								@endif
+							</select>
+						</div>
+
+						<div class="form-group col-md-6">
+							<label for="brand_id"> @lang('equicare.brand') </label>
+							<select name="brand_id" class="form-control">
+								<option value="">---select---</option>
+								@if(isset($brands))
+									@foreach ($brands as $brand)
+										<option value="{{ $brand->id }}"
+											{{ old('brand_id')?'selected':'' }}
+											>{{ $brand->name }}
+										</option>
+									@endforeach
+								@endif
+							</select>
+						</div>
+
+						<div class="form-group col-md-6">
+							<label for="model_id"> @lang('equicare.model') </label>
+							<select name="model_id" class="form-control">
+								<option value="">---select---</option>
+								@if(isset($models))
+									@foreach ($models as $model)
+										<option value="{{ $model->id }}"
+											{{ old('model_id')?'selected':'' }}
+											>{{ $model->name }}
+										</option>
+									@endforeach
+								@endif
+							</select>
+						</div>
+
+						
+						<div class="form-group col-md-6">
 							<label for="department"> @lang('equicare.department') </label>
 							{!! Form::select('department',$departments??[],null,['class'=>'form-control','placeholder'=>'--select--']) !!}
 						</div>
@@ -130,7 +176,15 @@
 							<textarea rows="2" name="notes" class="form-control"
 							>{{ old('notes') }}</textarea>
 						</div>
-						<input type="hidden" name="qr_id" value="{{request('qr_id')}}"/>
+						<input type="hidden" name="qr_id" value="{{request('qr_id')}}"/>	
+						
+						<div class="form-group col-md-12">
+							<div id="map" style="width: 100%; height: 400px;"></div>
+						</div>
+						<input type="hidden" name="latitude" id="latitude" value="{{ old('latitude') }}">
+						<input type="hidden" name="longitude" id="longitude" value="{{ old('longitude') }}">
+
+
 						<div class="form-group col-md-12">
 							<input type="submit" value="@lang('equicare.submit')" class="btn btn-primary btn-flat"/>
 						</div>
@@ -162,5 +216,32 @@
 				'todayHighlight' : true,
 			});
 		});
+	</script>
+
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMCnFrl_hkFXPXNj3ksPb_fkygp_HNOh8&callback=initMap" async defer></script>
+	<script>
+		function initMap() {
+			var initialLocation = { lat: 20.659698, lng: -103.349609 }; // Ubicación inicial
+			var map = new google.maps.Map(document.getElementById('map'), {
+				zoom: 8,
+				center: initialLocation
+			});
+			var marker = new google.maps.Marker({
+				position: initialLocation,
+				map: map,
+				draggable: true
+			});
+
+			google.maps.event.addListener(marker, 'dragend', function (event) {
+				document.getElementById('latitude').value = event.latLng.lat();
+				document.getElementById('longitude').value = event.latLng.lng();
+			});
+
+			google.maps.event.addListener(map, 'click', function (event) {
+				marker.setPosition(event.latLng);
+				document.getElementById('latitude').value = event.latLng.lat();
+				document.getElementById('longitude').value = event.latLng.lng();
+			});
+		}
 	</script>
 @endsection

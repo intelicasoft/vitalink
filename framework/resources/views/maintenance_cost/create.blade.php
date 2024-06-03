@@ -26,6 +26,7 @@
                     <h4 class="box-title">@lang('equicare.maintenance_cost_create')</h4>
                 </div>
                 <div class="box-body ">
+                    @include ('errors.list')
                     {{-- <form class="form" method="post" action="{{ route('maintenance_cost.store') }}"> --}}
                     {{ csrf_field() }}
                     {{ method_field('POST') }}

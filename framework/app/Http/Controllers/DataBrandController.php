@@ -45,6 +45,7 @@ class DataBrandController extends Controller
     {
         $data = $request->validate([
             'name' => 'required',
+            'type' => 'required',
             'description' => 'required',
         ]);
         
@@ -63,8 +64,8 @@ class DataBrandController extends Controller
     public function show($id)
     {
         $brand = DataBrand::findOrFail($id);
-        
-        return view('data_brands.show', compact('brand'));
+        return view('data_brands.create',$brand);
+  
     }
 
     
@@ -76,9 +77,10 @@ class DataBrandController extends Controller
      */
     public function edit($id)
     {
-        $brand = DataBrand::findOrFail($id);
+        $index['brand'] = DataBrand::findOrFail($id);
+        $index['page'] = 'brands';
         
-        return view('data_brands.edit', compact('brand'));
+        return view('data_brands.edit', $index);
     }
 
     
@@ -93,6 +95,7 @@ class DataBrandController extends Controller
     {
         $data = $request->validate([
             'name' => 'required',
+            'type' => 'required', 
             'description' => 'required',
         ]);
         

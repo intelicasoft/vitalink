@@ -87,6 +87,8 @@
 								<th> @lang('equicare.company') </th>
 								<th> @lang('equicare.model') </th>
 								<th> @lang('equicare.hospital') </th>
+								<th> Accesorio de Repuesto</th>
+								<th> Marca </th>
 								<th> @lang('equicare.serial_no') </th>
 								<th> @lang('equicare.department') </th>
 								<th> @lang('equicare.unique_id') </th>
@@ -117,6 +119,8 @@
 								<td>{{ $equipment->company?? '-' }}</td>
 								<td>{{ $equipment->model ?? '-' }}</td>
 								<td>{{ $equipment->hospital?$equipment->hospital->name:'-' }}</td>
+								<td>{{ $equipment->accesory_id ?? '-' }}</td>
+								<td>{{ $equipment->brand_id ?? '-' }}</td>
 								<td>{{ $equipment->sr_no }}</td>
 								{{-- {{dd($equipment->get_department)}} --}}
 								<td>{{($equipment->get_department->short_name)??"-" }} ({{ ($equipment->get_department->name) ??'-' }})</td>
@@ -153,6 +157,7 @@
 									<button class="btn btn-warning btn-sm btn-flat marginbottom" type="submit" onclick="return confirm('@lang('equicare.are_you_sure')')" title="@lang('equicare.delete')"><span class="fa fa-trash-o" aria-hidden="true"></span></button>
 									@endif
 									{!! Form::close() !!}
+									<a href="{{ route('equipments.etiqueta',$equipment->id) }}" class="btn bg-purple btn-sm btn-flat marginbottom fa fa-download"></a>
 								</td>
 								@endif
 
@@ -170,6 +175,8 @@
 								<th> @lang('equicare.company') </th>
 								<th> @lang('equicare.model') </th>
 								<th> @lang('equicare.hospital') </th>
+								<th> Accesorio de Repuesto</th>
+								<th> Marca </th>
 								<th> @lang('equicare.serial_no') </th>
 								<th> @lang('equicare.department') </th>
 								<th> @lang('equicare.unique_id') </th>

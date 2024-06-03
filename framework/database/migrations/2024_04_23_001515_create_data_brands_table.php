@@ -18,9 +18,10 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes(); // Agrega el campo para soft deletes
             // Agrega los campos adicionales del modelo DataBrands
+            $table->string('type');
             $table->string('name');
             $table->string('description');
-            // ... Agrega más campos según tus necesidades
+    
         });
     }
 

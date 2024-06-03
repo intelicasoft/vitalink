@@ -11,6 +11,9 @@ use App\CallEntry;
 use App\Equipment;
 use App\Department;
 use App\Calibration;
+use App\Models\DataBrand;
+use App\Models\DataAccesories;
+use App\Models\DataModels;
 use Illuminate\Http\Request;
 // use App\Role;
 use Maatwebsite\Excel\Concerns\FromView;
@@ -98,6 +101,9 @@ class EquipmentController extends Controller
         $this->availibility('Create Equipments');
         $index['page'] = 'equipments';
         $index['hospitals'] = Hospital::query()->Hospital()->get();
+        $index['brands'] = DataBrand::all();
+        $index['accesories'] = DataAccesories::all();
+        $index['models'] = DataModels::all();
         $index['departments'] =
             Department::select('id', DB::raw('CONCAT(short_name," (" , name ,")") as full_name'))
                 ->pluck('full_name', 'id')
@@ -127,6 +133,13 @@ class EquipmentController extends Controller
         $equipment->department = $request->department;
         $equipment->model = $request->model;
         $equipment->qr_id = $request->qr_id;
+        $equipment->brand_id = $request->brand_id;
+        $equipment->accesory_id = $request->accesory_id;
+        $equipment->model_id = $request->model_id;
+
+
+        $equipment->latitude = $request->latitude;
+        $equipment->longitude = $request->longitude;
 
         $dateFormat = env('date_convert', 'Y-m-d');
         $date_of_purchase = !empty($request->date_of_purchase) ? DateTime::createFromFormat($dateFormat, $request->date_of_purchase)->format('Y-m-d') : null;
@@ -243,6 +256,9 @@ class EquipmentController extends Controller
         $index['page'] = 'equipments';
         $index['equipment'] = Equipment::findOrFail($id);
         $index['hospitals'] = Hospital::query()->Hospital()->get();
+        $index['brands'] = DataBrand::all();
+        $index['accesories'] = DataAccesories::all();
+        $index['models'] = DataModels::all();
         $index['departments'] =
             Department::select('id', DB::raw('CONCAT(short_name," (" , name ,")") as full_name'))
                 ->pluck('full_name', 'id')
@@ -268,6 +284,12 @@ class EquipmentController extends Controller
         $equipment->hospital_id = $request->hospital_id;
         $equipment->department = $request->department;
         $equipment->model = $request->model;
+        $equipment->brand_id = $request->brand_id;
+        $equipment->accesory_id = $request->accesory_id;
+        $equipment->model_id = $request->model_id;
+        $equipment->latitude = $request->latitude;
+        $equipment->longitude = $request->longitude;
+        
 
         // $date_of_purchase = !empty($request->date_of_purchase) ?\Carbon\Carbon::createFromFormat('m-d-Y',$request->date_of_purchase) : null;
         // $order_date = !empty($request->order_date) ?\Carbon\Carbon::createFromFormat('m-d-Y',$request->order_date) : null;
@@ -395,6 +417,15 @@ class EquipmentController extends Controller
         } else {
             return redirect('admin/equipments/create' . '?qr_id=' . $qr->uid);
         }
+    }
+
+    public function etiqueta($id){
+        // $this->availibility('View orders');
+        $pdf['page'] = 'Etiqueta';
+        $pdf['equipment'] = Equipment::find($id);
+        $pdf = PDF::loadView('equipments.etiqueta',$pdf);
+        return $pdf->download('etiqueta'.$id.'.pdf');
+        //return view('equipments.etiqueta', $pdf);
     }
 
 }
