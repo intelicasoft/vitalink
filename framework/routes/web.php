@@ -18,6 +18,14 @@ use App\Http\Controllers\StickerController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\QrController;
 use App\Http\Controllers\QrScanController;
+use App\Http\Controllers\DataBrandController;
+use App\Http\Controllers\DataAccesoriesController;
+use App\Http\Controllers\DataLotsController;
+use App\Http\Controllers\DataModelsController;
+use App\Http\Controllers\DataProvidersController;
+use App\Http\Controllers\DataZonesController;
+use App\Http\Controllers\ServiceOrdersController;
+use App\Http\Controllers\TicketsController;
 use Illuminate\Support\Facades\Artisan;
 /*
 |--------------------------------------------------------------------------
@@ -62,6 +70,25 @@ Route::group(['middleware' => ['installed_or_not', 'auth']], function () {
     Route::resource('admin/permissions', PermissionController::class);
     Route::resource('admin/hospitals', HospitalController::class);
 
+    Route::resource('admin/brands', DataBrandController::class);
+
+    Route::resource('admin/accesories', DataAccesoriesController::class);
+
+    Route::resource('admin/lots', DataLotsController::class);
+
+    Route::resource('admin/models', DataModelsController::class);
+
+    Route::resource('admin/providers', DataProvidersController::class);
+
+    Route::resource('admin/zones', DataZonesController::class);
+
+    Route::resource('admin/orders', ServiceOrdersController::class);
+    Route::get('orders/reportes_pdf',[ServiceOrdersController::class,'reportes_pdf'])->name('orders.reportes_pdf');
+    Route::get('orders/pdf/{id}',[ServiceOrdersController::class,'pdf'])->name('orders.pdf');
+    Route::get('orders/updateStatus/{id}', [ServiceOrdersController::class, 'updateStatus'])->name('orders.updateStatus');
+
+    Route::resource('admin/tickets', TicketsController::class);
+
     Route::get('/admin/equipment/qr/{id}', [EquipmentController::class,'qr'])->name('equipments.qr');
     Route::get('/admin/equipment/qr-image/{id}', [EquipmentController::class,'qr_image'])->name('equipments.qrimage');
     Route::get('/admin/equipments/qr/regen', [EquipmentController::class,'regenerate_all_qr'])->name('equipments.regen');
@@ -72,6 +99,8 @@ Route::group(['middleware' => ['installed_or_not', 'auth']], function () {
     Route::delete('/admin/equipments/{equipment}', [EquipmentController::class,'destroy'])->name('equipments.destroy');
     Route::patch('/admin/equipments/{equipment}', [EquipmentController::class,'update'])->name('equipments.update');
     Route::get('/admin/equipments/{equipment}/edit', [EquipmentController::class,'edit'])->name('equipments.edit');
+    
+    Route::get('/admin/equipments/{equipment}', [EquipmentController::class,'etiqueta'])->name('equipments.etiqueta');
 
 
     Route::resource('admin/departments', DepartmentController::class);

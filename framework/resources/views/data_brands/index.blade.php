@@ -16,10 +16,9 @@
 			<div class="box box-primary">
 			<div class="box-header">
 				<h4 class="box-title"> Manejar Marcas
-						@can('Create brands')
+						@if(Auth::user()->can('Create brands'))
                             <a href="{{ route('brands.create') }}" class="btn btn-primary btn-flat">Agregar</a></h4>
-                        @endcan
-						<a href="{{ route('brands.create') }}" class="btn btn-primary btn-flat">Agregar</a></h4>
+                        @endif
 				</div>
 
 				<div class="box-body table-responsive">
@@ -30,10 +29,9 @@
 								<th> @lang('equicare.nombre')</th>
 								<th> Tipo de Marca </th>
 								<th> @lang('equicare.descripcion') </th>
-								{{-- @if(Auth::user()->can('Edit brands') || Auth::user()->can('Delete Hospitals'))
+								@if(Auth::user()->can('Edit brands') || Auth::user()->can('Delete brands'))
 								<th> @lang('equicare.action')</th>
-								@endif --}}
-                                <th> @lang('equicare.action')</th>
+								@endif 
 							</tr>
 						</thead>
 						<tbody>
@@ -51,19 +49,19 @@
 							<td> {{ $brand->type ?? '-' }}</td>
 							<td> {{ $brand->description ?? '-' }}</td>
 							
-							{{-- @if(Auth::user()->can('Edit Hospitals') || Auth::user()->can('Delete Hospitals'))
-                        	<td>
-								{!! Form::open(['url' => 'admin/hospitals/'.$hospital->id,'method'=>'DELETE','class'=>'form-inline']) !!}
-									@can('Edit Hospitals')
-									<a href="{{ route('hospitals.edit',$hospital->id) }}" class="btn bg-purple btn-sm btn-flat" title="@lang('equicare.edit')"><i class="fa fa-edit"></i>  </a>
-									@endcan &nbsp;
-		                            <input type="hidden" name="id" value="{{ $hospital->id }}">
-		                            @can('Delete Hospitals')
-		                            <button class="btn btn-warning btn-sm btn-flat" type="submit" onclick="return confirm('@lang('equicare.are_you_sure')')" title="@lang('equicare.delete')"><span class="fa fa-trash-o" aria-hidden="true"></span></button>
-		                            @endcan
-		                        {!! Form::close() !!}
-							</td>
-							@endif --}}
+							@if(Auth::user()->can('Edit brands') || Auth::user()->can('Delete brands'))
+								<td>
+									{!! Form::open(['url' => 'admin/brands/'.$brand->id,'method'=>'DELETE','class'=>'form-inline']) !!}
+										@can('Edit brands')
+										<a href="{{ route('brands.edit',$brand->id) }}" class="btn bg-purple btn-sm btn-flat" title="@lang('equicare.edit')"><i class="fa fa-edit"></i>  </a>
+										@endcan &nbsp;
+										<input type="hidden" name="id" value="{{ $brand->id }}">
+										@can('Delete brands')
+										<button class="btn btn-warning btn-sm btn-flat" type="submit" onclick="return confirm('@lang('equicare.are_you_sure')')" title="@lang('equicare.delete')"><span class="fa fa-trash-o" aria-hidden="true"></span></button>
+										@endcan
+									{!! Form::close() !!}
+								</td>
+							@endif
 						</tr>
 						@endforeach
 						@endif
@@ -74,7 +72,7 @@
 								<th> Nombre</th>
 								<th> Tipo de Marca </th>
 								<th> Descripcion </th>
-								@if(Auth::user()->can('Edit Brands') || Auth::user()->can('Delete Brands'))
+								@if(Auth::user()->can('Edit brands') || Auth::user()->can('Delete brands'))
 								<th> @lang('equicare.action')</th>
 								@endif
 							</tr>

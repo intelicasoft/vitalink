@@ -9,6 +9,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class DataZones extends Model
 {
     use SoftDeletes;
+    protected $fillable = [
+        'status',
+        'name',
+        'zone',
+        'manager_email',
+        'client_id',
+    ];
 
     use HasFactory;
 }

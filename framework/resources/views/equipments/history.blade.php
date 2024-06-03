@@ -31,6 +31,11 @@
                <div class="row">
                   @include('equipments.equipment')
                </div>
+               <div class="row">
+                  <div class="col-md-12">
+                     <h4>Distancia al equipo desde tu ubicación: <span id="distance"></span> km</h4>
+                  </div>
+               </div>
             </div>
          </div>
          
@@ -64,8 +69,6 @@
                            <a href="{{ route('breakdown_maintenance.edit',$d['id']) }}" title="@lang('equicare.edit')" class="h4"><i class="fa fa-edit purple-color" ></i> @lang('equicare.edit') </a>
                         @elseif($d['type'] == 'Call' && $d['call_type'] == 'preventive')
                            <a href="{{ route('preventive_maintenance.edit',$d['id']) }}" title="@lang('equicare.edit')" class="h4"><i class="fa fa-edit purple-color" ></i> @lang('equicare.edit') </a>
-                        @else
-                           <a href="{{ route('calibration.edit',$d['id']) }}" title="@lang('equicare.edit')" class="h4"><i class="fa fa-edit purple-color" ></i> @lang('equicare.edit') </a>
                         @endif
                      </span>
                      <h3 class="timeline-header text-blue">
@@ -114,4 +117,40 @@
       </div>
    </div>
 </div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    if (navigator.geolocation) {
+         navigator.geolocation.getCurrentPosition(function(position) {
+            const userLat = position.coords.latitude;
+            const userLng = position.coords.longitude;
+            const equipmentLat = {{$equipment->latitude}};
+            const equipmentLng = {{$equipment->longitude}};
+            const distance = haversine(userLat, userLng, equipmentLat, equipmentLng);
+            document.getElementById('distance').innerText = distance.toFixed(2);
+            console.log(distance);
+            // Mostrar alerta si la distancia es menor a 2 km
+            if (distance > 1) {
+                alert('Te encuentras fuera de la zona permitida, la revision no es valida y se le notificara al administrador.');
+            }
+        });
+    } else {
+        alert('Geolocation is not supported by this browser.');
+    }
+});
+
+function haversine(lat1, lon1, lat2, lon2) {
+    function toRad(x) {
+        return x * Math.PI / 180;
+    }
+
+    const R = 6371; // Radius of the Earth in km
+    const dLat = toRad(lat2 - lat1);
+    const dLon = toRad(lon2 - lon1);
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+              Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+              Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+}
+</script>
 @endsection

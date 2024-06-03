@@ -20,11 +20,19 @@ class CreateEquipmentTable extends Migration {
 			$table->string('short_name')->nullable();
 			$table->string('user_id')->nullable();
 			$table->integer('hospital_id')->nullable();
+			$table->integer('brand_id')->nullable();
+			$table->integer('accesory_id')->nullable();
+			$table->integer('model_id')->nullable();
+			$table->string('address')->nullable(); //geolocalization
 			$table->string('company')->nullable();
 			$table->string('model')->nullable();
 			$table->string('sr_no')->nullable();
 			$table->string('unique_id')->unique()->nullable();
 			$table->string('department')->nullable();
+
+			$table->string('latitude')->nullable();
+			$table->string('longitude')->nullable();
+			
 			$table->date('order_date')->nullable()->default(null);
 			$table->date('date_of_purchase')->nullable()->default(null);
 			$table->date('date_of_installation')->nullable()->default(null);
@@ -33,6 +41,7 @@ class CreateEquipmentTable extends Migration {
 			$table->boolean('is_critical')->nullable();
 			$table->text('notes')->nullable();
 			$table->string('qr_id')->nullable();
+
 			$table->SoftDeletes();
 			$table->timestamps();
 		});

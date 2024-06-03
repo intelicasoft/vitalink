@@ -49,6 +49,11 @@
     padding-top: 6px;
 
     }
+    .modal table{
+      word-wrap: anywhere;
+     word-break: break-word;
+    }
+    
   </style>
 </head>
 <body class="hold-transition skin-black-light sidebar-mini fixed">
@@ -134,239 +139,336 @@
           </a>
         </li>
 
-        <li class="{{ $page=='hospitals'?'active':'' }}">
-          {{-- <a href="{{ url('/admin/accessories') }}"> --}}
-            <a href="{{ url('/admin/hospitals') }}">
+        <li class="{{ $page=='accesories'?'active':'' }}">
+            <a href="{{ url('/admin/accesories') }}">
             <i class="fa fa-wrench"></i> <span>Accesorios</span>
           </a>
         </li>
 
-        <li class="{{ $page=='equipments'?'active':'' }}">
-          <a href="{{ url('/admin/equipments') }}">
-            <i class="fa fa-stethoscope"></i> <span>Equipos Clinicos</span>
-          </a>
-        </li>
-
-        <li class="{{ $page=='hospitals'?'active':'' }}">
-          {{-- <a href="{{ url('/admin/lots') }}"> --}}
-            <a href="{{ url('/admin/hospitals') }}">
+        <li class="{{ $page=='lots'?'active':'' }}">
+            <a href="{{ url('/admin/lots') }}">
             <i class="fa fa-cubes"></i> <span>Lotes</span>
           </a>
         </li>
-        {{-- primera prueba --}}
+
         <li class="{{ $page=='brands'?'active':'' }}">
           <a href="{{ url('/admin/brands') }}">
             <i class="fa fa-tag"></i> <span>Marcas</span>
           </a>
         </li>
 
-        <li class="{{ $page=='hospitals'?'active':'' }}">
-          {{-- <a href="{{ url('/admin/models') }}"> --}}
-            <a href="{{ url('/admin/hospitals') }}">
+        <li class="{{ $page=='models'?'active':'' }}">
+            <a href="{{ url('/admin/models') }}">
             <i class="fa fa-book"></i> <span>Modelos</span>
           </a>
         </li>
 
         <li class="{{ $page=='hospitals'?'active':'' }}">
-          {{-- <a href="{{ url('/admin/providers') }}"> --}}
-            <a href="{{ url('/admin/hospitals') }}">
+          <a href="{{ url('/admin/providers') }}"> 
             <i class="fa fa-truck"></i> <span>Proveedores</span>
           </a>
         </li>
 
-        <li class="{{ $page=='hospitals'?'active':'' }}">
-          {{-- <a href="{{ url('/admin/qr-reader') }}"> --}}
-            <a href="{{ url('/admin/hospitals') }}">
-            <i class="fa fa-qrcode"></i> <span>Leer codigo QR</span>
+        <li class="{{ $page=='zones'?'active':'' }}">
+          <a href="{{ url('/admin/zones') }}">
+            <i class="fa fa-tag"></i> <span>Zonas</span>
           </a>
         </li>
 
         <li class="{{ $page=='hospitals'?'active':'' }}">
-          {{-- <a href="{{ url('/admin/tickets') }}"> --}}
-            <a href="{{ url('/admin/hospitals') }}">
+            <a href="{{ url('/admin/tickets') }}">
             <i class="fa fa-ticket"></i> <span>Tickets</span>
           </a>
         </li>
 
         <li class="{{ $page=='hospitals'?'active':'' }}">
-          {{-- <a href="{{ url('/admin/service-orders') }}"> --}}
-            <a href="{{ url('/admin/hospitals') }}">
+            <a href="{{ url('/admin/orders') }}">
             <i class="fa fa-file-text-o"></i> <span>Órdenes de servicio</span>
           </a>
         </li>
+        
 
-        <li class="{{ $page=='hospitals'?'active':'' }}">
-          <a href="{{ url('/admin/hospitals') }}">
+@if(auth()->user()->hasDirectPermission('View Hospitals'))
+    <li class="{{ $page=='hospitals'?'active':'' }}">
+        <a href="{{ url('/admin/hospitals') }}">
             <i class="fa fa-hospital-o"></i> <span>@lang('equicare.hospital')</span>
-          </a>
-        </li>
+        </a>
+    </li>
+@endif
 
-        <li class="{{ $page=='departments'?'active':'' }}">
+{{-- @if(auth()->user()->hasDirectPermission('View QR Generate'))
+    <li class="{{ $page=='qr'?'active':'' }}">
+        <a href="{{ url('/admin/qr') }}">
+            <i class="fa fa-qrcode"></i> <span>@lang('equicare.qr_generate')</span>
+        </a>
+    </li>
+@endif --}}
+
+@if(auth()->user()->hasDirectPermission('View QR Scan'))
+    <li class="{{ $page=='qr-scan'?'active':'' }}">
+        <a href="{{ url('/admin/qr-scan') }}">
+            <i class="fa fa-qrcode"></i> <span>@lang('equicare.qr-scan')</span>
+        </a>
+    </li>
+@endif
+
+
+
+@if(auth()->user()->hasDirectPermission('View Equipments'))
+    <li class="{{ $page=='equipments'?'active':'' }}">
+        <a href="{{ url('/admin/equipments') }}">
+          <i class="fa fa-stethoscope"></i> <span>Equipos Clinicos</span>
+        </a>
+    </li>
+@endif
+
+
+<li class="treeview menu-open active">
+  <a href="#" class="">
+      <i class="fa fa-phone"></i> <span>Extras</span>
+      <span class="pull-right-container">
+          <i class="fa fa-angle-left pull-right"></i>
+      </span>
+  </a>
+  <ul class="treeview-menu" style=display:block;>
+      @if(auth()->user()->hasDirectPermission('View Departments'))
+      <li class="{{ $page=='departments'?'active':'' }}">
           <a href="{{ url('/admin/departments') }}">
-            <i class="fa fa-wrench"></i> <span>@lang('equicare.departments')</span>
+              <i class="fa fa-building"></i> <span>@lang('equicare.departments')</span>
           </a>
-        </li>
-
-        
-        
-        @if($page == "breakdown_maintenance" || $page == "preventive_maintenance")
-            @php($class="treeview menu-open")
-            @php($active = "active")
-            @php($menu="style=display:block;")
-            @else
-            @php($class="treeview")
-            @php($active = "")
-            @php($menu="")
-            @endif
-
-         <li class="{{ $class }} {{ $active }}">
-          <a href="#" class="">
-            <i class="fa fa-gear"></i> <span>Mantenimientos</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu" {{ $menu }}>
-            <li class="{{ $page=='breakdown_maintenance'?'active':'' }}">
-              <a href="{{ url('admin/call/breakdown_maintenance') }}">
-                <i class="fa fa-minus-circle"></i> @lang('equicare.breakdown_maintenance')
-              </a>
-            </li>
-            <li class="{{ $page=='preventive_maintenance'?'active':'' }}">
-              <a href="{{ url('admin/call/preventive_maintenance') }}">
-                <i class="fa fa-barcode"></i> @lang('equicare.preventive_maintenance')
-              </a>
-            </li>
-          </ul>
-        </li>
-
-        <li class="{{ $page=='calibrations'?'active':'' }}">
-          <a href="{{ url('admin/calibration') }}">
+      </li>
+      @endif
+      @if(auth()->user()->hasDirectPermission('View Calibrations'))
+    <li class="{{ $page=='calibrations'?'active':'' }}">
+        <a href="{{ url('admin/calibration') }}">
             <i class="fa fa-balance-scale"></i> <span>@lang('equicare.calibrations')</span>
-          </a>
-        </li>
-
-        <li class="{{ $page=='maintenance_cost'?'active':'' }}">
-          <a href="{{ url('admin/maintenance_cost') }}">
+        </a>
+    </li>
+    @endif
+    @if(auth()->user()->hasDirectPermission('View Maintenance Cost'))
+    <li class="{{ $page=='maintenance_cost'?'active':'' }}">
+        <a href="{{ url('admin/maintenance_cost') }}">
             <i class="fa fa-usd"></i> <span>@lang('equicare.maintenance_cost')</span>
-          </a>
-        </li>
-        @if($page == "reports/time_indicator" || $page == "reports/equipments")
-            @php($class="treeview menu-open")
-            @php($active = "active")
-            @php($menu="style=display:block;")
-            @else
-            @php($class="treeview")
-            @php($active = "")
-            @php($menu="")
-            @endif
-        <li class="{{ $class }} {{ $active }}">
-          <a href="#" class="">
-            <i class="fa fa-th"></i> <span>@lang('equicare.reports')</span>
+        </a>
+    </li>
+    @endif
+
+    @if(auth()->user()->hasDirectPermission('View Calibration Stickers'))
+            <li class="{{ $page=='calibrations_sticker'?'active':'' }}">
+                <a href="{{ url('admin/calibrations_sticker') }}">
+                    <i class="fa fa-tags"></i> <span>@lang('equicare.calibrations_sticker')</span>
+                </a>
+            </li>
+    @endif
+
+    {{-- ACTIVAR LOS RECORDATRORIOS --}}
+    <li class="">
+      <a href="">
+          <i class="fa fa-barcode"></i> <span>@lang('equicare.reminder')</span>
+      </a>
+    </li>
+
+    <li class="">
+      <a href="">
+          <i class="fa fa-barcode"></i> <span>@lang('equicare.reports')</span>
+      </a>
+    </li>
+
+
+  </ul>
+</li>
+
+@if(auth()->user()->hasDirectPermission('View Breakdown Maintenance') || auth()->user()->hasDirectPermission('View Preventive Maintenance'))
+    @if($page == "breakdown_maintenance" || $page == "preventive_maintenance")
+        @php($class="treeview menu-open")
+        @php($active = "active")
+        @php($menu="style=display:block;")
+    @else
+        @php($class="treeview")
+        @php($active = "")
+        @php($menu="")
+    @endif
+
+    <li class="{{ $class }} {{ $active }}">
+        <a href="#" class="">
+            <i class="fa fa-phone"></i> <span>Mantenimientos</span>
             <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
+                <i class="fa fa-angle-left pull-right"></i>
             </span>
-          </a>
-          <ul class="treeview-menu" {{ $menu }}>
+        </a>
+        <ul class="treeview-menu" {{ $menu }}>
+            @if(auth()->user()->hasDirectPermission('View Breakdown Maintenance'))
+                <li class="{{ $page=='breakdown_maintenance'?'active':'' }}">
+                    <a href="{{ url('admin/call/breakdown_maintenance') }}">
+                        <i class="fa fa-minus-circle"></i> @lang('equicare.breakdown_maintenance')
+                    </a>
+                </li>
+            @endif
+            @if(auth()->user()->hasDirectPermission('View Preventive Maintenance'))
+                <li class="{{ $page=='preventive_maintenance'?'active':'' }}">
+                    <a href="{{ url('admin/call/preventive_maintenance') }}">
+                        <i class="fa fa-barcode"></i> @lang('equicare.preventive_maintenance')
+                    </a>
+                </li>
+            @endif
+        </ul>
+    </li>
+@endif
+
+
+
+{{-- Informes --}}
+
+{{-- @if($page == "reports/time_indicator" || $page == "reports/equipments")
+    @php($class="treeview menu-open")
+    @php($active = "active")
+    @php($menu="style=display:block;")
+@else
+    @php($class="treeview")
+    @php($active = "")
+    @php($menu="")
+@endif
+
+<li class="{{ $class }} {{ $active }}">
+    <a href="#" class="">
+        <i class="fa fa-th"></i> <span>@lang('equicare.reports')</span>
+        <span class="pull-right-container">
+            <i class="fa fa-angle-left pull-right"></i>
+        </span>
+    </a>
+    <ul class="treeview-menu" {{ $menu }}>
+        @if(auth()->user()->hasDirectPermission('View Time Indicator Report'))
             <li class="{{ $page=='reports/time_indicator'?'active':'' }}">
-              <a href="{{ url('admin/reports/time_indicator') }}">
-                <i class="fa fa-clock-o"></i> <span>@lang('equicare.time_indicator')</span>
-              </a>
+                <a href="{{ url('admin/reports/time_indicator') }}">
+                    <i class="fa fa-clock-o"></i> <span>@lang('equicare.time_indicator')</span>
+                </a>
             </li>
-            <li class="{{ $page=='reports/equipments'?'active':'' }}">
-              <a href="{{ url('admin/reports/equipments') }}">
+        @endif
+        @if(auth()->user()->hasDirectPermission('View Equipments Report'))
+        <li class="{{ $page=='reports/equipments'?'active':'' }}">
+            <a href="{{ url('admin/reports/equipments') }}">
                 <i class="fa fa-wrench"></i> <span>@lang('equicare.equipment_report')</span>
-              </a>
-            </li>
-          </ul>
+            </a>
         </li>
-        @php($date = date('Y-m-d',strtotime('+15 days')))
-        @php($preventive_reminder_count = \App\CallEntry::where('call_type','preventive')->where('next_due_date','<=',$date)->count())
-        @php($calibrations_reminder_count = \App\Calibration::where('due_date','<=',$date)->count())
-        @if($page == "preventive_maintenance_reminder" || $page == "calibrations_reminder")
-            @php($class="treeview menu-open")
-            @php($active = "active")
-            @php($menu="style=display:block;")
-            @else
-            @php($class="treeview")
-            @php($active = "")
-            @php($menu="")
-            @endif
-        <li class="{{ $class }} {{ $active }}">
-          <a href="#" class="">
-            <i class="fa fa-clock-o"></i> <span>@lang('equicare.reminder')</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu" {{ $menu }}>
-            <li class="{{ $page=='preventive_maintenance_reminder'?'active':'' }}">
-              <a href="{{ url('admin/reminder/preventive_maintenance') }}">
+        @endif
+    </ul>
+</li> --}}
+
+
+
+  {{-- Recordatorios --}}
+  {{-- @php($preventive_reminder_count = \App\CallEntry::query()->Hospital()
+			->where('call_type', 'preventive')
+			->whereDate('next_due_date', '<=', \Carbon\Carbon::now()->addDays(20))
+			->whereNotExists(function ($query) {
+				$query->select(DB::raw(1))
+					->from('call_entries as ce2')
+					->whereColumn('ce2.equip_id', '=', 'call_entries.equip_id')
+					->where('ce2.call_type', '=', 'preventive')
+					->where('ce2.created_at', '>', DB::raw('call_entries.created_at'))
+					->whereNull('ce2.deleted_at');
+				})
+			->count())
+  @php($calibrations_reminder_count = \App\Calibration::query()->Hospital()
+			->whereDate('due_date', '<=', \Carbon\Carbon::now()->addDays(20))
+			->whereNotExists(function ($query) {
+				$query->select(DB::raw(1))
+					->from('calibrations as cal2')
+					->whereColumn('cal2.equip_id', '=', 'calibrations.equip_id')
+					->where('cal2.created_at', '>', DB::raw('calibrations.created_at'))
+					->whereNull('cal2.deleted_at');
+			})->count())
+
+@if($page == "preventive_maintenance_reminder" || $page == "calibrations_reminder")
+    @php($class="treeview menu-open")
+    @php($active = "active")
+    @php($menu="style=display:block;")
+@else
+    @php($class="treeview")
+    @php($active = "")
+    @php($menu="")
+@endif
+
+<li class="{{ $class }} {{ $active }}">
+    <a href="#" class="">
+        <i class="fa fa-clock-o"></i> <span>@lang('equicare.reminder')</span>
+        <span class="pull-right-container">
+            <i class="fa fa-angle-left pull-right"></i>
+        </span>
+    </a>
+    <ul class="treeview-menu" {{ $menu }}>
+        <li class="{{ $page=='preventive_maintenance_reminder'?'active':'' }}">
+            <a href="{{ url('admin/reminder/preventive_maintenance') }}">
                 <i class="fa fa-barcode"></i> <span>@lang('equicare.preventive_reminder')</span>
                 @if($preventive_reminder_count > 0)
-                <span class="badge label-danger">{{ $preventive_reminder_count }}</span>
+                    <span class="badge label-danger">{{ $preventive_reminder_count }}</span>
                 @endif
-              </a>
-            </li>
-            <li class="{{ $page=='calibrations_reminder'?'active':'' }}">
-              <a href="{{ url('admin/reminder/calibration') }}">
+            </a>
+        </li>
+        <li class="{{ $page=='calibrations_reminder'?'active':'' }}">
+            <a href="{{ url('admin/reminder/calibration') }}">
                 <i class="fa fa-balance-scale"></i> <span>@lang('equicare.calibrations_reminder')</span>
                 @if($calibrations_reminder_count > 0)
-                <span class="badge label-danger">{{ $calibrations_reminder_count }}</span>
+                    <span class="badge label-danger">{{ $calibrations_reminder_count }}</span>
                 @endif
-              </a>
-            </li>
-          </ul>
+            </a>
         </li>
-        <li class="{{ $page=='calibrations_sticker'?'active':'' }}">
-          <a href="{{ url('admin/calibrations_sticker') }}">
-            <i class="fa fa-tags"></i> <span>@lang('equicare.calibrations_sticker')</span>
-          </a>
-        </li>
+    </ul>
+</li> --}}
+    
 
-        @role('Admin')
-        <li class="{{ $page=='settings'?'active':'' }}">
-          <a href="{{ url('admin/settings') }}">
+@if(auth()->user()->hasRole('Admin'))
+    <li class="{{ $page=='settings'?'active':'' }}">
+        <a href="{{ url('admin/settings') }}">
             <i class="fa fa-cog"></i> <span>@lang('equicare.settings')</span>
-          </a>
-        </li>
+        </a>
+    </li>
 
-        @if($page == "users" || $page == "roles" || $page == "permissions")
-            @php($class="treeview menu-open")
-            @php($active = "active")
-            @php($menu="style=display:block;")
-            @else
-            @php($class="treeview")
-            @php($active = "")
-            @php($menu="")
-            @endif
+    @php($class="")
+    @php($active = "")
+    @php($menu="")
 
-         <li class="{{ $class }} {{ $active }}">
-          <a href="#" class="">
+    @if($page == "users" || $page == "roles" || $page == "permissions")
+        @php($class="treeview menu-open")
+        @php($active = "active")
+        @php($menu="style=display:block;")
+    @else
+        @php($class="treeview")
+        @php($active = "")
+        @php($menu="")
+    @endif
+
+    <li class="{{ $class }} {{ $active }}">
+        <a href="#" class="">
             <i class="fa fa-users"></i> <span>@lang('equicare.user_permission')</span>
             <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
+                <i class="fa fa-angle-left pull-right"></i>
             </span>
-          </a>
-          <ul class="treeview-menu" {{ $menu }}>
+        </a>
+        <ul class="treeview-menu" {{ $menu }}>
             <li class="{{ $page=='users'?'active':'' }}">
               <a href="{{ url('admin/permissions') }}">
                 <i class="fa fa-user"></i> @lang('equicare.user_permission')
               </a>
             </li>
-            <li class="{{ $page=='users'?'active':'' }}">
-              <a href="{{ url('admin/users') }}">
-                <i class="fa fa-user"></i> @lang('equicare.users')
-              </a>
-            </li>
-            <li class="{{ $page=='roles'?'active':'' }}">
-              <a href="{{ url('admin/roles') }}">
-                <i class="fa fa-unlock-alt"></i> @lang('equicare.roles')
-              </a>
-            </li>
-          </ul>
-        </li>
-        @endrole
+            @if(auth()->user()->hasDirectPermission('View Users'))
+                <li class="{{ $page=='users'?'active':'' }}">
+                    <a href="{{ url('admin/users') }}">
+                        <i class="fa fa-user"></i> @lang('equicare.users')
+                    </a>
+                </li>
+            @endif
+            @if(auth()->user()->hasDirectPermission('View Roles'))
+                <li class="{{ $page=='roles'?'active':'' }}">
+                    <a href="{{ url('admin/roles') }}">
+                        <i class="fa fa-unlock-alt"></i> @lang('equicare.roles')
+                    </a>
+                </li>
+            @endif
+        </ul>
+    </li>
+@endif
+
       </ul>
     </section>
     <!-- /.sidebar -->
@@ -399,7 +501,7 @@
   <!-- /.content-wrapper -->
   <footer class="main-footer">
     <div class="pull-right hidden-xs">
-      <b>Version</b> 2.0.1
+      <b>Version</b> 2.2.1
     </div>
     <strong>@lang('equicare.copyright') &copy; 2019-{{ date('Y') }} <a href="https://hyvikk.com" target="_blank">Hyvikk</a>.</strong> @lang('equicare.all_rights_reserved').
   </footer>
@@ -448,10 +550,32 @@
       radioClass: 'iradio_minimal-blue',
       // increaseArea: '20%' /* optional */
     });
+    $('.phone').on('input', function(event) {
+    var maxLength = 20; // Define the maximum length allowed
+    // Check if the length of the input value exceeds the maximum length
+    if ($(this).val().length > maxLength) {
+        // If the length exceeds the maximum, truncate the input value
+        $(this).val($(this).val().slice(0, maxLength));
+    }
+});
+$('input[type="text"]').on('input', function(event) {
+    // console.log('test');
+    // Get the current value of the input field
+    var inputValue = $(this).val();
+    
+    // Define a regular expression pattern to allow only alphanumeric characters and spaces
+    var regex = /^[a-zA-Z0-9\s]*$/;
+    
+    // Test if the input matches the regular expression
+    if (!regex.test(inputValue)) {
+        // If the input contains special characters, remove them and update the input field
+        $(this).val(inputValue.replace(/[^\w\s]/gi, ''));
+    }
+});
   });
 </script>
 <!-- AdminLTE for demo purposes -->
-<script src="{{ asset('assets/js/demo.js') }}"></script>
+<script src="{{ asset('assets/js/demo.js?v=1.1.2') }}"></script>
 <script type="text/javascript">
   $(document).ready(function(){
      @if(session('flash_message'))

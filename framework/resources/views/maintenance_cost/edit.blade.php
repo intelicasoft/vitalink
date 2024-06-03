@@ -21,6 +21,7 @@
 				<h4 class="box-title">@lang('equicare.maintenance_cost_edit')</h4>
 			</div>
 			<div class="box-body ">
+				@include ('errors.list')
 				{{-- <form class="form" method="post" action="{{ route('maintenance_cost.update',$maintenance_cost->id) }}"> --}}
 					{!! Form::open
 						(
