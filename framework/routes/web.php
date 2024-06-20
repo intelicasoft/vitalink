@@ -26,6 +26,7 @@ use App\Http\Controllers\DataProvidersController;
 use App\Http\Controllers\DataZonesController;
 use App\Http\Controllers\ServiceOrdersController;
 use App\Http\Controllers\TicketsController;
+use App\Http\Controllers\ReviewsController;
 use Illuminate\Support\Facades\Artisan;
 /*
 |--------------------------------------------------------------------------
@@ -88,6 +89,8 @@ Route::group(['middleware' => ['installed_or_not', 'auth']], function () {
     Route::get('orders/updateStatus/{id}', [ServiceOrdersController::class, 'updateStatus'])->name('orders.updateStatus');
 
     Route::resource('admin/tickets', TicketsController::class);
+
+    Route::resource('admin/reviews', ReviewsController::class);
 
     Route::get('/admin/equipment/qr/{id}', [EquipmentController::class,'qr'])->name('equipments.qr');
     Route::get('/admin/equipment/qr-image/{id}', [EquipmentController::class,'qr_image'])->name('equipments.qrimage');

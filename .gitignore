@@ -1,0 +1,77 @@
+# Laravel & Lumen
+/vendor
+/node_modules
+
+# Laravel 4 specific
+bootstrap/compiled.php
+app/storage
+
+# Laravel 5 & Lumen specific
+public/storage
+public/hot
+storage/*.key
+.env
+Homestead.yaml
+Homestead.json
+.env.testing
+
+# Cache, session files and logs
+storage/framework/cache/data/*
+storage/logs/*
+storage/framework/sessions/*
+storage/framework/views/*
+storage/app/public
+
+# Laravel Mix
+/public/hot
+/public/storage
+/public/mix-manifest.json
+/node_modules
+/npm-debug.log
+yarn-error.log
+yarn-debug.log
+
+# NPM & Yarn
+node_modules
+npm-debug.log*
+yarn-error.log*
+
+# Vagrant
+.vagrant
+
+# IDE
+/.idea
+/.vscode
+*.sublime-project
+*.sublime-workspace
+
+# Debugbar
+/storage/debugbar
+
+# Composer
+vendor/
+
+# Backup files
+*.bak
+*.backup
+*.tmp
+*.swp
+
+# Log files
+*.log
+
+# Temporary files
+*.tmp
+*.swp
+
+# System Files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msm
+*.msp
+*.lnk

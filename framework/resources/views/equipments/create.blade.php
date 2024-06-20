@@ -181,8 +181,8 @@
 						<div class="form-group col-md-12">
 							<div id="map" style="width: 100%; height: 400px;"></div>
 						</div>
-						<input type="hidden" name="latitude" id="latitude" value="{{ old('latitude') }}">
-						<input type="hidden" name="longitude" id="longitude" value="{{ old('longitude') }}">
+						<input type="hidden" name="latitude" id="latitude" value="{{ old('latitude' ,'20.644584169156285') }}">
+						<input type="hidden" name="longitude" id="longitude" value="{{ old('longitude','-103.33724912940228') }}">
 
 
 						<div class="form-group col-md-12">
@@ -222,6 +222,7 @@
 	<script>
 		function initMap() {
 			var initialLocation = { lat: 20.659698, lng: -103.349609 }; // Ubicación inicial
+
 			var map = new google.maps.Map(document.getElementById('map'), {
 				zoom: 8,
 				center: initialLocation

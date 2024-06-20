@@ -218,7 +218,15 @@
 	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMCnFrl_hkFXPXNj3ksPb_fkygp_HNOh8&callback=initMap" async defer></script>
 	<script>
 		function initMap() {
-			var initialLocation = { lat: parseFloat('{{ $equipment->latitude }}'), lng: parseFloat('{{ $equipment->longitude }}') }; // Ubicación inicial
+			var initialLocation;
+
+			// Verificar si hay datos en equipment
+			@if(isset($equipment) && !empty($equipment->latitude) && !empty($equipment->longitude))
+				initialLocation = { lat: parseFloat('{{ $equipment->latitude }}'), lng: parseFloat('{{ $equipment->longitude }}') };
+			@else
+				initialLocation = { lat: 20.659698, lng: -103.349609 }; // Ubicación inicial predeterminada
+			@endif
+
 			var map = new google.maps.Map(document.getElementById('map'), {
 				zoom: 8,
 				center: initialLocation
