@@ -186,7 +186,13 @@
             <i class="fa fa-file-text-o"></i> <span>Órdenes de servicio</span>
           </a>
         </li>
-        
+
+        <li class="{{ $page=='reviews'?'active':'' }}">
+          <a href="{{ url('/admin/reviews') }}">
+          <i class="fa fa-file-text-o"></i> <span>Revisiones</span>
+          </a>
+        </li>
+
 
 @if(auth()->user()->hasDirectPermission('View Hospitals'))
     <li class="{{ $page=='hospitals'?'active':'' }}">
@@ -223,7 +229,7 @@
 @endif
 
 
-<li class="treeview menu-open active">
+{{-- <li class="treeview menu-open active">
   <a href="#" class="">
       <i class="fa fa-phone"></i> <span>Extras</span>
       <span class="pull-right-container">
@@ -261,7 +267,7 @@
             </li>
     @endif
 
-    {{-- ACTIVAR LOS RECORDATRORIOS --}}
+    ACTIVAR LOS RECORDATORIOS
     <li class="">
       <a href="">
           <i class="fa fa-barcode"></i> <span>@lang('equicare.reminder')</span>
@@ -276,7 +282,7 @@
 
 
   </ul>
-</li>
+</li> --}}
 
 @if(auth()->user()->hasDirectPermission('View Breakdown Maintenance') || auth()->user()->hasDirectPermission('View Preventive Maintenance'))
     @if($page == "breakdown_maintenance" || $page == "preventive_maintenance")
