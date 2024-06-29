@@ -23,7 +23,7 @@
 						{{ csrf_field() }}
 						{{ method_field('PATCH') }}
 						<div class="row">
-						<div class="form-group col-md-6">
+						{{-- <div class="form-group col-md-6">
 							<label for="name"> @lang('equicare.name') </label>
 							<input type="text" name="name" class="form-control"
 							value="{{ $equipment->name }}" />
@@ -32,17 +32,17 @@
 							<label for="short_name"> @lang('equicare.short_name_eq') </label>
 							<input type="text" name="short_name" class="form-control"
 							value="{{ $equipment->short_name }}" />
-						</div>
+						</div> --}}
 						<div class="form-group col-md-6">
 							<label for="company"> @lang('equicare.company') </label>
 							<input type="text" name="company" class="form-control"
 							value="{{ $equipment->company }}" />
 						</div>
-						<div class="form-group col-md-6">
+						{{-- <div class="form-group col-md-6">
 							<label for="model"> @lang('equicare.model') </label>
 							<input type="text" name="model" class="form-control"
 							value="{{ $equipment->model }}" />
-						</div>
+						</div> --}}
 						<div class="form-group col-md-6">
 							<label for="sr_no"> @lang('equicare.serial_number') </label>
 							<input type="text" name="sr_no" class="form-control"

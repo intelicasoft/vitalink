@@ -53,6 +53,8 @@ class HospitalController extends Controller
 		$hospital->user_id = Auth::user()->id;
 		$hospital->mobile_no = $request->mobile_no;
 		$hospital->address = $request->address;
+		$hospital->latitude = $request->latitude;
+		$hospital->longitude = $request->longitude;
 		$yourString = $hospital->name;
 		$hospital->slug = $request->slug;
 
@@ -78,6 +80,7 @@ class HospitalController extends Controller
 		$this->availibility('Edit Hospitals');
 		$index['page'] = 'hospitals';
 		$index['hospital'] = Hospital::findOrFail($id);
+
 		return view('hospitals.edit', $index);
 	}
 
@@ -96,6 +99,8 @@ class HospitalController extends Controller
 		$hospital->contact_person = $request->contact_person;
 		$hospital->phone_no = $request->phone_no;
 		$hospital->mobile_no = $request->mobile_no;
+		$hospital->latitude = $request->latitude;
+		$hospital->longitude = $request->longitude;
 		$hospital->address = $request->address;
 		$hospital->slug = $request->slug;
 		$hospital->save();

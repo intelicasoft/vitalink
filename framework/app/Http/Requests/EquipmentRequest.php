@@ -24,11 +24,9 @@ class EquipmentRequest extends FormRequest {
 		// dd($request->all());
 		$dateFormat = env('date_convert', 'Y-m-d');
 		return [
-			'name' => 'required',
-			'short_name' => 'required',
 			'hospital_id' => 'required',
 			'sr_no' => 'required|regex:/^\S*$/',
-			'model' => 'required',
+			'model' => 'nullable',
 			'department' => 'required',
 			'company' => 'required',
 			'date_of_purchase' => 'required',

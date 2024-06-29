@@ -30,6 +30,8 @@ class HospitalRequest extends FormRequest {
 			'email' => 'required',
 			'contact_person' => 'required',
 			'phone_no' => 'required|numeric|min:6',
+			'latitude' => 'required',
+			'longitude' => 'required',
 			'mobile_no' => 'required|numeric|min:10',
 			'address' => 'required',
 	     	'slug'=>'required|max:8|unique:hospitals,slug,'.$request->id,

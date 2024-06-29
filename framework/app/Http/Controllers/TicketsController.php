@@ -52,6 +52,7 @@ class TicketsController extends Controller
         $data = $request->validate([
             'description' => 'required',
             'title' => 'required',
+            'model' => 'required', //agregue el campo 'model
             'manager_id' => 'required',
             'failure' => 'required',
             'category' => 'required',
@@ -132,11 +133,13 @@ class TicketsController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $ticket = Tickets::findOrFail($id);
         
         $data = $request->validate([
-            'number_id' => 'required|unique:tickets,number_id,', 
+            'number_id' => 'required|unique:tickets,number_id,' . $ticket->id,
             'description' => 'required',
             'title' => 'required',
+            'model' => 'required',
             'manager_id' => 'required',
             'failure' => 'required',
             'category' => 'required',
@@ -150,7 +153,7 @@ class TicketsController extends Controller
             'images' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        $ticket = Tickets::findOrFail($id);
+        
     
         $image = $request->file('images');
 
