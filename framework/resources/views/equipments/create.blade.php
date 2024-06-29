@@ -22,44 +22,42 @@
 						{{ csrf_field() }}
 						{{ method_field('POST') }}
 						<div class="row">
-						<div class="form-group col-md-6">
+						{{-- <div class="form-group col-md-6">
 							<label for="name"> @lang('equicare.name') </label>
 							<input type="text" name="name" class="form-control"
 							value="{{ old('name') }}" />
-						</div>
-						<div class="form-group col-md-6">
+						</div> --}}
+						{{-- <div class="form-group col-md-6">
 							<label for="short_name"> @lang('equicare.short_name_eq') </label>
 							<input type="text" name="short_name" class="form-control"
 							value="{{ old('short_name') }}" />
-						</div>
+						</div> --}}
 						<div class="form-group col-md-6">
 							<label for="company"> @lang('equicare.company') </label>
 							<input type="text" name="company" class="form-control"
 							value="{{ old('company') }}" />
 						</div>
 						<div class="form-group col-md-6">
-							<label for="model"> @lang('equicare.model') </label>
-							<input type="text" name="model" class="form-control"
-							value="{{ old('model') }}" />
-						</div>
-						<div class="form-group col-md-6">
 							<label for="sr_no"> @lang('equicare.serial_number') </label>
 							<input type="text" name="sr_no" class="form-control"
 							value="{{ old('sr_no') }}" />
 						</div>
+						
 						<div class="form-group col-md-6">
 							<label for="hospital_id"> @lang('equicare.hospital') </label>
-							<select name="hospital_id" class="form-control">
+							<select name="hospital_id" id="hospital_id" class="form-control">
 								<option value="">---select---</option>
 								@if(isset($hospitals))
 									@foreach ($hospitals as $hospital)
 										<option value="{{ $hospital->id }}"
-											{{ old('hospital_id')?'selected':'' }}
-											>{{ $hospital->name }}
-										</option>
+											data-latitude="{{ $hospital->latitude }}"
+											data-longitude="{{ $hospital->longitude }}"
+											{{ old('hospital_id') ? 'selected' : '' }}
+										>{{ $hospital->name }}</option>
 									@endforeach
 								@endif
 							</select>
+							
 						</div>
 
 						<div class="form-group col-md-6">
@@ -178,9 +176,10 @@
 						</div>
 						<input type="hidden" name="qr_id" value="{{request('qr_id')}}"/>	
 						
-						<div class="form-group col-md-12">
+						{{-- <div class="form-group col-md-12">
 							<div id="map" style="width: 100%; height: 400px;"></div>
-						</div>
+						</div> --}}
+						
 						<input type="hidden" name="latitude" id="latitude" value="{{ old('latitude' ,'20.644584169156285') }}">
 						<input type="hidden" name="longitude" id="longitude" value="{{ old('longitude','-103.33724912940228') }}">
 
@@ -200,25 +199,36 @@
 	<script type="text/javascript">
 		$(document).ready(function(){
 			$('#date_of_purchase').datepicker({
-				format:"{{env('date_settings')=='' ? 'yyyy-mm-dd' : env('date_settings')}}",
+				format:"{{ env('date_settings') == '' ? 'yyyy-mm-dd' : env('date_settings') }}",
 				'todayHighlight' : true,
 			});
 			$('#order_date').datepicker({
-				format:"{{env('date_settings')=='' ? 'yyyy-mm-dd' : env('date_settings')}}",
+				format:"{{ env('date_settings') == '' ? 'yyyy-mm-dd' : env('date_settings') }}",
 				'todayHighlight' : true,
 			});
 			$('#date_of_installation').datepicker({
-				format:"{{env('date_settings')=='' ? 'yyyy-mm-dd' : env('date_settings')}}",
+				format:"{{ env('date_settings') == '' ? 'yyyy-mm-dd' : env('date_settings') }}",
 				'todayHighlight' : true,
 			});
 			$('#warranty_due_date').datepicker({
-				format:"{{env('date_settings')=='' ? 'yyyy-mm-dd' : env('date_settings')}}",
+				format:"{{ env('date_settings') == '' ? 'yyyy-mm-dd' : env('date_settings') }}",
 				'todayHighlight' : true,
+			});
+
+			$('#hospital_id').change(function(){
+				var selectedOption = $(this).find('option:selected');
+				var latitude = selectedOption.data('latitude');
+				var longitude = selectedOption.data('longitude');
+
+				$('#latitude').val(latitude);
+				$('#longitude').val(longitude);
+				console.log(latitude, longitude);
 			});
 		});
 	</script>
 
-	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMCnFrl_hkFXPXNj3ksPb_fkygp_HNOh8&callback=initMap" async defer></script>
+
+	{{-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBMCnFrl_hkFXPXNj3ksPb_fkygp_HNOh8&callback=initMap" async defer></script>
 	<script>
 		function initMap() {
 			var initialLocation = { lat: 20.659698, lng: -103.349609 }; // Ubicación inicial
@@ -244,5 +254,5 @@
 				document.getElementById('longitude').value = event.latLng.lng();
 			});
 		}
-	</script>
+	</script> --}}
 @endsection

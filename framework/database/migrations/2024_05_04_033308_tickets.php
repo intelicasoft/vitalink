@@ -22,6 +22,7 @@ return new class extends Migration
             //title
             $table->string('title')->nullable();
             //failure   
+            $table->string('model')->nullable();
             $table->string('failure')->nullable();
             $table->integer('manager_id')->nullable();
             //category

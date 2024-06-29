@@ -2,7 +2,7 @@
    <b>@lang('equicare.equip_id')</b> : {{$equipment->id}}
 </div>
 
-<div class="col-md-3">
+{{-- <div class="col-md-3">
    <b>@lang('equicare.unique_id')</b> : {{$equipment->unique_id}}
 </div>
 
@@ -11,7 +11,7 @@
 </div>
 <div class="col-md-3">
    <b>@lang('equicare.user')</b> : {{ $equipment->user?ucfirst($equipment->user->name):'-' }}
-</div>
+</div> --}}
 
 <div class="col-md-3">
    <b>@lang('equicare.company')</b> : {{ $equipment->company?? '-' }}

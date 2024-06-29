@@ -23,6 +23,10 @@ class CreateHospitalsTable extends Migration {
 			$table->string('contact_person')->nullable();
 			$table->string('phone_no')->nullable();
 			$table->string('mobile_no')->nullable();
+			
+			$table->string('latitude')->nullable();
+			$table->string('longitude')->nullable();
+
 			$table->text('address')->nullable();
 			$table->SoftDeletes();
 			$table->timestamps();

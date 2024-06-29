@@ -17,6 +17,7 @@ class Tickets extends Model
         'title',
         'manager_id',
         'failure',
+        'model',
         'category',
         'priority',
         'adress',
@@ -40,6 +41,11 @@ class Tickets extends Model
 
     public function user() {
         return $this->belongsTo('App\User', 'user_id')->withTrashed();
+    }
+
+    //model_id
+    public function models() {
+        return $this->belongsTo('App\Models\Model', 'model_id')->withTrashed();
     }
     
     use HasFactory;

@@ -120,8 +120,8 @@ class EquipmentController extends Controller
     public function store_equipments_common(Request $request,$api=0)
     {
         $equipment = new Equipment;
-        $equipment->name = trim($request->name);
-        $equipment->short_name = $request->short_name;
+        //$equipment->name = trim($request->name);
+        //$equipment->short_name = $request->short_name;
         if($api==1){
             $equipment->user_id = auth('sanctum')->user()->id;
         } else {
@@ -200,7 +200,7 @@ class EquipmentController extends Controller
             $qr->assign_to = $equipment->id;
             $qr->uid = Str::random(11);
             $qr->save();
-            $url = url('/') . "/scan/qr/" . $qr->uid;
+            $url = 'http://34.132.51.29' . "/scan/qr/" . $qr->uid;
             if (extension_loaded('imagick')) {
             QrCode::format('png')->size(300)->generate($url, 'uploads/qrcodes/qr_assign/' . $qr->uid . '.png');
             }
@@ -276,8 +276,8 @@ class EquipmentController extends Controller
     public function update(EquipmentRequest $request, $id)
     {
         $equipment = Equipment::findOrFail($id);
-        $equipment->name = trim($request->name);
-        $equipment->short_name = $request->short_name;
+        //$equipment->name = trim($request->name);
+        //$equipment->short_name = $request->short_name;
         $equipment->user_id = \Auth::user()->id;
         $equipment->company = $request->company;
         $equipment->sr_no = $request->sr_no;
