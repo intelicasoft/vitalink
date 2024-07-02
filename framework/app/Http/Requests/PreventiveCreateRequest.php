@@ -33,8 +33,7 @@ class PreventiveCreateRequest extends FormRequest {
 	}
 	public function messages() {
 		return [
-			'equip_id.required' => 'The Unique id field is required.',
-
+			'unique_id.required' => 'El campo del ID único es obligatorio.',
 		];
 	}
 }

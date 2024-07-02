@@ -29,7 +29,7 @@ class UserCreateRequest extends FormRequest {
 	}
 	public function messages() {
 		return [
-			'role.required' => 'Role field is Required',
+			'role.required' => 'el campo de rol es obligatorio',
 		];
 	}
 }
