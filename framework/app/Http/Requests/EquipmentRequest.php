@@ -41,12 +41,12 @@ class EquipmentRequest extends FormRequest {
 	}
 	public function messages() {
 		return [
-			'hospital_id.required' => 'The Hospital field is required.',
-			'sr_no.required' => 'The Serial Number field is required.',
-			'date_of_purchase.required' => 'The Purchase Date field is required.',
-			'service_engineer_no.required' => 'The Service Engineer number field is required.',
-			'sr_no.regex' => 'The Serial number field not allowed blank space.',
-			'service_engineer_no.numeric' => 'The Service Engineer (Mobile no.) must be a Number.',
+			'hospital_id.required' => 'El campo Hospital es obligatorio.',
+			'sr_no.required' => 'El campo Número de Serie es obligatorio.',
+			'date_of_purchase.required' => 'El campo Fecha de Compra es obligatorio.',
+			'service_engineer_no.required' => 'El campo número de Ingeniero de Servicio es obligatorio.',
+			'sr_no.regex' => 'El campo Número de Serie no permite espacios en blanco.',
+			'service_engineer_no.numeric' => 'El número de móvil del Ingeniero de Servicio debe ser un número.',
 		];
 	}
 	protected function failedValidation(Validator $validator)

@@ -27,6 +27,11 @@
 								<label for="name"> @lang('equicare.name') </label>
 								<input type="text" name="name" class="form-control" value="{{ old('name') }}" />
 							</div>
+
+							<div class="form-group col-md-6">
+								<label for="links"> Links de video </label>
+								<input type="text" name="links" class="form-control" value="{{ old('links') }}" />
+							</div>
 							
 							<div class="form-group col-md-6">
 								<label for="brand_id"> @lang('equicare.marca') </label>

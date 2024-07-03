@@ -32,7 +32,7 @@ class BreakdownCreateRequest extends FormRequest {
 	}
 	public function messages() {
 		return [
-			'equip_id.required' => 'The Unique id field is required.',
+			'equip_id.required' => 'El campo de ID único es obligatorio.',
 
 		];
 	}

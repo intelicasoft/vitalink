@@ -50,6 +50,7 @@ class DataModelsController extends Controller
             'name' => 'required',
             'brand_id' => 'required', 
             'description' => 'required',
+            'links' => 'nullable',
         ]);
         
         DataModels::create($data);
@@ -101,6 +102,7 @@ class DataModelsController extends Controller
             'name' => 'required',
             'brand_id' => 'required', 
             'description' => 'required',
+            'links' => 'nullable'
         ]);
         
         $model = DataModels::findOrFail($id);

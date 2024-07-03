@@ -31,9 +31,9 @@ class CalibrationRequest extends FormRequest {
 	}
 	public function messages() {
 		return [
-			'unique_id.required' => 'The Unique Id field is required.',
-			'date_of_calibration.required' => 'The Calibration Date field is required.',
-			'due_date.required' => 'The Due date field is required',
+			'unique_id.required' => 'El campo de ID único es obligatorio.',
+			'date_of_calibration.required' => 'El campo de Fecha de Calibración es obligatorio.',
+			'due_date.required' => 'El campo de Fecha de Vencimiento es obligatorio',
 		];
 	}
 }

@@ -40,11 +40,11 @@ class HospitalRequest extends FormRequest {
 		}
 	public function messages() {
 		return [
-			'mobile_no.required' => 'The Mobile number field is required.',
-			'phone_no.required' => 'The Phone number field is required.',
-			'slug.required'=>'The Short Name Is Required',
-			'slug.max'=>'The Short Name Contain Maximum 8 Character',
-			'slug.unique'=>'The Short Name Should be Unique',
+			'mobile_no.required' => 'El campo del número móvil es obligatorio.',
+			'phone_no.required' => 'El campo del número telefónico es obligatorio.',
+			'slug.required' => 'El campo del nombre corto es obligatorio',
+			'slug.max' => 'El nombre corto debe contener máximo 8 caracteres',
+			'slug.unique' => 'El nombre corto debe ser único',
 		];
 	}
 }

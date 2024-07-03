@@ -15,6 +15,10 @@ Homestead.yaml
 Homestead.json
 .env.testing
 
+/uploads
+
+framework/public/images
+
 # Cache, session files and logs
 storage/framework/cache/data/*
 storage/logs/*

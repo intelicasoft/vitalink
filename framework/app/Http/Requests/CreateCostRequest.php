@@ -53,23 +53,23 @@ else{
 
 	public function messages() {
 		$messages = [];
-		if ($this->cost) {
-			foreach ($this->cost as $i => $v) {
-				$messages['equipments.' . $i . '.required'] = 'Equipment field is required';
-				$messages['start_dates.' . $i . '.required'] = 'Start Date field is required';
-				$messages['end_dates.' . $i . '.required'] = 'End Date field is required';
-				$messages['cost.' . $i . '.required'] = 'Cost field is required';
-				$messages['cost.' . $i . '.numeric'] = 'Cost must be a number.';
-			}
-		}
-		$messages['tp_name.required_if'] = 'Name field is required';
-		$messages['tp_mobile.required_if'] = 'Mobile Number field is required';
-		$messages['tp_mobile.numeric'] = 'Mobile Number field must be a number';
-		$messages['tp_email.required_if'] = 'Email field is required';
-		$messages['tp_email.email'] = 'Email must contain valid email-address';
-		$messages['hospital_id.required'] = 'Hospital field is required';
-		$messages['cost_by.required'] = 'Cost By field is required';
-		$messages['type.required'] = 'Type field is required';
-		return $messages;
+				if ($this->cost) {
+					foreach ($this->cost as $i => $v) {
+						$messages['equipments.' . $i . '.required'] = 'El campo Equipo es obligatorio';
+						$messages['start_dates.' . $i . '.required'] = 'El campo Fecha de Inicio es obligatorio';
+						$messages['end_dates.' . $i . '.required'] = 'El campo Fecha de Fin es obligatorio';
+						$messages['cost.' . $i . '.required'] = 'El campo Costo es obligatorio';
+						$messages['cost.' . $i . '.numeric'] = 'El Costo debe ser un número.';
+					}
+				}
+				$messages['tp_name.required_if'] = 'El campo Nombre es obligatorio';
+				$messages['tp_mobile.required_if'] = 'El campo Número de Móvil es obligatorio';
+				$messages['tp_mobile.numeric'] = 'El campo Número de Móvil debe ser un número';
+				$messages['tp_email.required_if'] = 'El campo Email es obligatorio';
+				$messages['tp_email.email'] = 'El Email debe contener una dirección de correo válida';
+				$messages['hospital_id.required'] = 'El campo Hospital es obligatorio';
+				$messages['cost_by.required'] = 'El campo Cost By es obligatorio';
+				$messages['type.required'] = 'El campo Tipo es obligatorio';
+				return $messages;
 	}
 }

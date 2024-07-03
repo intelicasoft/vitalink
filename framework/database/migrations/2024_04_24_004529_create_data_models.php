@@ -20,6 +20,7 @@ return new class extends Migration
             $table->integer('brand_id')->nullable();
             $table->string('name');
             $table->string('description');
+            $table->text('links')->nullable();
         
         });
     }
