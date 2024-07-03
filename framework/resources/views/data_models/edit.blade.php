@@ -25,11 +25,19 @@
 						{{ csrf_field() }}
 						<input type="hidden" name="_method" value="PATCH"/>
 						<div class="row">
+
 						<div class="form-group col-md-6">
 							<label for="name"> @lang('equicare.name') </label>
 							<input type="text" name="name" class="form-control"
 							value="{{ $model->name }}" />
 						</div>
+
+						<div class="form-group col-md-6">
+							<label for="links"> Links de video </label>
+							<input type="text" name="links" class="form-control"
+							value="{{ $model->links }}" />
+						</div>
+
 						
 						<div class="form-group col-md-6">
 							<label for="brand_id"> @lang('equicare.brand_id') </label>

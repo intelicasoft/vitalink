@@ -12,6 +12,7 @@ class DataModels extends Model
     protected $fillable = [
         'name',
         'description',
+        'links',
         'brand_id',
         'status',
     ];
