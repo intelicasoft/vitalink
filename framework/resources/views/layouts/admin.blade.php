@@ -586,7 +586,7 @@ $('input[type="text"]').on('input', function(event) {
   $(document).ready(function(){
      @if(session('flash_message'))
       new PNotify({
-              title: ' Success!',
+              title: ' Correcto!',
               text: "{{ session('flash_message') }}",
               type: 'success',
               delay: 3000,

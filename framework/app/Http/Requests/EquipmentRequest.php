@@ -23,16 +23,20 @@ class EquipmentRequest extends FormRequest {
 	public function rules() {
 		// dd($request->all());
 		$dateFormat = env('date_convert', 'Y-m-d');
+
+		$equipmentId = $this->route('equipment');
+
 		return [
 			'hospital_id' => 'required',
-			'sr_no' => 'required|regex:/^\S*$/',
+			'sr_no' => [
+				'required',
+				'regex:/^\S*$/',
+				'unique:equipments,sr_no,' . $equipmentId, // Validación de unicidad
+			],
 			'model' => 'nullable',
 			'department' => 'required',
 			'company' => 'required',
 			'date_of_purchase' => 'required',
-			// 'order_date'=>'before_or_equal:date_of_purchase',
-			// 'date_of_installation'=>'after_or_equal:date_of_purchase',
-			// 'warranty_due_date'=>'after_or_equal:date_of_purchase',
 			'order_date' => "before_or_equal:date_of_purchase|date_format:$dateFormat",
 			'date_of_installation' => "after_or_equal:date_of_purchase|date_format:$dateFormat",
 			'warranty_due_date' => "after_or_equal:date_of_purchase|date_format:$dateFormat",

@@ -27,6 +27,9 @@ use App\Http\Requests\EquipmentRequest;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Artisan;
 use DateTime;
+
+use Illuminate\Support\Facades\Log;
+
 // use Maatwebsite\Excel\Facades\Excel;
 class EquipmentController extends Controller
 {
@@ -185,6 +188,7 @@ class EquipmentController extends Controller
         $equipment->save();
 
         $id = $equipment->id;
+        $srno = $equipment->sr_no;
         //for generating qr 
         $equipment = Equipment::find($id);
         //update equipment qr_id if it not coming from request
@@ -200,7 +204,10 @@ class EquipmentController extends Controller
             $qr->assign_to = $equipment->id;
             $qr->uid = Str::random(11);
             $qr->save();
-            $url = 'http://34.132.51.29' . "/scan/qr/" . $qr->uid;
+            $url = 'http://34.132.51.29' . "/scan/qr/" . $srno;
+            // $url = url('/') . "/scan/qr/" . $qr->uid;
+            Log::info('El valor de la variable es: ' . $url);
+
             if (extension_loaded('imagick')) {
             QrCode::format('png')->size(300)->generate($url, 'uploads/qrcodes/qr_assign/' . $qr->uid . '.png');
             }
@@ -321,7 +328,7 @@ class EquipmentController extends Controller
         //     $image = QrCode::format('png')->size(300)->generate($url, 'uploads/qrcodes/' . $id . '.png');
         // }
 
-        return redirect('admin/equipments')->with('flash_message', 'Equipment "' . $equipment->name . '" updated');
+        return redirect('admin/equipments')->with('flash_message', 'Equipo "' . $equipment->name . '" actualizado');
     }
 
     /**

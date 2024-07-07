@@ -78,7 +78,7 @@
                             @if(isset($equipos))
                                 @foreach ($equipos as $equipo)
                                     <option value="{{ $equipo->id }}"
-                                        data-model="{{ $equipo->models->name }}"
+                                        data-model="{{ $equipo->models->name ?? "Sin modelo"}}"
                                         {{ $ticket->equipment_id == $equipo->id ? 'selected' : '' }}
                                         >{{ $equipo->sr_no }}</option>
                                 @endforeach

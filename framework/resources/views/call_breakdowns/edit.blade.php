@@ -225,7 +225,7 @@
                         department.val(data.success.department);
 
                         new PNotify({
-                            title: ' Success!',
+                            title: ' Correcto!',
                             text: "{{ __('equicare.equipment_data_fetched') }}",
                             type: 'success',
                             delay: 3000,
