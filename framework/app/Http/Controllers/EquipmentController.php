@@ -373,6 +373,13 @@ class EquipmentController extends Controller
         // dd($id,$request->all());
         $index['page'] = 'equipments history';
         $index['equipment'] = Equipment::find($id);
+
+        $videoLinksString = $index['equipment']->models->links ?? '';
+        $videoLinks = array_map(function($link) {
+            return str_replace('watch?v=', 'embed/', $link);
+        }, explode(',', $videoLinksString));
+        
+
         $history = collect();
         $h1 = CallEntry::where('equip_id', $id)->with('user')->with('user_attended_fn')->get();
         foreach ($h1 as $h) {
@@ -392,8 +399,12 @@ class EquipmentController extends Controller
         $collection = new Collection();
         $index['data'] = $collection->merge($history)->merge($calibration)->sortByDesc('created_at');
 
+        $index['videoLinks'] = $videoLinks;
+
         return view('equipments.history', $index);
     }
+
+    
     public function history_qr($uid)
     {
         $index['page'] = 'equipments history';
