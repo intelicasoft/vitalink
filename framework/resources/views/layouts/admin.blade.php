@@ -284,7 +284,7 @@
   </ul>
 </li> --}}
 
-@if(auth()->user()->hasDirectPermission('View Breakdown Maintenance') || auth()->user()->hasDirectPermission('View Preventive Maintenance'))
+{{-- @if(auth()->user()->hasDirectPermission('View Breakdown Maintenance') || auth()->user()->hasDirectPermission('View Preventive Maintenance'))
     @if($page == "breakdown_maintenance" || $page == "preventive_maintenance")
         @php($class="treeview menu-open")
         @php($active = "active")
@@ -319,7 +319,7 @@
             @endif
         </ul>
     </li>
-@endif
+@endif --}}
 
 
 

@@ -58,8 +58,5 @@
     <p>No videos available.</p>
 @endif --}}
 
-<script>
 
-   console.log($videoLinks)
-</script>
 

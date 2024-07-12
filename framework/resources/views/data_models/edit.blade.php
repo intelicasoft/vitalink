@@ -34,7 +34,7 @@
 
 						<div class="form-group col-md-6">
 							<label for="links"> Links de video </label>
-							<input type="text" name="links" class="form-control"
+							<input type="url" name="links" class="form-control"
 							value="{{ $model->links }}" />
 						</div>
 

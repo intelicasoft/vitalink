@@ -14,6 +14,7 @@ use App\Calibration;
 use App\Models\DataBrand;
 use App\Models\DataAccesories;
 use App\Models\DataModels;
+use App\Models\Tickets;
 use Illuminate\Http\Request;
 // use App\Role;
 use Maatwebsite\Excel\Concerns\FromView;
@@ -27,7 +28,7 @@ use App\Http\Requests\EquipmentRequest;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Artisan;
 use DateTime;
-
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 
 // use Maatwebsite\Excel\Facades\Excel;
@@ -204,7 +205,7 @@ class EquipmentController extends Controller
             $qr->assign_to = $equipment->id;
             $qr->uid = Str::random(11);
             $qr->save();
-            $url = 'http://34.132.51.29' . "/scan/qr/" . $srno;
+            $url = 'http://34.132.51.29' . "/scan/qr/" . $qr->uid ;
             // $url = url('/') . "/scan/qr/" . $qr->uid;
             Log::info('El valor de la variable es: ' . $url);
 
@@ -370,36 +371,24 @@ class EquipmentController extends Controller
 
     public function history($id)
     {
-        // dd($id,$request->all());
+
         $index['page'] = 'equipments history';
         $index['equipment'] = Equipment::find($id);
 
-        $videoLinksString = $index['equipment']->models->links ?? '';
-        $videoLinks = array_map(function($link) {
-            return str_replace('watch?v=', 'embed/', $link);
-        }, explode(',', $videoLinksString));
-        
+        // Obtener historial de Tickets
+    
+        $tickets = Tickets::where('equipment_id', $id)
+        ->with('user', 'manager','equipment')
+        ->get()
+        ->map(function ($item) {
+            return collect($item)->put('type', 'Ticket');
+        });
 
-        $history = collect();
-        $h1 = CallEntry::where('equip_id', $id)->with('user')->with('user_attended_fn')->get();
-        foreach ($h1 as $h) {
-            $h2 = collect($h);
-            $h2->put('type', 'Call');
-            $history[] = $h2;
-        }
+        // Ordenar por fecha descendente
+        $index['data'] = $tickets->sortByDesc('created_at');
 
-        $calibration = collect();
-        $c1 = Calibration::where('equip_id', $id)->with('user')->get();
-        foreach ($c1 as $c) {
-            $c2 = collect($c);
-            $c2->put('type', 'Calibration');
-            $calibration[] = $c2;
-        }
 
-        $collection = new Collection();
-        $index['data'] = $collection->merge($history)->merge($calibration)->sortByDesc('created_at');
-
-        $index['videoLinks'] = $videoLinks;
+        //Log::info('El valor de la variable tickets es: ' . $tickets->toJson());
 
         return view('equipments.history', $index);
     }
@@ -412,24 +401,19 @@ class EquipmentController extends Controller
         if ($qr->assign_to != 0) {
             $index['equipment'] = Equipment::find($qr->assign_to);
             $id = $index['equipment']->id;
-            $history = collect();
-            $h1 = CallEntry::where('equip_id', $id)->with('user')->with('user_attended_fn')->get();
-            foreach ($h1 as $h) {
-                $h2 = collect($h);
-                $h2->put('type', 'Call');
-                $history[] = $h2;
-            }
 
-            $calibration = collect();
-            $c1 = Calibration::where('equip_id', $id)->with('user')->get();
-            foreach ($c1 as $c) {
-                $c2 = collect($c);
-                $c2->put('type', 'Calibration');
-                $calibration[] = $c2;
-            }
-
-            $collection = new Collection();
-            $index['data'] = $collection->merge($history)->merge($calibration)->sortByDesc('created_at');
+            // Obtener historial de Tickets
+            $tickets = Tickets::where('equipment_id', $id)
+                ->with('user', 'manager','equipment')
+                ->get()
+                ->map(function ($item) {
+                    return collect($item)->put('type', 'Ticket');
+                });
+        
+            // Ordenar por fecha descendente
+            $index['data'] = $tickets->sortByDesc('created_at');
+        
+            //Log::info('El valor de la variable tickets es: ' . $tickets->toJson());
 
             return view('equipments.history', $index);
         } else {
