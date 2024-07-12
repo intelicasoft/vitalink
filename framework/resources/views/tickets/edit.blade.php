@@ -48,14 +48,14 @@
                     </div>
 
                     <div class="form-group col-md-6">
-                        <label for="manager_id"> @lang('equicare.lote') </label>
+                        <label for="manager_id"> Encargado </label>
                         <select name="manager_id" class="form-control">
                             <option value="">Encargado</option>
-                            @if(isset($encargados))
-                                @foreach ($encargados as $encargado)
-                                    <option value="{{ $encargado->id }}"
-                                        {{ $ticket->manager_id == $encargado->id ? 'selected' : '' }}
-                                        >{{ $encargado->name }}</option>
+                            @if(isset($managers))
+                                @foreach ($managers as $manager)
+                                    <option value="{{ $manager->id }}"
+                                        {{ $ticket->manager_id == $manager->id ? 'selected' : '' }}
+                                        >{{ $manager->name }}</option>
                                 @endforeach
                             @endif
                         </select>
@@ -75,12 +75,13 @@
                         <label for="equipment_id"> Equipo Clinico </label>
                         <select id="equipment_id" name="equipment_id" class="form-control select2">
                             <option value="">Equipo clinico</option>
-                            @if(isset($equipos))
-                                @foreach ($equipos as $equipo)
-                                    <option value="{{ $equipo->id }}"
-                                        data-model="{{ $equipo->models->name }}"
-                                        {{ $ticket->equipment_id == $equipo->id ? 'selected' : '' }}
-                                        >{{ $equipo->sr_no }}</option>
+                            @if(isset($equipments))
+                                @foreach ($equipments as $equipment)
+                                    <option value="{{ $equipment->id }}"
+                                        data-model="{{ $equipment->models->name ?? "Sin modelo"}}"
+                                        data-hospital="{{ $equipment->hospital->name ?? 'Sin hospital' }}" 
+                                        {{ $ticket->equipment_id == $equipment->id ? 'selected' : '' }}
+                                        >{{ $equipment->sr_no }}</option>
                                 @endforeach
                             @endif
                         </select>
@@ -88,10 +89,13 @@
 
                     <div class="form-group col-md-6">
                         <label for="model">Modelo</label>
-                        <input type="text" id="model" name="model" class="form-control" value="{{ old('model', $ticket->model) }}" />
+                        <input type="text" id="model" name="model" class="form-control" value="{{ old('model', $equipment->models->name) }}" />
                     </div>
 
-                   
+                    <div class="form-group col-md-6">
+                        <label for="hospital">Hospital</label>
+                        <input type="text" id="hospital" name="hospital" class="form-control" value="{{ old('hospital') }}" disabled />
+                    </div>
 
                     <div class="form-group col-md-6">
                         <label for="category"> Categoria </label>
@@ -172,7 +176,9 @@
         function updateModel() {
             var selectedOption = $('#equipment_id').find('option:selected');
             var model = selectedOption.data('model') || ''; // Default to empty string if no model found
+            var hospital = selectedOption.data('hospital') || ''; // Default to empty string if no hospital found
             $('#model').val(model);
+            $('#hospital').val(hospital);
         }
 
         // Update model on page load if a selection is already made

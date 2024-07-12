@@ -161,7 +161,8 @@
 							<input type="text" name="service_engineer_no" class="form-control phone"
 							value="{{ $equipment->service_engineer_no }}" />
 						</div>
-						<div class="form-group col-md-6">
+						
+						{{-- <div class="form-group col-md-6">
 							<label> @lang('equicare.critical') </label><br/>
 							<label>
 							<input type="radio" value="1" name="is_critical" {{ $equipment->is_critical==1? 'checked':'' }}>
@@ -170,7 +171,8 @@
 							<input type="radio" value="0" name="is_critical" {{ $equipment->is_critical==0? 'checked':''  }}>
 							@lang('equicare.no')
 							</label>
-						</div>
+						</div> --}}
+
 						<div class="form-group col-md-6">
 							<label for="notes"> @lang('equicare.notes') </label>
 							<textarea rows="2" name="notes" class="form-control"

@@ -80,9 +80,9 @@
 		function initMap() {
 			var initialLocation;
 
-			// Verificar si hay datos en equipment
-			@if(isset($equipment) && !empty($equipment->latitude) && !empty($equipment->longitude))
-				initialLocation = { lat: parseFloat('{{ $equipment->latitude }}'), lng: parseFloat('{{ $equipment->longitude }}') };
+			// Verificar si hay datos en hospital
+			@if(isset($hospital) && !empty($hospital->latitude) && !empty($hospital->longitude))
+				initialLocation = { lat: parseFloat('{{ $hospital->latitude }}'), lng: parseFloat('{{ $hospital->longitude }}') };
 			@else
 				initialLocation = { lat: 20.659698, lng: -103.349609 }; // Ubicación inicial predeterminada
 			@endif

@@ -178,7 +178,7 @@
 			    		date_pm.val(data.success.date_pm);
 			    		due_pm.val(data.success.due_pm);
 			    		new PNotify({
-				              title: ' Success!',
+				              title: ' Correcto!',
 				              text: "{{__('equicare.equipment_data_fetched')}}",
 				              type: 'success',
 				              delay: 3000,

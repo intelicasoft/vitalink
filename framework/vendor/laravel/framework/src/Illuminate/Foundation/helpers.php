@@ -22,6 +22,9 @@ use Illuminate\Support\Facades\Date;
 use Illuminate\Support\HtmlString;
 use Symfony\Component\HttpFoundation\Response;
 
+use Illuminate\Support\Facades\Log;
+
+
 if (! function_exists('abort')) {
     /**
      * Throw an HttpException with the given data.
@@ -989,7 +992,9 @@ if (! function_exists('url')) {
             return app(UrlGenerator::class);
         }
 
+        
         return app(UrlGenerator::class)->to($path, $parameters, $secure);
+     
     }
 }
 

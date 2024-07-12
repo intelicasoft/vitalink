@@ -67,6 +67,7 @@ class BreakdownController extends Controller {
 		$index['unique_ids'] = Equipment::query()->Hospital()->pluck('unique_id', 'id')->toArray();
 		$index['departments'] = Department::select('id', \DB::raw('CONCAT(short_name,"(",name,")") as department'))->pluck('department', 'id')->toArray();
 		$index['hospitals'] = Hospital::query()->Hospital()->pluck('name', 'id')->toArray();
+		$index['equipments'] = Equipment::all();
 		return view('call_breakdowns.create', $index);
 	}
 

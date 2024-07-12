@@ -34,8 +34,8 @@ class TicketsController extends Controller
     public function create()
     {
         $index['page'] = 'accesories';
-        $index['equipos'] = Equipment::all();
-        $index['encargados'] = User::where('role_id', 1)->get();
+        $index['equipments'] = Equipment::all();
+        $index['managers'] = User::where('role_id', 1)->get();
         $index['user'] = Auth::user();
         return view('tickets.create',$index);
     }
@@ -116,8 +116,8 @@ class TicketsController extends Controller
     public function edit($id)
     {
         $index['page'] = 'accesories';
-        $index['equipos'] = Equipment::all();
-        $index['encargados'] = User::where('role_id', 1)->get();
+        $index['equipments'] = Equipment::all();
+        $index['managers'] = User::where('role_id', 1)->get();
         $index['user'] = Auth::user();
         $index['ticket'] = Tickets::find($id);
 

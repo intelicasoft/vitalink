@@ -3,7 +3,7 @@
     @lang('Tickets')
 @endsection
 @section('title')
-	| @lang('Tickets')
+    | @lang('Tickets')
 @endsection
 @section('breadcrumb')
 <li class="active">Tickets</li>
@@ -39,10 +39,10 @@
                             <label for="manager_id"> @lang('equicare.lote') </label>
                             <select name="manager_id" class="form-control">
                                 <option value="">Encargado</option>
-                                @if(isset($encargados))
-                                    @foreach ($encargados as $encargado)
-                                        <option value="{{ $encargado->id }}" {{ old('manager_id') == $encargado->id ? 'selected' : '' }}>
-                                            {{ $encargado->name }}
+                                @if(isset($managers))
+                                    @foreach ($managers as $manager)
+                                        <option value="{{ $manager->id }}" {{ old('manager_id') == $manager->id ? 'selected' : '' }}>
+                                            {{ $manager->name }}
                                         </option>
                                     @endforeach
                                 @endif
@@ -52,10 +52,10 @@
                             <label for="equipment_id">Equipo Clínico</label>
                             <select id="equipment_id" name="equipment_id" class="form-control select2">
                                 <option value="">Equipo clínico</option>
-                                @if(isset($equipos))
-                                    @foreach ($equipos as $equipo)
-                                        <option value="{{ $equipo->id }}" data-model="{{ $equipo->models->name}}" {{ old('equipment_id') == $equipo->id ? 'selected' : '' }}>
-                                            {{ $equipo->sr_no }}
+                                @if(isset($equipments))
+                                    @foreach ($equipments as $equipment)
+                                        <option value="{{ $equipment->id }}" data-model="{{ $equipment->models->name ?? 'Sin modelo' }}" data-hospital="{{ $equipment->hospital->name ?? 'Sin hospital' }}" {{ old('equipment_id') == $equipment->id ? 'selected' : '' }}>
+                                            {{ $equipment->sr_no }}
                                         </option>
                                     @endforeach
                                 @endif
@@ -64,6 +64,10 @@
                         <div class="form-group col-md-6">
                             <label for="model">Modelo</label>
                             <input type="text" id="model" name="model" class="form-control" value="{{ old('model') }}" />
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="hospital">Hospital</label>
+                            <input type="text" id="hospital" name="hospital" class="form-control" value="{{ old('hospital') }}" disabled />
                         </div>
                         <div class="form-group col-md-6">
                             <label for="priority"> Prioridad </label>
@@ -134,18 +138,20 @@
             placeholder: "Seleccione un equipo"
         });
 
-        function updateModel() {
+        function updateFields() {
             var selectedOption = $('#equipment_id').find('option:selected');
             var model = selectedOption.data('model') || ''; // Default to empty string if no model found
+            var hospital = selectedOption.data('hospital') || ''; // Default to empty string if no hospital found
             $('#model').val(model);
+            $('#hospital').val(hospital);
         }
 
-        // Update model on page load if a selection is already made
-        updateModel();
+        // Update fields on page load if a selection is already made
+        updateFields();
 
-        // Update model when the selection changes
+        // Update fields when the selection changes
         $('#equipment_id').on('change', function() {
-            updateModel();
+            updateFields();
         });
     });
 </script>
