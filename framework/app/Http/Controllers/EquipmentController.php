@@ -383,6 +383,38 @@ class EquipmentController extends Controller
                 return collect($item)->put('type', 'Ticket');
             });
 
+
+            //ultimo ticket abierto que no sea de mantenimiento ni instalacion
+            $lastOpenedTicket = Tickets::where('equipment_id', $id)
+                ->where('status', '1')
+                ->where('category', '!=', 'INSTALACIÓN (M)')
+                ->where('category', '!=', 'MANTENIMIENTO PREVENTIVO (M)')
+                ->with('user', 'manager', 'equipment')
+                ->orderBy('created_at', 'desc')
+                ->first();
+
+            $index['lastOpenedTicket'] = $lastOpenedTicket;
+
+            //ultimo ticket de manteniento abierto
+            $lastMaintenanceTicket = Tickets::where('equipment_id', $id)
+            ->where('status', '1')
+            ->where('category', 'MANTENIMIENTO PREVENTIVO (M)')
+            ->with('user', 'manager', 'equipment')
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+            $index['lastMaintenanceTicket'] = $lastMaintenanceTicket;
+
+            //ultimo ticket de instalacion abierto
+            $lastInstallationTicket = Tickets::where('equipment_id', $id)
+            ->where('status', '1')
+            ->where('category', 'INSTALACIÓN (M)')
+            ->with('user', 'manager', 'equipment')
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+            $index['lastInstallationTicket'] = $lastInstallationTicket;
+
         // Ordenar por fecha descendente
         $index['data'] = $tickets->sortByDesc('created_at');
 
