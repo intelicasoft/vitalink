@@ -110,8 +110,8 @@ class EquipmentController extends Controller
         $index['models'] = DataModels::all();
         $index['departments'] =
             Department::select('id', DB::raw('CONCAT(short_name," (" , name ,")") as full_name'))
-                ->pluck('full_name', 'id')
-                ->toArray();
+            ->pluck('full_name', 'id')
+            ->toArray();
         return view('equipments.create', $index);
     }
 
@@ -121,12 +121,12 @@ class EquipmentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store_equipments_common(Request $request,$api=0)
+    public function store_equipments_common(Request $request, $api = 0)
     {
         $equipment = new Equipment;
         //$equipment->name = trim($request->name);
         //$equipment->short_name = $request->short_name;
-        if($api==1){
+        if ($api == 1) {
             $equipment->user_id = auth('sanctum')->user()->id;
         } else {
             $equipment->user_id = \Auth::user()->id;
@@ -171,19 +171,18 @@ class EquipmentController extends Controller
         $equipment_number = sprintf("%02d", $equipment_number + 1);
         $equipment->unique_id = "";
         $hospital = Hospital::where('id', $request->hospital_id)->first();
-        if ($hospital != "") 
-        {
+        if ($hospital != "") {
             $unique_id = $hospital->slug . '/' . $equipment->department . '/' . $equipment->short_name . '/' . $equipment_number;
-			$label_name=$hospital->slug . '/' . $equipment->department . '/' . $equipment->short_name . '/';
-			$equipment_last = Equipment::where('unique_id', 'like', $label_name.'%')->orderBy('unique_id', 'desc')->first();
-			if($equipment_last){
-				$last_label_no=explode('/',$equipment_last->unique_id);
-				$last_label_no=end($last_label_no);
-				$equipment_number = sprintf("%02d", ((int)$last_label_no) + 1);
-				$unique_id=$label_name.$equipment_number;
-			}else{
-				$unique_id=$label_name."01";
-			}
+            $label_name = $hospital->slug . '/' . $equipment->department . '/' . $equipment->short_name . '/';
+            $equipment_last = Equipment::where('unique_id', 'like', $label_name . '%')->orderBy('unique_id', 'desc')->first();
+            if ($equipment_last) {
+                $last_label_no = explode('/', $equipment_last->unique_id);
+                $last_label_no = end($last_label_no);
+                $equipment_number = sprintf("%02d", ((int)$last_label_no) + 1);
+                $unique_id = $label_name . $equipment_number;
+            } else {
+                $unique_id = $label_name . "01";
+            }
             $equipment->unique_id = $unique_id;
         }
         $equipment->save();
@@ -205,12 +204,12 @@ class EquipmentController extends Controller
             $qr->assign_to = $equipment->id;
             $qr->uid = Str::random(11);
             $qr->save();
-            $url = 'http://34.132.51.29' . "/scan/qr/" . $qr->uid ;
+            $url = 'http://34.132.51.29' . "/scan/qr/" . $qr->uid;
             // $url = url('/') . "/scan/qr/" . $qr->uid;
             Log::info('El valor de la variable es: ' . $url);
 
             if (extension_loaded('imagick')) {
-            QrCode::format('png')->size(300)->generate($url, 'uploads/qrcodes/qr_assign/' . $qr->uid . '.png');
+                QrCode::format('png')->size(300)->generate($url, 'uploads/qrcodes/qr_assign/' . $qr->uid . '.png');
             }
             $equipment->qr_id = $qr->id;
             $equipment->save();
@@ -220,7 +219,7 @@ class EquipmentController extends Controller
     }
     public function store(EquipmentRequest $request)
     {
-        $equipment = $this->store_equipments_common($request,0);
+        $equipment = $this->store_equipments_common($request, 0);
         return redirect('admin/equipments')->with('flash_message', 'Equipment "' . $equipment->name . '" created');
     }
 
@@ -269,8 +268,8 @@ class EquipmentController extends Controller
         $index['models'] = DataModels::all();
         $index['departments'] =
             Department::select('id', DB::raw('CONCAT(short_name," (" , name ,")") as full_name'))
-                ->pluck('full_name', 'id')
-                ->toArray();
+            ->pluck('full_name', 'id')
+            ->toArray();
         return view('equipments.edit', $index);
     }
 
@@ -297,7 +296,7 @@ class EquipmentController extends Controller
         $equipment->model_id = $request->model_id;
         $equipment->latitude = $request->latitude;
         $equipment->longitude = $request->longitude;
-        
+
 
         // $date_of_purchase = !empty($request->date_of_purchase) ?\Carbon\Carbon::createFromFormat('m-d-Y',$request->date_of_purchase) : null;
         // $order_date = !empty($request->order_date) ?\Carbon\Carbon::createFromFormat('m-d-Y',$request->order_date) : null;
@@ -376,13 +375,45 @@ class EquipmentController extends Controller
         $index['equipment'] = Equipment::find($id);
 
         // Obtener historial de Tickets
-    
+
         $tickets = Tickets::where('equipment_id', $id)
-        ->with('user', 'manager','equipment')
-        ->get()
-        ->map(function ($item) {
-            return collect($item)->put('type', 'Ticket');
-        });
+            ->with('user', 'manager', 'equipment')
+            ->get()
+            ->map(function ($item) {
+                return collect($item)->put('type', 'Ticket');
+            });
+
+
+            //ultimo ticket abierto que no sea de mantenimiento ni instalacion
+            $lastOpenedTicket = Tickets::where('equipment_id', $id)
+                ->where('status', '1')
+                ->where('category', '!=', 'INSTALACIÓN (M)')
+                ->where('category', '!=', 'MANTENIMIENTO PREVENTIVO (M)')
+                ->with('user', 'manager', 'equipment')
+                ->orderBy('created_at', 'desc')
+                ->first();
+
+            $index['lastOpenedTicket'] = $lastOpenedTicket;
+
+            //ultimo ticket de manteniento abierto
+            $lastMaintenanceTicket = Tickets::where('equipment_id', $id)
+            ->where('status', '1')
+            ->where('category', 'MANTENIMIENTO PREVENTIVO (M)')
+            ->with('user', 'manager', 'equipment')
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+            $index['lastMaintenanceTicket'] = $lastMaintenanceTicket;
+
+            //ultimo ticket de instalacion abierto
+            $lastInstallationTicket = Tickets::where('equipment_id', $id)
+            ->where('status', '1')
+            ->where('category', 'INSTALACIÓN (M)')
+            ->with('user', 'manager', 'equipment')
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+            $index['lastInstallationTicket'] = $lastInstallationTicket;
 
         // Ordenar por fecha descendente
         $index['data'] = $tickets->sortByDesc('created_at');
@@ -393,27 +424,66 @@ class EquipmentController extends Controller
         return view('equipments.history', $index);
     }
 
-    
+
     public function history_qr($uid)
     {
         $index['page'] = 'equipments history';
         $qr = QrGenerate::where('uid', $uid)->first();
         if ($qr->assign_to != 0) {
             $index['equipment'] = Equipment::find($qr->assign_to);
+            // $index['model'] = DataModels::find($index['equipment']->model_id);
+
             $id = $index['equipment']->id;
 
             // Obtener historial de Tickets
             $tickets = Tickets::where('equipment_id', $id)
-                ->with('user', 'manager','equipment')
+                ->with('user', 'manager', 'equipment')
                 ->get()
                 ->map(function ($item) {
                     return collect($item)->put('type', 'Ticket');
                 });
-        
+
+            //ultimo ticket abierto que no sea de mantenimiento ni instalacion
+            $lastOpenedTicket = Tickets::where('equipment_id', $id)
+                ->where('status', '1')
+                ->where('category', '!=', 'INSTALACIÓN (M)')
+                ->where('category', '!=', 'MANTENIMIENTO PREVENTIVO (M)')
+                ->with('user', 'manager', 'equipment')
+                ->orderBy('created_at', 'desc')
+                ->first();
+
+            $index['lastOpenedTicket'] = $lastOpenedTicket;
+
+            //ultimo ticket de manteniento abierto
+            $lastMaintenanceTicket = Tickets::where('equipment_id', $id)
+            ->where('status', '1')
+            ->where('category', 'MANTENIMIENTO PREVENTIVO (M)')
+            ->with('user', 'manager', 'equipment')
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+            $index['lastMaintenanceTicket'] = $lastMaintenanceTicket;
+
+            //ultimo ticket de instalacion abierto
+            $lastInstallationTicket = Tickets::where('equipment_id', $id)
+            ->where('status', '1')
+            ->where('category', 'INSTALACIÓN (M)')
+            ->with('user', 'manager', 'equipment')
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+            $index['lastInstallationTicket'] = $lastInstallationTicket;
+
             // Ordenar por fecha descendente
             $index['data'] = $tickets->sortByDesc('created_at');
-        
+
             //Log::info('El valor de la variable tickets es: ' . $tickets->toJson());
+
+            foreach ($index as $key => $value) {
+                Log::info('El valor de la variable ' . $key . ' es: ' . $value);
+            }
+
+
 
             return view('equipments.history', $index);
         } else {
@@ -421,13 +491,13 @@ class EquipmentController extends Controller
         }
     }
 
-    public function etiqueta($id){
+    public function etiqueta($id)
+    {
         // $this->availibility('View orders');
         $pdf['page'] = 'Etiqueta';
         $pdf['equipment'] = Equipment::find($id);
-        $pdf = PDF::loadView('equipments.etiqueta',$pdf);
-        return $pdf->download('etiqueta'.$id.'.pdf');
+        $pdf = PDF::loadView('equipments.etiqueta', $pdf);
+        return $pdf->download('etiqueta' . $id . '.pdf');
         //return view('equipments.etiqueta', $pdf);
     }
-
 }

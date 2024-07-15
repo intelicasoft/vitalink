@@ -29,8 +29,9 @@
 						</div>
 						<input type="hidden" name="id" class="form-control"
 							value="{{ $hospital->id }}" />
+
 						<div class="form-group col-md-6">
-							<label for="slug"> @lang('equicare.Short Name') </label>
+							<label for="slug"> No. Hospital</label>
 							<input type="text" name="slug" class="form-control"
 							value="{{ $hospital->slug }}" />
 						</div>

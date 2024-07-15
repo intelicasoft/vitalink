@@ -1,9 +1,9 @@
 @extends('layouts.admin')
 @section('body-title')
-    @lang('equicare.models')
+Modelos
 @endsection
 @section('title')
-	| @lang('equicare.models')
+	| Modelos
 @endsection
 @section('breadcrumb')
 <li class="active">Modelos</li>
