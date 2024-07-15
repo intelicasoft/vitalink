@@ -27,8 +27,8 @@
 							<tr>
 								<th> # </th>
 								<th> Titulo</th>
-								<th> Numero de Ticket </th>
-								<th>Equipo</th>
+								<th> Categoria </th>
+								<th> SN. Equipo</th>
 								<th> Encargado </th>
 								
 								<th> Usuario </th>
@@ -51,8 +51,8 @@
 							<tr>
 							<td> {{ $count }} </td>
 							<td> {{ ucfirst($ticket->title) }} </td>
-							<td> {{ $ticket->number_id ?? '-' }}</td>
-							<td> {{ $ticket->equipment->name ?? '-' }}</td>
+							<td> {{ $ticket->category ?? '-' }}</td>
+							<td> {{ $ticket->equipment->sr_no ?? '-' }}</td>
 							<td> {{ $ticket->manager->name ?? '-' }}</td>
 							<td> {{ $ticket->user->name ?? '-' }}</td>
 							<td>
@@ -90,8 +90,8 @@
 							<tr>
 								<th> # </th>
 								<th> Titulo</th>
-								<th> Numero de Ticket </th>
-								<th>Equipo</th>
+								<th> Categoria </th>
+								<th> SN. Equipo</th>
 								<th> Encargado </th>
 								<th> Usuario </th>
 								<th>Prioridad</th>

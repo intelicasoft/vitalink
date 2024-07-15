@@ -30,7 +30,7 @@
 							value="{{ old('name') }}" />
 						</div>
 						<div class="form-group col-md-6">
-							<label for="slug"> @lang('equicare.Short Name') </label>
+							<label for="slug"> No. Hospital</label>
 							<input type="text" name="slug" class="form-control"
 							value="{{ old('slug') }}" />
 						</div>

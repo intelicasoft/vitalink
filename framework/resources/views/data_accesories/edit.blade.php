@@ -32,7 +32,7 @@
 						</div>
 						
 						<div class="form-group col-md-6">
-							<label for="lote_id"> @lang('equicare.lote') </label>
+							<label for="lote_id"> lotes  </label>
 							<select name="lote_id" class="form-control">
 								<option value="" {{ old('lote_id') ? 'Selecciona un lote' : 'selected' }}></option>
 								@if(isset($lotes))

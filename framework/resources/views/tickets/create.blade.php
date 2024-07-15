@@ -36,7 +36,7 @@
                             <input type="text" name="title" class="form-control" value="{{ old('title') }}" />
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="manager_id"> @lang('equicare.lote') </label>
+                            <label for="manager_id"> Encargado </label>
                             <select name="manager_id" class="form-control">
                                 <option value="">Encargado</option>
                                 @if(isset($managers))

@@ -30,7 +30,7 @@
 								<th> @lang('equicare.name') </th>
 								<th> @lang('equicare.email') </th>
 								<th> @lang('equicare.user') </th>
-								<th> @lang('equicare.slug') </th>
+								<th> No. Hospital </th>
 								<th> @lang('equicare.phone') </th>
 								<th> @lang('equicare.mobile') </th>
 								@if(Auth::user()->hasDirectPermission('Edit Hospitals') || Auth::user()->hasDirectPermission('Delete Hospitals'))
@@ -85,7 +85,7 @@
 								<th> @lang('equicare.name') </th>
 								<th> @lang('equicare.email') </th>
 								<th> @lang('equicare.user') </th>
-								<th> @lang('equicare.slug') </th>
+								<th> No. Hospital </th>
 								<th> @lang('equicare.phone') </th>
 								<th> @lang('equicare.mobile') </th>
 								@if(Auth::user()->hasDirectPermission('Edit Hospitals') || Auth::user()->hasDirectPermission('Delete Hospitals'))
