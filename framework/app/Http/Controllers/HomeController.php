@@ -49,6 +49,27 @@ class HomeController extends Controller {
 		    ->groupBy('call_entries.created_at')
 		    ->get();
 
+		$reviewsPerUserThisMonth = \App\Models\Reviews::select(\DB::raw('user_id, COUNT(*) as total_reviews'))
+			->whereYear('created_at', date('Y'))
+			->whereMonth('created_at', date('m'))
+			->groupBy('user_id')
+			->get();
+
+		$reviewsPerUserYesterday = \App\Models\Reviews::select(\DB::raw('user_id, COUNT(*) as total_reviews'))
+			->whereDate('created_at', \Carbon\Carbon::yesterday())
+			->groupBy('user_id')
+			->get();
+
+		$ticketsClosedIn72HoursPerMonth = \App\Models\Tickets::select(\DB::raw('YEAR(updated_at) as year, MONTH(updated_at) as month, COUNT(*) as total_tickets'))
+			->where('status', 2)
+			->where(\DB::raw('TIMESTAMPDIFF(HOUR, created_at, updated_at)'), '<=', 72)
+			->groupBy('year', 'month')
+			->get();
+		
+		$ticketsClosedPerMonth = \App\Models\Tickets::select(\DB::raw('YEAR(updated_at) as year, MONTH(updated_at) as month, COUNT(*) as total_tickets'))
+			->where('status', 2)
+			->groupBy('year', 'month')
+			->get();
 
 		for ($i = 30; $i >= 0; $i--) {
 			$total_days[] = date("Y-m-d", strtotime('-' . $i . ' days'));
@@ -71,7 +92,10 @@ class HomeController extends Controller {
 				}
 			}
 		}
-
+		$index['ticketsClosedIn72HoursPerMonth'] = $ticketsClosedIn72HoursPerMonth;
+		$index['ticketsClosedPerMonth'] = $ticketsClosedPerMonth;
+		$index['reviewsPerUserThisMonth'] = $reviewsPerUserThisMonth;
+		$index['reviewsPerUserYesterday'] = $reviewsPerUserYesterday;
 		$index['total_days_array'] = $total_days;
 		$index['breakdown'] = $breakdown_totals;
 		$index['preventive'] = $preventive_totals;

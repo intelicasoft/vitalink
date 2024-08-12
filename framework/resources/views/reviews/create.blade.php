@@ -107,11 +107,17 @@ document.addEventListener('DOMContentLoaded', function () {
         navigator.geolocation.getCurrentPosition(function(position) {
             const userLat = position.coords.latitude;
             const userLng = position.coords.longitude;
-            const equipmentLat = {{$equipo->latitude}};
-            const equipmentLng = {{$equipo->longitude}};
+            const equipmentLat = {{$equipo->latitude}}
+            const equipmentLng = {{$equipo->longitude}}
+
+            // Verificación de las coordenadas
+            console.log(`User Coordinates: ${userLat}, ${userLng}`);
+            console.log(`Equipment Coordinates: ${equipmentLat}, ${equipmentLng}`);
+
             const distance = haversine(userLat, userLng, equipmentLat, equipmentLng);
             distanceInput.value = distance.toFixed(2);
             document.getElementById('distancia').innerText = distance.toFixed(2);
+
             if (distance > 10) {
                 alert('Te encuentras fuera de la zona permitida, la revisión no es válida y se le notificará al administrador.');
                 document.querySelector('form').addEventListener('submit', function(event) {
@@ -128,7 +134,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function haversine(lat1, lon1, lat2, lon2) {
-    const toRad = x => x * Math.PI / 180;
+    const toRad = angle => angle * Math.PI / 180;
     const R = 6371; // Radio de la Tierra en km
     const dLat = toRad(lat2 - lat1);
     const dLon = toRad(lon2 - lon1);
@@ -136,8 +142,13 @@ function haversine(lat1, lon1, lat2, lon2) {
               Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
               Math.sin(dLon / 2) * Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c;
+    const distance = R * c;
+
+    console.log(`Calculated Distance: ${distance}`);
+    
+    return distance;
 }
+
 
 
 </script>

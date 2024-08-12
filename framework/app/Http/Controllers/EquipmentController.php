@@ -204,7 +204,7 @@ class EquipmentController extends Controller
             $qr->assign_to = $equipment->id;
             $qr->uid = Str::random(11);
             $qr->save();
-            $url = 'http://34.132.51.29' . "/scan/qr/" . $qr->uid;
+            $url = 'http://34.132.51.29/equicare' . "/scan/qr/" . $qr->uid;
             // $url = url('/') . "/scan/qr/" . $qr->uid;
             Log::info('El valor de la variable es: ' . $url);
 
@@ -427,6 +427,7 @@ class EquipmentController extends Controller
 
     public function history_qr($uid)
     {
+        Log::info('El valor de la variable uid es: ' . $uid);
         $index['page'] = 'equipments history';
         $qr = QrGenerate::where('uid', $uid)->first();
         if ($qr->assign_to != 0) {
