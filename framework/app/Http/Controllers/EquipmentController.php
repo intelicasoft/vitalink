@@ -144,6 +144,8 @@ class EquipmentController extends Controller
 
         $equipment->latitude = $request->latitude;
         $equipment->longitude = $request->longitude;
+        
+        $equipment->last_id = $request->last_id;
 
         $dateFormat = env('date_convert', 'Y-m-d');
         $date_of_purchase = !empty($request->date_of_purchase) ? DateTime::createFromFormat($dateFormat, $request->date_of_purchase)->format('Y-m-d') : null;
@@ -204,7 +206,7 @@ class EquipmentController extends Controller
             $qr->assign_to = $equipment->id;
             $qr->uid = Str::random(11);
             $qr->save();
-            $url = 'http://34.132.51.29/equicare' . "/scan/qr/" . $qr->uid;
+            $url = 'http://34.133.51.29/equicare' . "/scan/qr/" . $qr->uid;
             // $url = url('/') . "/scan/qr/" . $qr->uid;
             Log::info('El valor de la variable es: ' . $url);
 
@@ -294,8 +296,11 @@ class EquipmentController extends Controller
         $equipment->brand_id = $request->brand_id;
         $equipment->accesory_id = $request->accesory_id;
         $equipment->model_id = $request->model_id;
+
         $equipment->latitude = $request->latitude;
         $equipment->longitude = $request->longitude;
+
+        $equipment->last_id = $request->last_id;
 
 
         // $date_of_purchase = !empty($request->date_of_purchase) ?\Carbon\Carbon::createFromFormat('m-d-Y',$request->date_of_purchase) : null;
@@ -490,6 +495,77 @@ class EquipmentController extends Controller
         } else {
             return redirect('admin/equipments/create' . '?qr_id=' . $qr->uid);
         }
+    }
+
+    public function hq_history_qr($id)
+    {
+        Log::info('El valor de la variable id es: ' . $id);
+    
+        $index['page'] = 'equipments history';
+
+        // Encuentra el equipo usando el ID
+        $equipment = Equipment::where('last_id', $id)->first();
+
+        // Verifica si se encontró el equipo antes de intentar acceder a sus propiedades
+        if (!$equipment) {
+            Log::error('No se encontró el equipo con last_id: ' . $id);
+            return redirect('admin/equipments')->with('flash_message', 'Equipo con ID antiguo "' . $id . '" No encontrado');
+        }
+
+        $index['equipment'] = $equipment;
+
+        // Ahora puedes acceder al id sin problemas
+        $id = $equipment->id;
+        // Obtener historial de Tickets
+        $tickets = Tickets::where('equipment_id', $id)
+            ->with('user', 'manager', 'equipment')
+            ->get()
+            ->map(function ($item) {
+                return collect($item)->put('type', 'Ticket');
+            });
+
+        //ultimo ticket abierto que no sea de mantenimiento ni instalacion
+        $lastOpenedTicket = Tickets::where('equipment_id', $id)
+            ->where('status', '1')
+            ->where('category', '!=', 'INSTALACIÓN (M)')
+            ->where('category', '!=', 'MANTENIMIENTO PREVENTIVO (M)')
+            ->with('user', 'manager', 'equipment')
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        $index['lastOpenedTicket'] = $lastOpenedTicket;
+
+        //ultimo ticket de manteniento abierto
+        $lastMaintenanceTicket = Tickets::where('equipment_id', $id)
+        ->where('status', '1')
+        ->where('category', 'MANTENIMIENTO PREVENTIVO (M)')
+        ->with('user', 'manager', 'equipment')
+        ->orderBy('created_at', 'desc')
+        ->first();
+
+        $index['lastMaintenanceTicket'] = $lastMaintenanceTicket;
+
+        //ultimo ticket de instalacion abierto
+        $lastInstallationTicket = Tickets::where('equipment_id', $id)
+        ->where('status', '1')
+        ->where('category', 'INSTALACIÓN (M)')
+        ->with('user', 'manager', 'equipment')
+        ->orderBy('created_at', 'desc')
+        ->first();
+
+        $index['lastInstallationTicket'] = $lastInstallationTicket;
+
+        // Ordenar por fecha descendente
+        $index['data'] = $tickets->sortByDesc('created_at');
+
+        //Log::info('El valor de la variable tickets es: ' . $tickets->toJson());
+
+        foreach ($index as $key => $value) {
+            Log::info('El valor de la variable ' . $key . ' es: ' . $value);
+        }
+
+        return view('equipments.history', $index);
+
     }
 
     public function etiqueta($id)

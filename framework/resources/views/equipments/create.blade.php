@@ -176,6 +176,13 @@
 							<textarea rows="2" name="notes" class="form-control"
 							>{{ old('notes') }}</textarea>
 						</div>
+
+						<div class="form-group col-md-6">
+							<label for="last_id"> Anterior ID</label>
+							<input type="number" name="last_id" class="form-control"
+							value="{{ old('last_id') }}" />
+						</div>
+
 						<input type="hidden" name="qr_id" value="{{request('qr_id')}}"/>	
 						
 						{{-- <div class="form-group col-md-12">

@@ -42,6 +42,8 @@ class CreateEquipmentTable extends Migration {
 			$table->text('notes')->nullable();
 			$table->string('qr_id')->nullable();
 
+			$table->integer('last_id')->nullable();
+
 			$table->SoftDeletes();
 			$table->timestamps();
 		});

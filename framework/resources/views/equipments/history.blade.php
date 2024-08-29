@@ -211,17 +211,25 @@
                                     <div class="carousel-container">
                                         <div class="carousel">
                                             <?php
-                                            $links = explode(',', $equipment->models->links);
-                                            foreach ($links as $link) {
-                                                $link = str_replace('watch?v=', 'embed/', $link);
-                                                echo '<div class="carousel-item">';
-                                                echo '<iframe class="video-container" src="' . $link . '" frameborder="0" allowfullscreen></iframe>';
-                                                echo '</div>';
+                                            // Verificar si $equipment->models existe y si tiene links
+                                            if ($equipment->models && !empty($equipment->models->links)) {
+                                                $links = explode(',', $equipment->models->links);
+                                                foreach ($links as $link) {
+                                                    $link = str_replace('watch?v=', 'embed/', $link);
+                                                    echo '<div class="carousel-item">';
+                                                    echo '<iframe class="video-container" src="' . $link . '" frameborder="0" allowfullscreen></iframe>';
+                                                    echo '</div>';
+                                                }
+                                            } else {
+                                                // Mostrar mensaje si no hay enlaces disponibles
+                                                echo '<p>No hay videos disponibles para este equipo.</p>';
                                             }
                                             ?>
                                         </div>
-                                        <button class="prev" onclick="moveSlide(-1)">&#10094;</button>
-                                        <button class="next" onclick="moveSlide(1)">&#10095;</button>
+                                        <?php if ($equipment->models && !empty($equipment->models->links)): ?>
+                                            <button class="prev" onclick="moveSlide(-1)">&#10094;</button>
+                                            <button class="next" onclick="moveSlide(1)">&#10095;</button>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                                 <div class="flex-container" style="width: 100%">

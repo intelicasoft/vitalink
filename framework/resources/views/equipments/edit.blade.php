@@ -179,6 +179,12 @@
 							>{{ $equipment->notes }}</textarea>
 						</div>
 
+						<div class="form-group col-md-6">
+							<label for="last_id"> Anterior ID</label>
+							<input type="number" name="last_id" class="form-control"
+							value="{{ $equipment->last_id}}" />
+						</div>
+
 						<div class="form-group col-md-12">
 							<div id="map" style="width: 100%; height: 400px;"></div>
 						</div>
