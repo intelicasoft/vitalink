@@ -32,6 +32,9 @@ class CreateEquipmentTable extends Migration {
 
 			$table->string('latitude')->nullable();
 			$table->string('longitude')->nullable();
+
+			$table->integer('status')->nullable();
+			$table->integer('supplies')->nullable();
 			
 			$table->date('order_date')->nullable()->default(null);
 			$table->date('date_of_purchase')->nullable()->default(null);

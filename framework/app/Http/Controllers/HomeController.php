@@ -26,28 +26,19 @@ class HomeController extends Controller {
 
 		$last_thirty_days = date('Y-m-d', strtotime('-30 days'));
 
-		// $breakdown = CallEntry::select('*', DB::raw('COUNT(*) as total'), DB::raw('DATE(created_at) as date'))
-		// 	->where('call_type', 'breakdown')
-		// 	->whereDate('created_at', '>=', $last_thirty_days)->Hospital()
-		// 	->groupBy('date')->get();
+		// $breakdown = CallEntry::select('*', DB::raw('COUNT(*) as total'), DB::raw('DATE(call_entries.created_at) as date'))
+		//     ->where('call_type', 'breakdown')
+		//     ->whereDate('call_entries.created_at', '>=', $last_thirty_days)
+		//     ->Hospital()
+		//     ->groupBy('call_entries.created_at')
+		//     ->get();
 
-		// $preventive = CallEntry::select('*', DB::raw('COUNT(*) as total'), DB::raw('DATE(created_at) as date'))
-		// 	->where('call_type', 'preventive')
-		// 	->whereDate('created_at', '>=', $last_thirty_days)->Hospital()
-		// 	->groupBy('date')->get();
-		$breakdown = CallEntry::select('*', DB::raw('COUNT(*) as total'), DB::raw('DATE(call_entries.created_at) as date'))
-		    ->where('call_type', 'breakdown')
-		    ->whereDate('call_entries.created_at', '>=', $last_thirty_days)
-		    ->Hospital()
-		    ->groupBy('call_entries.created_at')
-		    ->get();
-
-		$preventive = CallEntry::select('*', DB::raw('COUNT(*) as total'), DB::raw('DATE(call_entries.created_at) as date'))
-		    ->where('call_type', 'preventive')
-		    ->whereDate('call_entries.created_at', '>=', $last_thirty_days)
-		    ->Hospital()
-		    ->groupBy('call_entries.created_at')
-		    ->get();
+		// $preventive = CallEntry::select('*', DB::raw('COUNT(*) as total'), DB::raw('DATE(call_entries.created_at) as date'))
+		//     ->where('call_type', 'preventive')
+		//     ->whereDate('call_entries.created_at', '>=', $last_thirty_days)
+		//     ->Hospital()
+		//     ->groupBy('call_entries.created_at')
+		//     ->get();
 
 		$reviewsPerUserThisMonth = \App\Models\Reviews::select(\DB::raw('user_id, COUNT(*) as total_reviews'))
 			->whereYear('created_at', date('Y'))

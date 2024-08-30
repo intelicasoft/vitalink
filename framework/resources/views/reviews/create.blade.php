@@ -39,6 +39,55 @@
 								</select>
 							</div>
 
+                            <div class="form-group col-md-6">
+                                <label>Seleccione el estado en el que se encuentra el equipo</label>
+                                <div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="status" id="status1" value="1" required>
+                                        <label class="form-check-label" for="status1">
+                                            <span class="badge badge-pill" style="font-size: 1.5rem; background-color: lightblue; color: black;">Disponible, en uso</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="status" id="status2" value="2" required>
+                                        <label class="form-check-label" for="status2">
+                                            <span class="badge badge-pill" style="font-size: 1.5rem; background-color: lightgray; color: black;">Disponible, sin uso</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="status" id="status3" value="3" required>
+                                        <label class="form-check-label" for="status3">
+                                            <span class="badge badge-pill" style="font-size: 1.5rem; background-color: lightgreen; color: black;">Fuera de Servicio, reportado</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="status" id="status4" value="4" required>
+                                        <label class="form-check-label" for="status4">
+                                            <span class="badge badge-pill" style="font-size: 1.5rem; background-color: pink; color: black;">Fuera de Servicio, no reportado</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-md-6">
+                                <label>Seleccione la disponibilidad de insumos</label>
+                                <div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="supplies" id="supplies1" value="1" required>
+                                        <label class="form-check-label" for="supplies1">
+                                            <span class="badge badge-pill" style="font-size: 1.5rem; background-color: lightblue; color: black;">No dispone de insumos</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="supplies" id="supplies2" value="2" required>
+                                        <label class="form-check-label" for="supplies2">
+                                            <span class="badge badge-pill" style="font-size: 1.5rem; background-color: lightgray; color: black;">Disponible de insumos</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            
 							{{-- Botón para abrir la cámara --}}
 							<div class="form-group col-md-12">
 								<button type="button" id="open-camera" class="btn btn-secondary btn-flat">Abrir Cámara</button>
