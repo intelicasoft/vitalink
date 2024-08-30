@@ -10,7 +10,6 @@
 @endsection
 @section('content')
     <link rel="stylesheet" href="{{ asset('assets/css/dashboard.css') }}">
-    <script src="{{ asset('assets/js/dashboard.js') }}" type="text/javascript"></script>
 
     <div class="row ">
 
@@ -66,46 +65,54 @@
                             </div>
                         </div>
 
-                        <div class="card">
-                            <div>
-                                <div class="numbers">80</div>
-                                <div class="cardName">Sales</div>
+                        <div class="card" onclick="window.location.href='{{ url('admin/tickets') }}'">
+                            <div class="cardName">
+                                <div class="numbers">{{ $countOpenTickets }}</div>
+                                <p>Tickets Abiertos</p>
                             </div>
                             <div class="iconBx">
-                                <ion-icon name="cart-outline"></ion-icon>
+                                <i class="fa fa-wrench"></i>
                             </div>
                         </div>
-                        {{-- <div class="card">
-                            <div>
-                                <div class="numbers">284</div>
-                                <div class="cardName">Comments</div>
-                            </div>
-                            <div class="iconBx">
-                                <ion-icon name="chatbubbles-outline"></ion-icon>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div>
-                                <div class="numbers">$7,842</div>
-                                <div class="cardName">Earning</div>
-                            </div>
-                            <div class="iconBx">
-                                <ion-icon name="cash-outline"></ion-icon>
-                            </div>
-                        </div> --}}
+
                     </div>
-
-
 
                     <!-- Add Charts -->
                     <div class="graphBox">
-                        <div class="box">
-                            <canvas id="myChartt"></canvas>
+                        <div class="box" style="padding: 30px">
+                            <canvas id="equipmentStatusChart"></canvas>
                         </div>
-                        <div class="box">
-                            <canvas id="earning"></canvas>
+
+                        <div class="carousel-container">
+                            <div class="carousel">
+                                <div class="carousel-item">
+                                    <div class="box">
+                                        <canvas id="earning"></canvas>
+                                    </div>
+                                </div>
+                                <div class="carousel-item">
+                                    <div class="box">
+                                        <canvas id="reviewsPerUserYesterdayChart"></canvas>
+                                    </div>
+                                </div>
+                                <div class="carousel-item">
+                                    <div class="box">
+                                        <canvas id="ticketsClosedIn72HoursPerMonthChart"></canvas>
+                                    </div>
+                                </div>
+                                <div class="carousel-item">
+                                    <div class="box">
+                                        <canvas id="ticketsClosedPerMonthChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="prev" onclick="moveSlide(-1)">&#10094;</button>
+                            <button class="next" onclick="moveSlide(1)">&#10095;</button>
                         </div>
                     </div>
+
+
+
 
                     <div class="details">
                         <!-- order details list -->
@@ -279,11 +286,73 @@
 
         </body>
     @endsection
-
+    @php
+        function getNombreMes($numeroMes)
+        {
+            $meses = [
+                1 => 'Enero',
+                2 => 'Febrero',
+                3 => 'Marzo',
+                4 => 'Abril',
+                5 => 'Mayo',
+                6 => 'Junio',
+                7 => 'Julio',
+                8 => 'Agosto',
+                9 => 'Septiembre',
+                10 => 'Octubre',
+                11 => 'Noviembre',
+                12 => 'Diciembre',
+            ];
+            return $meses[$numeroMes] ?? '';
+        }
+    @endphp
 
     @section('scripts')
         <script>
+            const purpleGradient = {
+                backgroundColor: [
+                    'rgba(65, 22, 87, 1)',
+                    'rgba(87, 30, 117, 0.9)',
+                    'rgba(109, 38, 147, 0.8)',
+                    'rgba(131, 46, 177, 0.7)',
+                    'rgba(153, 54, 207, 0.6)',
+                    'rgba(175, 62, 237, 0.5)',
+                    'rgba(197, 70, 255, 0.4)'
+                ],
+                borderColor: [
+                    'rgb(65, 22, 87)',
+                    'rgb(87, 30, 117)',
+                    'rgb(109, 38, 147)',
+                    'rgb(131, 46, 177)',
+                    'rgb(153, 54, 207)',
+                    'rgb(175, 62, 237)',
+                    'rgb(197, 70, 255)'
+                ]
+            };
+
+            const coolColors = {
+                backgroundColor: [
+                    'rgba(0, 63, 92, 1)',
+                    'rgba(5, 102, 141, 0.9)',
+                    'rgba(2, 128, 144, 0.8)',
+                    'rgba(0, 168, 150, 0.7)',
+                    'rgba(2, 195, 154, 0.6)',
+                    'rgba(240, 243, 189, 0.5)',
+                    'rgba(73, 190, 170, 0.4)'
+                ],
+                borderColor: [
+                    'rgb(0, 63, 92)',
+                    'rgb(5, 102, 141)',
+                    'rgb(2, 128, 144)',
+                    'rgb(0, 168, 150)',
+                    'rgb(2, 195, 154)',
+                    'rgb(240, 243, 189)',
+                    'rgb(73, 190, 170)'
+                ]
+            };
+
             var ctxMonth = document.getElementById('earning').getContext('2d');
+
             var reviewsPerUserThisMonthChart = new Chart(ctxMonth, {
                 type: 'bar',
                 data: {
@@ -291,28 +360,17 @@
                     datasets: [{
                         label: 'Revisiones del Mes',
                         data: {!! json_encode($reviewsPerUserThisMonth->pluck('total_reviews')) !!},
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(255, 206, 86, 1)',
-                            'rgba(75, 192, 192, 1)',
-                            'rgba(153, 102, 255, 1)',
-                            'rgba(255, 159, 64, 1)',
-                            'rgba(255, 99, 132, 1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(255, 206, 86, 1)',
-                            'rgba(75, 192, 192, 1)',
-                            'rgba(153, 102, 255, 1)',
-                            'rgba(255, 159, 64, 1)'
-                        ],
-                        borderColor: 'rgba(54, 162, 235, 1)',
+                        backgroundColor: purpleGradient.backgroundColor,
+                        borderColor: purpleGradient.borderColor,
                         borderWidth: 1
                     }]
                 },
                 options: {
-                    responsive: true, 
+                    indexAxis: 'y',
+
+                    responsive: true,
                     scales: {
-                        y: {
+                        x: {
                             beginAtZero: true,
                             max: 50 // Fija el límite máximo en el eje Y a 50
                         }
@@ -325,16 +383,28 @@
             var reviewsPerUserYesterdayChart = new Chart(ctxYesterday, {
                 type: 'bar',
                 data: {
-                    labels: {!! json_encode($reviewsPerUserYesterday->pluck('user_id')) !!},
+                    labels: {!! json_encode($reviewsPerUserYesterday->pluck('user_name')) !!},
                     datasets: [{
                         label: 'Revisiones del Día de Ayer',
                         data: {!! json_encode($reviewsPerUserYesterday->pluck('total_reviews')) !!},
-                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                        borderColor: 'rgba(255, 99, 132, 1)',
+                        backgroundColor: purpleGradient.backgroundColor,
+                        borderColor: purpleGradient.borderColor,
                         borderWidth: 1
                     }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 20
+                        }
+                    }
                 }
+
             });
+
+
 
             var ctx72HoursPerMonth = document.getElementById('ticketsClosedIn72HoursPerMonthChart').getContext('2d');
             var ticketsClosedIn72HoursPerMonthChart = new Chart(ctx72HoursPerMonth, {
@@ -342,24 +412,27 @@
                 data: {
                     labels: {!! json_encode(
                         $ticketsClosedIn72HoursPerMonth->map(function ($item) {
-                            return $item->year . '-' . str_pad($item->month, 2, '0', STR_PAD_LEFT); // Formato Año-Mes
+                            return getNombreMes($item->month);
                         }),
                     ) !!},
                     datasets: [{
                         label: 'Tickets Cerrados en 72 Horas por Mes',
                         data: {!! json_encode($ticketsClosedIn72HoursPerMonth->pluck('total_tickets')) !!},
-                        backgroundColor: 'rgba(54, 162, 235, 0.2)', // Color de fondo de las barras
-                        borderColor: 'rgba(54, 162, 235, 1)', // Color del borde de las barras
+                        backgroundColor: purpleGradient.backgroundColor,
+                        borderColor: purpleGradient.borderColor,
                         borderWidth: 1
                     }]
                 },
                 options: {
+                    responsive: true,
                     scales: {
                         y: {
-                            beginAtZero: true // Comienza el eje y en 0
+                            beginAtZero: true,
+                            max: 50 // Fija el límite máximo en el eje Y a 50
                         }
                     }
                 }
+
             });
 
             var ctxPerMonth = document.getElementById('ticketsClosedPerMonthChart').getContext('2d');
@@ -368,16 +441,60 @@
                 data: {
                     labels: {!! json_encode(
                         $ticketsClosedPerMonth->map(function ($item) {
-                            return $item->year . '-' . str_pad($item->month, 2, '0', STR_PAD_LEFT);
+                            return getNombreMes($item->month);
                         }),
                     ) !!},
                     datasets: [{
                         label: 'Tickets Cerrados',
                         data: {!! json_encode($ticketsClosedPerMonth->pluck('total_tickets')) !!},
-                        backgroundColor: 'rgba(153, 102, 255, 0.2)',
-                        borderColor: 'rgba(153, 102, 255, 1)',
+                        backgroundColor: purpleGradient.backgroundColor,
+                        borderColor: purpleGradient.borderColor,
                         borderWidth: 1
                     }]
+                },
+                options: {
+
+
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 50 // Fija el límite máximo en el eje Y a 50
+                        }
+                    }
+                }
+
+            });
+
+            var ctx = document.getElementById('equipmentStatusChart').getContext('2d');
+            var equipmentStatusChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: {!! json_encode($equipmentStatusCounts->pluck('status_description')) !!},
+                    datasets: [{
+                        label: 'Cantidad de Equipos por Estado',
+                        data: {!! json_encode($equipmentStatusCounts->pluck('total')) !!},
+                        backgroundColor: purpleGradient.backgroundColor,
+                        borderColor: purpleGradient.borderColor,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Cantidad de Equipos por Estado',
+                            font: {
+                                size: 20
+                            },
+                            padding: {
+                                bottom: 10
+                            }
+                        },
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
                 }
             });
         </script>

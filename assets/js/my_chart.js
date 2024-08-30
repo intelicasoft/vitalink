@@ -1,3 +1,6 @@
+let currentIndex = 0;
+
+
 var ctx = document.getElementById('myChartt').getContext('2d');
 var earning = document.getElementById('earningg').getContext('2d');
 var myChart = new Chart(ctx, {
@@ -51,4 +54,22 @@ var myChart = new Chart(earning, {
     }
 });
 
+
+function moveSlide(direction) {
+    console.log('moveSlide', direction);
+    const carousel = document.querySelector('.carousel');
+    const items = document.querySelectorAll('.carousel-item');
+    const totalItems = items.length;
+
+    currentIndex += direction;
+
+    if (currentIndex < 0) {
+        currentIndex = totalItems - 1;
+    } else if (currentIndex >= totalItems) {
+        currentIndex = 0;
+    }
+
+    const offset = -currentIndex * 100;
+    carousel.style.transform = `translateX(${offset}%)`;
+}
 
