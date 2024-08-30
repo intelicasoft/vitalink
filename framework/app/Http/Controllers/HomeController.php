@@ -22,16 +22,8 @@ class HomeController extends Controller {
 	 */
 	public function index() {
 		$index['page'] = '/home';
-		$breakdown_totals = $preventive_totals = $total_days = [];
 
 		$last_thirty_days = date('Y-m-d', strtotime('-30 days'));
-
-		// $breakdown = CallEntry::select('*', DB::raw('COUNT(*) as total'), DB::raw('DATE(call_entries.created_at) as date'))
-		//     ->where('call_type', 'breakdown')
-		//     ->whereDate('call_entries.created_at', '>=', $last_thirty_days)
-		//     ->Hospital()
-		//     ->groupBy('call_entries.created_at')
-		//     ->get();
 
 		// $preventive = CallEntry::select('*', DB::raw('COUNT(*) as total'), DB::raw('DATE(call_entries.created_at) as date'))
 		//     ->where('call_type', 'preventive')
@@ -40,11 +32,12 @@ class HomeController extends Controller {
 		//     ->groupBy('call_entries.created_at')
 		//     ->get();
 
-		$reviewsPerUserThisMonth = \App\Models\Reviews::select(\DB::raw('user_id, COUNT(*) as total_reviews'))
-			->whereYear('created_at', date('Y'))
-			->whereMonth('created_at', date('m'))
-			->groupBy('user_id')
-			->get();
+		$reviewsPerUserThisMonth = \App\Models\Reviews::select(\DB::raw('users.name as user_name, COUNT(*) as total_reviews'))
+            ->join('users', 'reviews.user_id', '=', 'users.id')
+            ->whereYear('reviews.created_at', date('Y'))
+            ->whereMonth('reviews.created_at', date('m'))
+            ->groupBy('users.name')
+            ->get();
 
 		$reviewsPerUserYesterday = \App\Models\Reviews::select(\DB::raw('user_id, COUNT(*) as total_reviews'))
 			->whereDate('created_at', \Carbon\Carbon::yesterday())
@@ -66,30 +59,12 @@ class HomeController extends Controller {
 			$total_days[] = date("Y-m-d", strtotime('-' . $i . ' days'));
 		}
 
-		foreach ($total_days as $key => $v) {
-			foreach ($breakdown as $key => $b) {
-				if ($b->date == $v) {
-					array_push($breakdown_totals, $b->total);
-				} else {
-					array_push($breakdown_totals, 0);
-				}
-			}
-
-			foreach ($preventive as $key => $p) {
-				if ($p->date == $v) {
-					array_push($preventive_totals, $p->total);
-				} else {
-					array_push($preventive_totals, 0);
-				}
-			}
-		}
+		
 		$index['ticketsClosedIn72HoursPerMonth'] = $ticketsClosedIn72HoursPerMonth;
 		$index['ticketsClosedPerMonth'] = $ticketsClosedPerMonth;
 		$index['reviewsPerUserThisMonth'] = $reviewsPerUserThisMonth;
 		$index['reviewsPerUserYesterday'] = $reviewsPerUserYesterday;
 		$index['total_days_array'] = $total_days;
-		$index['breakdown'] = $breakdown_totals;
-		$index['preventive'] = $preventive_totals;
 		// dd($index);
 		return view('home', $index);
 	}
