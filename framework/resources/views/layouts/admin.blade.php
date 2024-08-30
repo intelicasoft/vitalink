@@ -210,13 +210,13 @@
     </li>
 @endif --}}
 
-@if(auth()->user()->hasDirectPermission('View QR Scan'))
+{{-- @if(auth()->user()->hasDirectPermission('View QR Scan'))
     <li class="{{ $page=='qr-scan'?'active':'' }}">
         <a href="{{ url('/admin/qr-scan') }}">
             <i class="fa fa-qrcode"></i> <span>@lang('equicare.qr-scan')</span>
         </a>
     </li>
-@endif
+@endif --}}
 
 
 

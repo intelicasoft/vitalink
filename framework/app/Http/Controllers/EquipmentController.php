@@ -146,6 +146,8 @@ class EquipmentController extends Controller
         $equipment->longitude = $request->longitude;
         
         $equipment->last_id = $request->last_id;
+        $equipment->status = $request->status;
+        $equipment->supplies = $request->supplies;
 
         $dateFormat = env('date_convert', 'Y-m-d');
         $date_of_purchase = !empty($request->date_of_purchase) ? DateTime::createFromFormat($dateFormat, $request->date_of_purchase)->format('Y-m-d') : null;
@@ -301,7 +303,8 @@ class EquipmentController extends Controller
         $equipment->longitude = $request->longitude;
 
         $equipment->last_id = $request->last_id;
-
+        $equipment->status = $request->status;
+        $equipment->supplies = $request->supplies;
 
         // $date_of_purchase = !empty($request->date_of_purchase) ?\Carbon\Carbon::createFromFormat('m-d-Y',$request->date_of_purchase) : null;
         // $order_date = !empty($request->order_date) ?\Carbon\Carbon::createFromFormat('m-d-Y',$request->order_date) : null;
