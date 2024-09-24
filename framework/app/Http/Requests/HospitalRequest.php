@@ -27,7 +27,7 @@ class HospitalRequest extends FormRequest {
 		
 			$rules=[
 			'name' => 'required|unique:hospitals,name,'.$request->id,
-			'email' => 'required',
+			'email' => 'nullable',  //antes era required
 			'contact_person' => 'required',
 			'phone_no' => 'required|numeric|min:6',
 			'latitude' => 'required',

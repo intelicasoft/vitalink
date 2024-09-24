@@ -88,7 +88,7 @@
 								<th> Accesorio de Repuesto</th>
 								<th> Marca </th>
 								<th> @lang('equicare.serial_no') </th>
-								<th> @lang('equicare.department') </th>
+								{{-- <th> @lang('equicare.department') </th> --}}
 								<th> @lang('equicare.purchase_date') </th>
 								<th> @lang('equicare.order_date') </th>
 								<th> @lang('equicare.installation_date') </th>
@@ -118,7 +118,7 @@
 								<td>{{ $equipment->brand_id ?? '-' }}</td>
 								<td>{{ $equipment->sr_no }}</td>
 								{{-- {{dd($equipment->get_department)}} --}}
-								<td>{{($equipment->get_department->short_name)??"-" }} ({{ ($equipment->get_department->name) ??'-' }})</td>
+								{{-- <td>{{($equipment->get_department->short_name)??"-" }} ({{ ($equipment->get_department->name) ??'-' }})</td>
 								@php
 									$uids = explode('/',$equipment->unique_id);
 									$department_id = $uids[1];
@@ -127,7 +127,7 @@
 										$uids[1] = $department->short_name;
 									}
 									$uids = implode('/',$uids);
-								@endphp
+								@endphp --}}
 								{{-- <td>{{ $uids }}</td> --}}
 								<td>{{ date_change($equipment->date_of_purchase)?? '-' }}</td>
 								<td>{{ date_change($equipment->order_date)?? '-' }}</td>
@@ -170,7 +170,7 @@
 								<th> Accesorio de Repuesto</th>
 								<th> Marca </th>
 								<th> @lang('equicare.serial_no') </th>
-								<th> @lang('equicare.department') </th>
+								{{-- <th> @lang('equicare.department') </th> --}}
 								<th> @lang('equicare.purchase_date') </th>
 								<th> @lang('equicare.order_date') </th>
 								<th> @lang('equicare.installation_date') </th>

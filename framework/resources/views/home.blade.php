@@ -14,6 +14,23 @@
     <div class="row ">
 
         <body>
+            <style>
+                .status {
+                    padding: 5px;
+                    border-radius: 3px;
+                    font-weight: bold;
+                }
+            
+                .status.abierto {
+                    color: white;
+                    background-color: green;
+                }
+            
+                .status.cerrado {
+                    color: white;
+                    background-color: red;
+                }
+            </style>
 
             <div class="container">
                 <!-- main -->
@@ -124,81 +141,88 @@
                             <table>
                                 <thead>
                                     <tr>
-                                        <td>Name</td>
-                                        <td>Price</td>
-                                        <td>Payment</td>
+                                        <td>Categoría</td>
+                                        <td>Número de Serie</td>
+                                        <td>Fecha</td>
                                         <td>Status</td>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>Star Refrigerator</td>
-                                        <td>$1200</td>
-                                        <td>Paid</td>
-                                        <td><span class="status delivered">Delivered</span></td>
+                                        <td>MANTENIMIENTO PREVENTIVO (M)</td>
+                                        <td>123456789</td>
+                                        <td>2024-09-22</td>
+                                        <td><span class="status abierto">Abierto</span></td>
                                     </tr>
                                     <tr>
-                                        <td>Window Coolers</td>
-                                        <td>$110</td>
-                                        <td>Due</td>
-                                        <td><span class="status pending">Pending</span></td>
+                                        <td>INSTALACIÓN (M)</td>
+                                        <td>987654321</td>
+                                        <td>2024-09-20</td>
+                                        <td><span class="status cerrado">Cerrado</span></td>
                                     </tr>
                                     <tr>
-                                        <td>Speakers</td>
-                                        <td>$620</td>
-                                        <td>Paid</td>
-                                        <td><span class="status return">Return</span></td>
+                                        <td>REACONDICIONAMIENTO (M)</td>
+                                        <td>567890123</td>
+                                        <td>2024-09-15</td>
+                                        <td><span class="status abierto">Abierto</span></td>
                                     </tr>
                                     <tr>
-                                        <td>Hp Laptop</td>
-                                        <td>$110</td>
-                                        <td>Due</td>
-                                        <td><span class="status inprogress">In Progress</span></td>
+                                        <td>INCIDENCIA CORRECTIVA (I)</td>
+                                        <td>345678901</td>
+                                        <td>2024-09-12</td>
+                                        <td><span class="status cerrado">Cerrado</span></td>
                                     </tr>
                                     <tr>
-                                        <td>Apple Watch</td>
-                                        <td>$1200</td>
-                                        <td>Paid</td>
-                                        <td><span class="status delivered">Delivered</span></td>
+                                        <td>CAPACITACIÓN (M)</td>
+                                        <td>234567890</td>
+                                        <td>2024-09-10</td>
+                                        <td><span class="status abierto">Abierto</span></td>
                                     </tr>
                                     <tr>
-                                        <td>Wall Fan</td>
-                                        <td>$110</td>
-                                        <td>Paid</td>
-                                        <td><span class="status pending">Pending</span></td>
+                                        <td>VERIFICACIÓN (M)</td>
+                                        <td>998877665</td>
+                                        <td>2024-09-08</td>
+                                        <td><span class="status cerrado">Cerrado</span></td>
                                     </tr>
                                     <tr>
-                                        <td>Adidas Shoes</td>
-                                        <td>$620</td>
-                                        <td>Paid</td>
-                                        <td><span class="status return">Return</span></td>
+                                        <td>ASESORIA (I)</td>
+                                        <td>112233445</td>
+                                        <td>2024-09-05</td>
+                                        <td><span class="status abierto">Abierto</span></td>
                                     </tr>
                                     <tr>
-                                        <td>Denim Shirts</td>
-                                        <td>$110</td>
-                                        <td>Due</td>
-                                        <td><span class="status inprogress">In Progress</span></td>
+                                        <td>DESINSTALACIÓN (M)</td>
+                                        <td>443322110</td>
+                                        <td>2024-09-03</td>
+                                        <td><span class="status cerrado">Cerrado</span></td>
                                     </tr>
                                     <tr>
-                                        <td>Casual Shoes</td>
-                                        <td>$575</td>
-                                        <td>Paid</td>
-                                        <td><span class="status pending">Pending</span></td>
+                                        <td>ABASTECIMIENTO (I)</td>
+                                        <td>556677889</td>
+                                        <td>2024-09-01</td>
+                                        <td><span class="status abierto">Abierto</span></td>
                                     </tr>
                                     <tr>
-                                        <td>Wall Fan</td>
-                                        <td>$110</td>
-                                        <td>Paid</td>
-                                        <td><span class="status pending">Pending</span></td>
+                                        <td>SISTEMAS TI (I)</td>
+                                        <td>221100998</td>
+                                        <td>2024-08-30</td>
+                                        <td><span class="status cerrado">Cerrado</span></td>
                                     </tr>
                                     <tr>
-                                        <td>Denim Shirts</td>
-                                        <td>$110</td>
-                                        <td>Due</td>
-                                        <td><span class="status inprogress">In Progress</span></td>
+                                        <td>MANTENIMIENTO PREVENTIVO (M)</td>
+                                        <td>778899112</td>
+                                        <td>2024-08-28</td>
+                                        <td><span class="status abierto">Abierto</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>INCIDENCIA CORRECTIVA (I)</td>
+                                        <td>334455667</td>
+                                        <td>2024-08-25</td>
+                                        <td><span class="status cerrado">Cerrado</span></td>
                                     </tr>
                                 </tbody>
                             </table>
+                            
                         </div>
 
                         <!-- New Customers -->

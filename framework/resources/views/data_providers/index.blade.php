@@ -1,9 +1,9 @@
 @extends('layouts.admin')
 @section('body-title')
-    @lang('equicare.providers')
+    Proveedores
 @endsection
 @section('title')
-	| @lang('equicare.providers')
+	| Proveedores
 @endsection
 @section('breadcrumb')
 <li class="active">Proveedores</li>

@@ -40,7 +40,7 @@ Modelos
 
 						
 						<div class="form-group col-md-6">
-							<label for="brand_id"> @lang('equicare.brand_id') </label>
+							<label for="brand_id"> Marca </label>
 							<select name="brand_id" class="form-control">
 								<option value="" {{ old('marca_id') ? 'Selecciona un marca' : 'selected' }}></option>
 								@if(isset($marcas))

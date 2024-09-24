@@ -76,7 +76,7 @@
 						</div>
 
 						<div class="form-group col-md-6">
-							<label for="brand_id"> @lang('equicare.brand') </label>
+							<label for="brand_id"> Marca </label>
 							<select name="brand_id" class="form-control">
 								<option value="">---select---</option>
 								@if(isset($brands))
@@ -106,10 +106,10 @@
 						</div>
 
 						
-						<div class="form-group col-md-6">
+						{{-- <div class="form-group col-md-6">
 							<label for="department"> @lang('equicare.department') </label>
 							{!! Form::select('department',$departments??[],null,['class'=>'form-control','placeholder'=>'--select--']) !!}
-						</div>
+						</div> --}}
 						<div class="form-group col-md-6">
 							<label for="date_of_purchase"> @lang('equicare.purchase_date') </label>
 							<div class="input-group">

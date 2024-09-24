@@ -108,10 +108,10 @@ class EquipmentController extends Controller
         $index['brands'] = DataBrand::all();
         $index['accesories'] = DataAccesories::all();
         $index['models'] = DataModels::all();
-        $index['departments'] =
-            Department::select('id', DB::raw('CONCAT(short_name," (" , name ,")") as full_name'))
-            ->pluck('full_name', 'id')
-            ->toArray();
+        // $index['departments'] =
+        //     Department::select('id', DB::raw('CONCAT(short_name," (" , name ,")") as full_name'))
+        //     ->pluck('full_name', 'id')
+        //     ->toArray();
         return view('equipments.create', $index);
     }
 
@@ -134,7 +134,7 @@ class EquipmentController extends Controller
         $equipment->company = $request->company;
         $equipment->sr_no = $request->sr_no;
         $equipment->hospital_id = $request->hospital_id;
-        $equipment->department = $request->department;
+        //$equipment->department = $request->department;
         $equipment->model = $request->model;
         $equipment->qr_id = $request->qr_id;
         $equipment->brand_id = $request->brand_id;
@@ -170,12 +170,14 @@ class EquipmentController extends Controller
         $equipment_number = Equipment::where('hospital_id', $request->hospital_id)
             ->where('name', trim($request->name))
             ->where('short_name', $request->short_name)
-            ->where('department', $request->department)
+            // ->where('department', $request->department)
             ->count();
         $equipment_number = sprintf("%02d", $equipment_number + 1);
         $equipment->unique_id = "";
         $hospital = Hospital::where('id', $request->hospital_id)->first();
         if ($hospital != "") {
+            // $unique_id = $hospital->slug . '/' . $equipment->department . '/' . $equipment->short_name . '/' . $equipment_number;
+            // $label_name = $hospital->slug . '/' . $equipment->department . '/' . $equipment->short_name . '/';
             $unique_id = $hospital->slug . '/' . $equipment->department . '/' . $equipment->short_name . '/' . $equipment_number;
             $label_name = $hospital->slug . '/' . $equipment->department . '/' . $equipment->short_name . '/';
             $equipment_last = Equipment::where('unique_id', 'like', $label_name . '%')->orderBy('unique_id', 'desc')->first();
@@ -270,10 +272,10 @@ class EquipmentController extends Controller
         $index['brands'] = DataBrand::all();
         $index['accesories'] = DataAccesories::all();
         $index['models'] = DataModels::all();
-        $index['departments'] =
-            Department::select('id', DB::raw('CONCAT(short_name," (" , name ,")") as full_name'))
-            ->pluck('full_name', 'id')
-            ->toArray();
+        // $index['departments'] =
+        //     Department::select('id', DB::raw('CONCAT(short_name," (" , name ,")") as full_name'))
+        //     ->pluck('full_name', 'id')
+        //     ->toArray();
         return view('equipments.edit', $index);
     }
 
@@ -293,7 +295,7 @@ class EquipmentController extends Controller
         $equipment->company = $request->company;
         $equipment->sr_no = $request->sr_no;
         $equipment->hospital_id = $request->hospital_id;
-        $equipment->department = $request->department;
+        //$equipment->department = $request->department;
         $equipment->model = $request->model;
         $equipment->brand_id = $request->brand_id;
         $equipment->accesory_id = $request->accesory_id;
