@@ -56,6 +56,10 @@ Route::get('migration', [LaravelWebInstaller::class,'migration']);
 Route::get('/equipments/history/{equipment}', [EquipmentController::class,'history'])->name('equipments.history');
 Route::get('/scan/qr/{equipment}', [EquipmentController::class,'history_qr']);
 
+//last_id hq
+Route::get('scan/qr/hq/{id}',[EquipmentController::class,'hq_history_qr']);
+
+
 Route::group(['middleware' => ['installed_or_not', 'auth']], function () {
     Route::get('/', [HomeController::class,'index'])->name('home');
     Route::get('/home', function () {

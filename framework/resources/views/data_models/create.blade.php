@@ -34,7 +34,7 @@
 							</div>
 							
 							<div class="form-group col-md-6">
-								<label for="brand_id"> @lang('equicare.marca') </label>
+								<label for="brand_id"> Marca </label>
 								<select name="brand_id" class="form-control">
 									<option value="">Seleccione una marca</option>
 									@if(isset($marcas))

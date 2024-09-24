@@ -28,7 +28,14 @@ class ReviewsController extends Controller
             ->select('equipments.*', DB::raw('MAX(reviews.created_at) as ultima_fecha_revision'))
             ->groupBy('equipments.id')
             ->get();
-
+            
+        $equipos = Equipment::with(['hospital'])
+            ->leftJoin('reviews', 'equipments.id', '=', 'reviews.equipment_id')
+            ->select('equipments.*', 
+                     DB::raw('MAX(reviews.created_at) as ultima_fecha_revision'),
+                     DB::raw('(SELECT description FROM reviews WHERE reviews.equipment_id = equipments.id ORDER BY reviews.created_at DESC LIMIT 1) as description'))
+            ->groupBy('equipments.id')
+            ->get();
         return view('reviews.index', $index,['equipos' => $equipos]);
     }
 
@@ -73,10 +80,21 @@ class ReviewsController extends Controller
             'description' => 'required|string|max:255',
             'equipment_id' => 'required|integer|exists:equipments,id', // Suponiendo que hay una tabla de equipos
             'images' => 'required|string', // Modificamos la validación a 'string'
+            'status' => 'required|integer',
+            'supplies' => 'required|integer',
             'distance' => 'required|numeric|max:9.99',
         ]);
 
         $data['user_id'] = Auth::id(); // Utiliza Auth::id() en lugar de Auth::user()->id
+
+        $equipment = Equipment::find($data['equipment_id']);
+        if ($equipment) {
+            $equipment->status = $data['status'];
+            $equipment->supplies = $data['supplies'];
+            $equipment->save();
+        } else {
+            return back()->withErrors(['equipment_id' => 'El equipo no fue encontrado.']);
+        }
 
         // Procesar la imagen si está presente
         if ($request->has('images')) {

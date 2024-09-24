@@ -32,6 +32,9 @@ class CreateEquipmentTable extends Migration {
 
 			$table->string('latitude')->nullable();
 			$table->string('longitude')->nullable();
+
+			$table->integer('status')->nullable();
+			$table->integer('supplies')->nullable();
 			
 			$table->date('order_date')->nullable()->default(null);
 			$table->date('date_of_purchase')->nullable()->default(null);
@@ -41,6 +44,8 @@ class CreateEquipmentTable extends Migration {
 			$table->boolean('is_critical')->nullable();
 			$table->text('notes')->nullable();
 			$table->string('qr_id')->nullable();
+
+			$table->integer('last_id')->nullable();
 
 			$table->SoftDeletes();
 			$table->timestamps();

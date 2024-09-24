@@ -210,13 +210,13 @@
     </li>
 @endif --}}
 
-@if(auth()->user()->hasDirectPermission('View QR Scan'))
+{{-- @if(auth()->user()->hasDirectPermission('View QR Scan'))
     <li class="{{ $page=='qr-scan'?'active':'' }}">
         <a href="{{ url('/admin/qr-scan') }}">
             <i class="fa fa-qrcode"></i> <span>@lang('equicare.qr-scan')</span>
         </a>
     </li>
-@endif
+@endif --}}
 
 
 
@@ -564,20 +564,21 @@
         $(this).val($(this).val().slice(0, maxLength));
     }
 });
-$('input[type="text"]').on('input', function(event) {
-    // console.log('test');
-    // Get the current value of the input field
-    var inputValue = $(this).val();
-    
-    // Define a regular expression pattern to allow only alphanumeric characters and spaces
-    var regex = /^[a-zA-Z0-9\s]*$/;
-    
-    // Test if the input matches the regular expression
-    if (!regex.test(inputValue)) {
-        // If the input contains special characters, remove them and update the input field
-        $(this).val(inputValue.replace(/[^\w\s]/gi, ''));
-    }
-});
+  // $('input[type="text"]').on('input', function(event) {
+  //     // console.log('test');
+  //     // Get the current value of the input field
+  //     var inputValue = $(this).val();
+      
+  //     // Define a regular expression pattern to allow only alphanumeric characters and spaces
+  //     var regex = /^[a-zA-Z0-9\s]*$/;
+      
+  //     // Test if the input matches the regular expression
+  //     if (!regex.test(inputValue)) {
+  //         // If the input contains special characters, remove them and update the input field
+  //         $(this).val(inputValue.replace(/[^\w\s]/gi, ''));
+  //     }
+  // });
+  $('input[type="text"]').off('input');
   });
 </script>
 <!-- AdminLTE for demo purposes -->

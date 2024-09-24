@@ -108,10 +108,10 @@ class EquipmentController extends Controller
         $index['brands'] = DataBrand::all();
         $index['accesories'] = DataAccesories::all();
         $index['models'] = DataModels::all();
-        $index['departments'] =
-            Department::select('id', DB::raw('CONCAT(short_name," (" , name ,")") as full_name'))
-            ->pluck('full_name', 'id')
-            ->toArray();
+        // $index['departments'] =
+        //     Department::select('id', DB::raw('CONCAT(short_name," (" , name ,")") as full_name'))
+        //     ->pluck('full_name', 'id')
+        //     ->toArray();
         return view('equipments.create', $index);
     }
 
@@ -134,7 +134,7 @@ class EquipmentController extends Controller
         $equipment->company = $request->company;
         $equipment->sr_no = $request->sr_no;
         $equipment->hospital_id = $request->hospital_id;
-        $equipment->department = $request->department;
+        //$equipment->department = $request->department;
         $equipment->model = $request->model;
         $equipment->qr_id = $request->qr_id;
         $equipment->brand_id = $request->brand_id;
@@ -144,6 +144,10 @@ class EquipmentController extends Controller
 
         $equipment->latitude = $request->latitude;
         $equipment->longitude = $request->longitude;
+        
+        $equipment->last_id = $request->last_id;
+        $equipment->status = $request->status;
+        $equipment->supplies = $request->supplies;
 
         $dateFormat = env('date_convert', 'Y-m-d');
         $date_of_purchase = !empty($request->date_of_purchase) ? DateTime::createFromFormat($dateFormat, $request->date_of_purchase)->format('Y-m-d') : null;
@@ -166,12 +170,14 @@ class EquipmentController extends Controller
         $equipment_number = Equipment::where('hospital_id', $request->hospital_id)
             ->where('name', trim($request->name))
             ->where('short_name', $request->short_name)
-            ->where('department', $request->department)
+            // ->where('department', $request->department)
             ->count();
         $equipment_number = sprintf("%02d", $equipment_number + 1);
         $equipment->unique_id = "";
         $hospital = Hospital::where('id', $request->hospital_id)->first();
         if ($hospital != "") {
+            // $unique_id = $hospital->slug . '/' . $equipment->department . '/' . $equipment->short_name . '/' . $equipment_number;
+            // $label_name = $hospital->slug . '/' . $equipment->department . '/' . $equipment->short_name . '/';
             $unique_id = $hospital->slug . '/' . $equipment->department . '/' . $equipment->short_name . '/' . $equipment_number;
             $label_name = $hospital->slug . '/' . $equipment->department . '/' . $equipment->short_name . '/';
             $equipment_last = Equipment::where('unique_id', 'like', $label_name . '%')->orderBy('unique_id', 'desc')->first();
@@ -204,7 +210,7 @@ class EquipmentController extends Controller
             $qr->assign_to = $equipment->id;
             $qr->uid = Str::random(11);
             $qr->save();
-            $url = 'http://34.132.51.29' . "/scan/qr/" . $qr->uid;
+            $url = 'http://34.133.51.29/equicare' . "/scan/qr/" . $qr->uid;
             // $url = url('/') . "/scan/qr/" . $qr->uid;
             Log::info('El valor de la variable es: ' . $url);
 
@@ -266,10 +272,10 @@ class EquipmentController extends Controller
         $index['brands'] = DataBrand::all();
         $index['accesories'] = DataAccesories::all();
         $index['models'] = DataModels::all();
-        $index['departments'] =
-            Department::select('id', DB::raw('CONCAT(short_name," (" , name ,")") as full_name'))
-            ->pluck('full_name', 'id')
-            ->toArray();
+        // $index['departments'] =
+        //     Department::select('id', DB::raw('CONCAT(short_name," (" , name ,")") as full_name'))
+        //     ->pluck('full_name', 'id')
+        //     ->toArray();
         return view('equipments.edit', $index);
     }
 
@@ -289,14 +295,18 @@ class EquipmentController extends Controller
         $equipment->company = $request->company;
         $equipment->sr_no = $request->sr_no;
         $equipment->hospital_id = $request->hospital_id;
-        $equipment->department = $request->department;
+        //$equipment->department = $request->department;
         $equipment->model = $request->model;
         $equipment->brand_id = $request->brand_id;
         $equipment->accesory_id = $request->accesory_id;
         $equipment->model_id = $request->model_id;
+
         $equipment->latitude = $request->latitude;
         $equipment->longitude = $request->longitude;
 
+        $equipment->last_id = $request->last_id;
+        $equipment->status = $request->status;
+        $equipment->supplies = $request->supplies;
 
         // $date_of_purchase = !empty($request->date_of_purchase) ?\Carbon\Carbon::createFromFormat('m-d-Y',$request->date_of_purchase) : null;
         // $order_date = !empty($request->order_date) ?\Carbon\Carbon::createFromFormat('m-d-Y',$request->order_date) : null;
@@ -427,6 +437,7 @@ class EquipmentController extends Controller
 
     public function history_qr($uid)
     {
+        Log::info('El valor de la variable uid es: ' . $uid);
         $index['page'] = 'equipments history';
         $qr = QrGenerate::where('uid', $uid)->first();
         if ($qr->assign_to != 0) {
@@ -489,6 +500,77 @@ class EquipmentController extends Controller
         } else {
             return redirect('admin/equipments/create' . '?qr_id=' . $qr->uid);
         }
+    }
+
+    public function hq_history_qr($id)
+    {
+        Log::info('El valor de la variable id es: ' . $id);
+    
+        $index['page'] = 'equipments history';
+
+        // Encuentra el equipo usando el ID
+        $equipment = Equipment::where('last_id', $id)->first();
+
+        // Verifica si se encontró el equipo antes de intentar acceder a sus propiedades
+        if (!$equipment) {
+            Log::error('No se encontró el equipo con last_id: ' . $id);
+            return redirect('admin/equipments')->with('flash_message', 'Equipo con ID antiguo "' . $id . '" No encontrado');
+        }
+
+        $index['equipment'] = $equipment;
+
+        // Ahora puedes acceder al id sin problemas
+        $id = $equipment->id;
+        // Obtener historial de Tickets
+        $tickets = Tickets::where('equipment_id', $id)
+            ->with('user', 'manager', 'equipment')
+            ->get()
+            ->map(function ($item) {
+                return collect($item)->put('type', 'Ticket');
+            });
+
+        //ultimo ticket abierto que no sea de mantenimiento ni instalacion
+        $lastOpenedTicket = Tickets::where('equipment_id', $id)
+            ->where('status', '1')
+            ->where('category', '!=', 'INSTALACIÓN (M)')
+            ->where('category', '!=', 'MANTENIMIENTO PREVENTIVO (M)')
+            ->with('user', 'manager', 'equipment')
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        $index['lastOpenedTicket'] = $lastOpenedTicket;
+
+        //ultimo ticket de manteniento abierto
+        $lastMaintenanceTicket = Tickets::where('equipment_id', $id)
+        ->where('status', '1')
+        ->where('category', 'MANTENIMIENTO PREVENTIVO (M)')
+        ->with('user', 'manager', 'equipment')
+        ->orderBy('created_at', 'desc')
+        ->first();
+
+        $index['lastMaintenanceTicket'] = $lastMaintenanceTicket;
+
+        //ultimo ticket de instalacion abierto
+        $lastInstallationTicket = Tickets::where('equipment_id', $id)
+        ->where('status', '1')
+        ->where('category', 'INSTALACIÓN (M)')
+        ->with('user', 'manager', 'equipment')
+        ->orderBy('created_at', 'desc')
+        ->first();
+
+        $index['lastInstallationTicket'] = $lastInstallationTicket;
+
+        // Ordenar por fecha descendente
+        $index['data'] = $tickets->sortByDesc('created_at');
+
+        //Log::info('El valor de la variable tickets es: ' . $tickets->toJson());
+
+        foreach ($index as $key => $value) {
+            Log::info('El valor de la variable ' . $key . ' es: ' . $value);
+        }
+
+        return view('equipments.history', $index);
+
     }
 
     public function etiqueta($id)

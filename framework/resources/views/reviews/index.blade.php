@@ -20,8 +20,10 @@
                         <thead class="thead-inverse">
                             <tr>
                                 <th> # </th>
-                                <th> @lang('equicare.nombre')</th>
-                                <th> Tipo de Marca </th>
+                                <th> No. Serie</th>
+                                <th> Hospital </th>
+                                <th> Status </th>
+                                <th> Insumos </th>
                                 <th> @lang('equicare.descripcion') </th>
                                 <th> Última Fecha de Revisión </th>
                                 @if(Auth::user()->can('Edit brands') || Auth::user()->can('Delete brands'))
@@ -43,10 +45,48 @@
                             @endphp
                             <tr>
                             <td> {{ $count }} </td>
-                            <td> {{ ucfirst($equipo->name) }} </td>
+                            <td> {{ $equipo->sr_no ?? '-' }}</td>
                             <td> {{ $equipo->hospital->name ?? '-' }}</td>
-                            <td> {{ $equipo->description ?? '-' }}</td>
-                            <td> {{ $equipo->ultima_fecha_revision ?? '-' }}</td>
+                            <td>
+                                @switch($equipo->status)
+                                    @case(1)
+                                        <span class="badge badge-pill" style="font-size: 1.5rem; background-color: lightblue; color: black;">Disponible, en uso</span>
+                                        @break
+                            
+                                    @case(2)
+                                        <span class="badge badge-pill" style="font-size: 1.5rem; background-color: lightgray; color: black;">Disponible, sin uso</span>
+                                        @break
+                            
+                                    @case(3)
+                                        <span class="badge badge-pill" style="font-size: 1.5rem; background-color: lightgreen; color: black;">Fuera de Servicio, reportado</span>
+                                        @break
+                            
+                                    @case(4)
+                                        <span class="badge badge-pill" style="font-size: 1.5rem; background-color: pink; color: black;">Fuera de Servicio, no reportado</span>
+                                        @break
+                            
+                                    @default
+                                        <span>-</span>
+                                @endswitch
+                            </td>    
+                            
+                            <td>    
+                                @switch($equipo->supplies)
+                                    @case(1)
+                                        <span class="badge badge-pill" style="font-size: 1.5rem; background-color: lightblue; color: black;">No dispone de insumos</span>
+                                        @break
+                            
+                                    @case(2)
+                                        <span class="badge badge-pill" style="font-size: 1.5rem; background-color: lightgray; color: black;">Disponible de insumos</span>
+                                        @break
+                            
+                                    @case(Null)
+                                        <span>-</span>
+                                @endswitch
+                            </td>
+                            
+                            <td> {{ $equipo->description ?? '-' }}</td>                       
+                            <td> {{ $equipo->ultima_fecha_revision ? \Carbon\Carbon::parse($equipo->ultima_fecha_revision)->format('d/m/Y') : '-' }}</td>
 
                             <td>
                                 {!! Form::open(['url' => 'admin/reviews/'.$equipo->id,'method'=>'DELETE','class'=>'form-inline']) !!}
@@ -64,8 +104,10 @@
                         <tfoot>
                             <tr>
                                 <th> # </th>
-                                <th> Nombre</th>
-                                <th> Tipo de Marca </th>
+                                <th> No. Serie</th>
+                                <th> Hospital</th>
+                                <th> Status</th>
+                                <th> Insumos </th>
                                 <th> Descripcion </th>
                                 <th> Última Fecha de Revisión </th>
                                 @if(Auth::user()->can('Edit brands') || Auth::user()->can('Delete brands'))

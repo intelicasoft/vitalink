@@ -20,6 +20,29 @@ class EquipmentRequest extends FormRequest {
 	 *
 	 * @return array
 	 */
+	// public function rules() {
+	// 	// dd($request->all());
+	// 	$dateFormat = env('date_convert', 'Y-m-d');
+
+	// 	$equipmentId = $this->route('equipment');
+
+	// 	return [
+	// 		'hospital_id' => 'required',
+	// 		'sr_no' => [
+	// 			'required',
+	// 			'regex:/^\S*$/',
+	// 			'unique:equipments,sr_no,' . $equipmentId, // Validación de unicidad
+	// 		],
+	// 		'model' => 'nullable',
+	// 		'department' => 'nullable',
+	// 		'company' => 'required',
+	// 		'date_of_purchase' => 'required',
+	// 		'order_date' => "before_or_equal:date_of_purchase|date_format:$dateFormat",
+	// 		'date_of_installation' => "after_or_equal:date_of_purchase|date_format:$dateFormat",
+	// 		'warranty_due_date' => "after_or_equal:date_of_purchase|date_format:$dateFormat",
+	// 		'service_engineer_no' => 'required|numeric',
+	// 	];
+	// }
 	public function rules() {
 		// dd($request->all());
 		$dateFormat = env('date_convert', 'Y-m-d');
@@ -34,13 +57,13 @@ class EquipmentRequest extends FormRequest {
 				'unique:equipments,sr_no,' . $equipmentId, // Validación de unicidad
 			],
 			'model' => 'nullable',
-			'department' => 'required',
+			'department' => 'nullable',
 			'company' => 'required',
-			'date_of_purchase' => 'required',
-			'order_date' => "before_or_equal:date_of_purchase|date_format:$dateFormat",
-			'date_of_installation' => "after_or_equal:date_of_purchase|date_format:$dateFormat",
-			'warranty_due_date' => "after_or_equal:date_of_purchase|date_format:$dateFormat",
-			'service_engineer_no' => 'required|numeric',
+			'date_of_purchase' => 'nullable',
+			'order_date' => "nullable|before_or_equal:date_of_purchase|date_format:$dateFormat",
+			'date_of_installation' => "nullable|after_or_equal:date_of_purchase|date_format:$dateFormat",
+			'warranty_due_date' => "nullable|after_or_equal:date_of_purchase|date_format:$dateFormat",
+			'service_engineer_no' => 'nullable|numeric',
 		];
 	}
 	public function messages() {
