@@ -14,10 +14,10 @@
     <b>@lang('equicare.hospital')</b> : {{ $equipment->hospital ? $equipment->hospital->name : '-' }}
 </div>
 
-<div class="equipment-item">
+{{-- <div class="equipment-item">
     <b>@lang('equicare.department')</b> : {{ $equipment->get_department->short_name ?? '-' }}
     ({{ $equipment->get_department->name ?? '-' }})
-</div>
+</div> --}}
 
 <div class="equipment-item">
     <b>Fecha de instalacion</b> : {{ $equipment['date_of_installation'] ?? '-' }}

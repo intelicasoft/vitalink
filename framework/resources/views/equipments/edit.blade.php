@@ -50,14 +50,16 @@
 						</div>
 						<div class="form-group col-md-6">
 							<label for="hospital_id"> @lang('equicare.hospital') </label>
-							<select name="hospital_id" class="form-control">
+							<select name="hospital_id" id="hospital_id" class="form-control">
 								<option value="">---select---</option>
 								@if(isset($hospitals))
 									@foreach ($hospitals as $hospital)
-										<option value="{{ $hospital->id }}"
-											{{ $hospital->id==$equipment->hospital_id?'selected':''}}
-											>{{ $hospital->name }}
-										</option>
+									<option value="{{ $hospital->id }}"
+										data-latitude="{{ $hospital->latitude }}"
+										data-longitude="{{ $hospital->longitude }}"
+										{{ $hospital->id==$equipment->hospital_id?'selected':'' }}>
+										{{ $hospital->name }}
+									</option>
 									@endforeach
 								@endif
 							</select>
@@ -220,6 +222,23 @@
 			$('#warranty_due_date').datepicker({
 				format:"{{env('date_settings')=='' ? 'yyyy-mm-dd' : env('date_settings')}}",
 				'todayHighlight' : true,
+			});
+
+			$('#hospital_id').change(function(){
+				var selectedOption = $(this).find('option:selected');
+				var latitude = selectedOption.data('latitude');
+				var longitude = selectedOption.data('longitude');
+				
+				console.log('Selected latitude:', latitude);
+				console.log('Selected longitude:', longitude);
+
+				$('#latitude').val(latitude);
+				$('#longitude').val(longitude);
+			});
+
+			$('form').submit(function() {
+				console.log("Latitude sent:", $('#latitude').val());
+				console.log("Longitude sent:", $('#longitude').val());
 			});
 		});
 	</script>
