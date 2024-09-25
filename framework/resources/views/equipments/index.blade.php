@@ -112,10 +112,10 @@
 								<td><img loading="lazy" src="{{ asset('/uploads/qrcodes/qr_assign/'.$u_e_id.'.png') }}" width="80px" /></td>
 								<td>{{ $equipment->user?ucfirst($equipment->user->name):'-' }}</td>
 								<td>{{ $equipment->company?? '-' }}</td>
-								<td>{{ $equipment->model ?? '-' }}</td>
+								<td>{{ $equipment->models->name ?? '-' }}</td>
 								<td>{{ $equipment->hospital?$equipment->hospital->name:'-' }}</td>
 								<td>{{ $equipment->accesory_id ?? '-' }}</td>
-								<td>{{ $equipment->brand_id ?? '-' }}</td>
+								<td>{{ $equipment->brand->name ?? '-' }}</td>
 								<td>{{ $equipment->sr_no }}</td>
 								{{-- {{dd($equipment->get_department)}} --}}
 								{{-- <td>{{($equipment->get_department->short_name)??"-" }} ({{ ($equipment->get_department->name) ??'-' }})</td>
