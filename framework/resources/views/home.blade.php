@@ -336,13 +336,25 @@
             function showLoadingAndRedirect(url) {
                 // Mostrar la pantalla de carga
                 document.getElementById('loading').style.display = 'block';
-                
-                // Redirigir después de un pequeño retraso
-                setTimeout(function() {
-                    window.location.href = url;
-                    document.getElementById('loading').style.display = 'none';
-                }, 1000); // Puedes ajustar el tiempo si es necesario
-                
+
+                // Realizar una solicitud para redirigir a la nueva página y mantener el preloader hasta que la nueva página esté completamente cargada
+                fetch(url, { method: 'GET' })
+                    .then(response => {
+                        // Verificar que la solicitud fue exitosa
+                        if (response.ok) {
+                            // Redirigir a la nueva página
+                            window.location.href = url;
+                        } else {
+                            alert('Error al cargar la página.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error en la solicitud:', error);
+                    })
+                    .finally(() => {
+                        // Si se desea ocultar la pantalla de carga en caso de error
+                        document.getElementById('loading').style.display = 'none';
+                    });
             }
 
             const purpleGradient = {
