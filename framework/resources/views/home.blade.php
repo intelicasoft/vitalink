@@ -14,8 +14,7 @@
     <div class="row ">
 
         <body>
-            <style>
-                                
+            <style>                
                 .status {
                     padding: 5px;
                     border-radius: 3px;
@@ -219,34 +218,38 @@
                                 <h2>Tickets Abiertos</h2>
                                 <a href="{{ route('tickets.index') }}" class="btn">Ver todos los tickets</a>
                             </div>
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <td>Título</td>
-                                        <td>Categoría</td>
-                                        {{-- <td>Fecha de Creación</td> --}}
-                                        <td>Prioridad</td>
-                                        <td>Estado</td>
-                                        <td>Modelo</td>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($lastTickets as $ticket)
+                            @if($lastTickets->isEmpty())
+                                <p>No hay tickets abiertos en este momento.</p>
+                            @else
+                                <table>
+                                    <thead>
                                         <tr>
-                                            <td>{{ $ticket->title }}</td>
-                                            <td>{{ $ticket->category }}</td>
-                                            {{-- <td>{{ $ticket->created_at->format('Y-m-d') }}</td> --}}
-                                            <td>{{ $ticket->priority }}</td>
-                                            <td>
-                                                <span class="status {{ $ticket->status == 1 ? 'abierto' : 'cerrado' }}">
-                                                    {{ $ticket->status == 1 ? 'Abierto' : 'Cerrado' }}
-                                                </span>
-                                            </td>
-                                            <td>{{ $ticket->model ?? 'Sin modelo' }}</td>
+                                            <td>Título</td>
+                                            <td>Categoría</td>
+                                            {{-- <td>Fecha de Creación</td> --}}
+                                            <td>Prioridad</td>
+                                            <td>Estado</td>
+                                            <td>Modelo</td>
                                         </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($lastTickets as $ticket)
+                                            <tr>
+                                                <td>{{ $ticket->title }}</td>
+                                                <td>{{ $ticket->category }}</td>
+                                                {{-- <td>{{ $ticket->created_at->format('Y-m-d') }}</td> --}}
+                                                <td>{{ $ticket->priority }}</td>
+                                                <td>
+                                                    <span class="status {{ $ticket->status == 1 ? 'abierto' : 'cerrado' }}">
+                                                        {{ $ticket->status == 1 ? 'Abierto' : 'Cerrado' }}
+                                                    </span>
+                                                </td>
+                                                <td>{{ $ticket->model ?? 'Sin modelo' }}</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            @endif
                         </div>
 
                         <div class="recentCustomers">
