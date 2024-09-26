@@ -335,7 +335,7 @@
                 options: {
                     indexAxis: 'y',
 
-                    // responsive: true,
+                    responsive: true,
                     scales: {
                         x: {
                             beginAtZero: true,
@@ -360,7 +360,7 @@
                     }]
                 },
                 options: {
-                    // responsive: true,
+                    responsive: true,
                     scales: {
                         y: {
                             beginAtZero: true,
@@ -391,7 +391,7 @@
                     }]
                 },
                 options: {
-                    // responsive: true,
+                    responsive: true,
                     scales: {
                         y: {
                             beginAtZero: true,
