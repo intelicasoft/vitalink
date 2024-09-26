@@ -331,7 +331,7 @@
 
     @section('scripts')
         <script>
-            document.addEventListener("DOMContentLoaded", function() {
+              document.addEventListener("DOMContentLoaded", function() {
                 // Ocultar la pantalla de carga al cargar la página
                 document.getElementById('loading').style.display = 'none';
             });
@@ -345,18 +345,16 @@
                     .then(response => {
                         // Verificar que la solicitud fue exitosa
                         if (response.ok) {
-                            // Redirigir a la nueva página
-                            window.location.href = url;
+                            // Utilizar un pequeño retraso antes de la redirección para permitir que se vea el preloader y evitar el congelamiento
+                            setTimeout(function() {
+                                window.location.href = url;
+                            }, 200); // Espera 200ms antes de redirigir
                         } else {
                             alert('Error al cargar la página.');
                         }
                     })
                     .catch(error => {
                         console.error('Error en la solicitud:', error);
-                    })
-                    .finally(() => {
-                        // Si se desea ocultar la pantalla de carga en caso de error
-                        document.getElementById('loading').style.display = 'none';
                     });
             }
 
