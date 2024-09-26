@@ -331,7 +331,7 @@
 
     @section('scripts')
         <script>
-            document.addEventListener("DOMContentLoaded", function() {
+              document.addEventListener("DOMContentLoaded", function() {
                 // Ocultar la pantalla de carga al cargar la página
                 document.getElementById('loading').style.display = 'none';
             });
@@ -339,13 +339,23 @@
             function showLoadingAndRedirect(url) {
                 // Mostrar la pantalla de carga
                 document.getElementById('loading').style.display = 'block';
-                
-                // Redirigir después de un pequeño retraso
-                setTimeout(function() {
-                    window.location.href = url;
-                    document.getElementById('loading').style.display = 'none';
-                }, 1000); // Puedes ajustar el tiempo si es necesario
-                
+
+                // Realizar una solicitud para redirigir a la nueva página y mantener el preloader hasta que la nueva página esté completamente cargada
+                fetch(url, { method: 'GET' })
+                    .then(response => {
+                        // Verificar que la solicitud fue exitosa
+                        if (response.ok) {
+                            // Utilizar un pequeño retraso antes de la redirección para permitir que se vea el preloader y evitar el congelamiento
+                            setTimeout(function() {
+                                window.location.href = url;
+                            }, 200); // Espera 200ms antes de redirigir
+                        } else {
+                            alert('Error al cargar la página.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error en la solicitud:', error);
+                    });
             }
 
             const purpleGradient = {
