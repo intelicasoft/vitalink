@@ -15,6 +15,7 @@
 
         <body>
             <style>
+                                
                 .status {
                     padding: 5px;
                     border-radius: 3px;
@@ -29,6 +30,51 @@
                 .status.cerrado {
                     color: white;
                     background-color: red;
+                }
+
+                #preloader6 {
+                    position: relative;
+                    width: 84px; /* Aumentado de 42px a 84px */
+                    height: 84px; /* Aumentado de 42px a 84px */
+                    animation: preloader_6 5s infinite linear;
+                }
+
+                #preloader6 span {
+                    width: 40px;  /* Aumentado de 20px a 40px */
+                    height: 40px; /* Aumentado de 20px a 40px */
+                    position: absolute;
+                    background: red;
+                    display: block;
+                    animation: preloader_6_span 1s infinite linear;
+                }
+
+                #preloader6 span:nth-child(1) {
+                    background: #2ecc71;
+                }
+
+                #preloader6 span:nth-child(2) {
+                    left: 44px; /* Aumentado de 22px a 44px */
+                    background: #9b59b6;
+                    animation-delay: .2s;
+                }
+
+                #preloader6 span:nth-child(3) {
+                    top: 44px; /* Aumentado de 22px a 44px */
+                    background: #3498db;
+                    animation-delay: .4s;
+                }
+
+                #preloader6 span:nth-child(4) {
+                    top: 44px; /* Aumentado de 22px a 44px */
+                    left: 44px; /* Aumentado de 22px a 44px */
+                    background: #f1c40f;
+                    animation-delay: .6s;
+                }
+
+                @keyframes preloader_6_span {
+                    0% { transform: scale(1); }
+                    50% { transform: scale(0.5); }
+                    100% { transform: scale(1); }
                 }
             </style>
 
@@ -76,9 +122,7 @@
 
                     <!-- cards -->
                     <div class="cardBox">
-
-                        {{-- onclick url --}}
-                        <div class="card" onclick="window.location.href='{{ url('admin/hospitals') }}'">
+                        <div class="card" onclick="showLoadingAndRedirect('{{ url('admin/hospitals') }}')">
                             <div class="cardName">
                                 <div class="numbers">{{ $countHospitals }}</div>
                                 <p>@lang('equicare.hospitals')</p>
@@ -87,9 +131,8 @@
                                 <i class="fa fa-hospital-o"></i>
                             </div>
                         </div>
-
-
-                        <div class="card" onclick="window.location.href='{{ url('admin/equipments') }}'">
+                    
+                        <div class="card" onclick="showLoadingAndRedirect('{{ url('admin/equipments') }}')">
                             <div class="cardName">
                                 <div class="numbers">{{ $countEquipment }}</div>
                                 <p>@lang('equicare.equipments')</p>
@@ -98,9 +141,8 @@
                                 <i class="fa fa-wheelchair"></i>
                             </div>
                         </div>
-
-
-                        <div class="card" onclick="window.location.href='{{ url('admin/tickets') }}'">
+                    
+                        <div class="card" onclick="showLoadingAndRedirect('{{ url('admin/tickets') }}')">
                             <div class="cardName">
                                 <div class="numbers">{{ $countOpenTickets }}</div>
                                 <p>Tickets Abiertos</p>
@@ -109,8 +151,8 @@
                                 <i class="fa fa-wrench"></i>
                             </div>
                         </div>
-
-                        <div class="card" onclick="window.location.href='{{ url('admin/tickets') }}'">
+                    
+                        <div class="card" onclick="showLoadingAndRedirect('{{ url('admin/tickets') }}')">
                             <div class="cardName">
                                 <div class="numbers">{{ $countOpenTickets }}</div>
                                 <p>Tickets Abiertos</p>
@@ -119,7 +161,6 @@
                                 <i class="fa fa-wrench"></i>
                             </div>
                         </div>
-
                     </div>
 
                     <!-- Add Charts -->
@@ -251,6 +292,17 @@
             <script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.min.js"></script>
             <script src="{{ asset('assets/js/my_chart.js') }}" type="text/javascript"></script>
 
+            <div id="loading" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255, 255, 255, 0.8); z-index:9999; text-align:center;">
+                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                    
+                    <div id="preloader6">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+            </div>
         </body>
     @endsection
     @php
@@ -276,6 +328,23 @@
 
     @section('scripts')
         <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                // Ocultar la pantalla de carga al cargar la página
+                document.getElementById('loading').style.display = 'none';
+            });
+
+            function showLoadingAndRedirect(url) {
+                // Mostrar la pantalla de carga
+                document.getElementById('loading').style.display = 'block';
+                
+                // Redirigir después de un pequeño retraso
+                setTimeout(function() {
+                    window.location.href = url;
+                    document.getElementById('loading').style.display = 'none';
+                }, 1000); // Puedes ajustar el tiempo si es necesario
+                
+            }
+
             const purpleGradient = {
                 backgroundColor: [
                     'rgba(65, 22, 87, 1)',
