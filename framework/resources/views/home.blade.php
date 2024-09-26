@@ -41,7 +41,6 @@
 
                         $oneWeekAgo = Carbon::now()->subWeek();
                         log::info($oneWeekAgo);
-                        
 
                         $countHospitals = 0;
                         $countHospitals = \App\Hospital::query()->Hospital()->count();
@@ -124,31 +123,46 @@
                     </div>
 
                     <!-- Add Charts -->
+
                     <div class="graphBox">
-                        <div class="box" style="padding: 30px">
-                            <canvas id="equipmentStatusChart"></canvas>
+                        <div class="carrousel-container">
+                            <div class="carrousel"> 
+                                <div class="box">
+                                    <div class="canvas-container">
+                                        <canvas id="equipmentStatusChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="carousel-container">
                             <div class="carousel">
                                 <div class="carousel-item">
                                     <div class="box">
-                                        <canvas id="earning"></canvas>
+                                        <div class="canvas-container">
+                                            <canvas id="earning"></canvas>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="carousel-item">
                                     <div class="box">
-                                        <canvas id="reviewsPerUserYesterdayChart"></canvas>
+                                        <div class="canvas-container">
+                                            <canvas id="reviewsPerUserYesterdayChart"></canvas>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="carousel-item">
                                     <div class="box">
-                                        <canvas id="ticketsClosedIn72HoursPerMonthChart"></canvas>
+                                        <div class="canvas-container">
+                                            <canvas id="ticketsClosedIn72HoursPerMonthChart"></canvas>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="carousel-item">
                                     <div class="box">
-                                        <canvas id="ticketsClosedPerMonthChart"></canvas>
+                                        <div class="canvas-container">
+                                            <canvas id="ticketsClosedPerMonthChart"></canvas>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -156,8 +170,6 @@
                             <button class="next" onclick="moveSlide(1)">&#10095;</button>
                         </div>
                     </div>
-
-
 
 
                     <div class="details">
@@ -223,8 +235,8 @@
                                 @endforeach
                             </table>
                         </div>
-                        
-                        
+
+
 
 
 
@@ -323,7 +335,7 @@
                 options: {
                     indexAxis: 'y',
 
-                    responsive: true,
+                    // responsive: true,
                     scales: {
                         x: {
                             beginAtZero: true,
@@ -348,7 +360,7 @@
                     }]
                 },
                 options: {
-                    responsive: true,
+                    // responsive: true,
                     scales: {
                         y: {
                             beginAtZero: true,
@@ -379,7 +391,7 @@
                     }]
                 },
                 options: {
-                    responsive: true,
+                    // responsive: true,
                     scales: {
                         y: {
                             beginAtZero: true,
@@ -435,6 +447,7 @@
                     }]
                 },
                 options: {
+                    responsive: true,
                     plugins: {
                         title: {
                             display: true,
@@ -450,7 +463,9 @@
                             position: 'bottom'
                         }
                     }
+
                 }
+
             });
         </script>
     @endsection
