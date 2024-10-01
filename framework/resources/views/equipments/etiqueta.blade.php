@@ -1,5 +1,5 @@
 @php
-    $u_e_id =
+   $u_e_id =
         \App\QrGenerate::where('id', $equipment->qr_id)->first() != null
             ? \App\QrGenerate::where('id', $equipment->qr_id)->first()->uid
             : '';
@@ -14,39 +14,41 @@
     <title>Etiqueta de Equipo</title>
     <style>
         @page {
-            size: letter;
+ 
+            size: 14in 7in; /* Ancho: 8.5 pulgadas, Alto: 5.5 pulgadas (mitad de una hoja carta) */
+            margin: 5;
         }
 
         body {
-            transform: rotate(90deg);
+            /* transform: rotate(90deg); */
             font-family: Arial, sans-serif;
-            font-size: 32px;
+            font-size: 49px;
         }
 
         .container {
             border: 3px solid black;
-            width: 1000px;
+            width: 1300px;
             height: 650px;
-            padding: 10px;
+            padding: 0px;
             border-radius: 15px;
             box-shadow: 0 4px 8px rgba(2, 2, 2, 0.1);
         }
 
         .header {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 0px;
             border-bottom: solid 1px black;
         }
 
         .logoImage {
-            width: 200px;
-            height: 95px;
-            border-radius: 15px;
+            width: 380px;
+            height: 180px;
+            border-radius: 15pxpx;
         }
 
         .info-table {
             width: 100%;
-            border-spacing: 30px;
+            border-spacing: 5px;
         }
 
         .textos {
@@ -54,8 +56,8 @@
         }
 
         .qrImage img {
-            width: 400px;
-            height: 400px;
+            width: 350px;
+            height: 350px;
         }
     </style>
 </head>
@@ -70,12 +72,12 @@
         <table class="info-table">
             <tr>
                 <td class="textos">
-                    <div><strong>Hospital:</strong> {{ $equipment->hospital->name }}</div>
-                    <div><strong>Compañía:</strong> {{ $equipment->company }}</div>
-                    <div><strong>Número de Serie:</strong> {{ $equipment->sr_no }}</div>
-                    <div><strong>Modelo:</strong> {{ $equipment->models->name }}</div>
-                    <div><strong>Call center:</strong> +52 331486 96 52</div>
-                    <div><strong>Correo:</strong> serviciotecnico@ucinmedica.com</div>
+                    <div style="margin-bottom: 10px;"><strong>SERVICIOS DE SALUD DE VERACRUZ HOSPITAL DE ALTA ESPECIALIDAD VERACRUZ</strong> </div>
+                    {{-- <div style="margin-bottom: 10px;"><strong>Compañía:</strong> {{ $equipment->company }}</div> --}}
+                    <div style="margin-bottom: 10px;"><strong>Número de Serie:{{ $equipment->sr_no }}</strong> </div>
+                    <div style="margin-bottom: 10px;"><strong>Modelo:{{ $equipment->models->name }}</strong> </div>
+                    <div style="margin-bottom: 10px;"><strong>Call center: +52 331486 96 52</strong> </div>
+                    <div> <strong>serviciotecnico@ucinmedica.com</strong> </div>
                 </td>
                 <td class="qrImage">
                     <img src="{{ asset('uploads/qrcodes/qr_assign/' . $u_e_id . '.png') }}" alt="QR Code">
@@ -85,4 +87,3 @@
     </div>
 </body>
 
-</html>
