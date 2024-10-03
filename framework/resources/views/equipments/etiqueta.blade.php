@@ -72,7 +72,7 @@
         <table class="info-table">
             <tr>
                 <td class="textos">
-                    <div style="margin-bottom: 10px;"><strong>SERVICIOS DE SALUD DE VERACRUZ HOSPITAL DE ALTA ESPECIALIDAD VERACRUZ</strong> </div>
+                    <div style="margin-bottom: 10px;"><strong>{{ $equipment->hospital->name }}</strong> </div>
                     {{-- <div style="margin-bottom: 10px;"><strong>Compañía:</strong> {{ $equipment->company }}</div> --}}
                     <div style="margin-bottom: 10px;"><strong>Número de Serie:{{ $equipment->sr_no }}</strong> </div>
                     <div style="margin-bottom: 10px;"><strong>Modelo:{{ $equipment->models->name }}</strong> </div>
