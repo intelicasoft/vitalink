@@ -75,7 +75,7 @@
                     <div style="margin-bottom: 10px;"><strong>{{ $equipment->hospital->name }}</strong> </div>
                     {{-- <div style="margin-bottom: 10px;"><strong>Compañía:</strong> {{ $equipment->company }}</div> --}}
                     <div style="margin-bottom: 10px;"><strong>Número de Serie:{{ $equipment->sr_no }}</strong> </div>
-                    <div style="margin-bottom: 10px;"><strong>Modelo:{{ $equipment->models->name }}</strong> </div>
+                    <div style="margin-bottom: 10px;"> <strong>Modelo: {{ $equipment->models->short_name ?? $equipment->models->name }}</strong></div>
                     <div style="margin-bottom: 10px;"><strong>Call center: +52 331486 96 52</strong> </div>
                     <div> <strong>serviciotecnico@ucinmedica.com</strong> </div>
                 </td>

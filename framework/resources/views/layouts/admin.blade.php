@@ -171,7 +171,7 @@
         </li>
       @endif
 
-      @if(auth()->user()->hasDirectPermission('View zones'))
+      @if(auth()->user()->hasDirectPermission('View providers'))
         <li class="{{ $page=='providers'?'active':'' }}">
           <a href="{{ url('/admin/providers') }}"> 
             <i class="fa fa-truck"></i> <span>Proveedores</span>
@@ -179,13 +179,13 @@
         </li>
       @endif
       
-      @if(auth()->user()->hasDirectPermission('View zones'))
+      {{-- @if(auth()->user()->hasDirectPermission('View zones'))
         <li class="{{ $page=='zones'?'active':'' }}">
           <a href="{{ url('/admin/zones') }}">
             <i class="fa fa-tag"></i> <span>Zonas</span>
           </a>
         </li>
-      @endif
+      @endif --}}
       
       @if(auth()->user()->hasDirectPermission('View tickets'))
         <li class="{{ $page=='tickets'?'active':'' }}">

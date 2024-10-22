@@ -48,6 +48,7 @@ class DataModelsController extends Controller
     {
         $data = $request->validate([
             'name' => 'required',
+            'short_name' => 'required',
             'brand_id' => 'required', 
             'description' => 'required',
             'links' => 'nullable',
@@ -100,6 +101,7 @@ class DataModelsController extends Controller
     {
         $data = $request->validate([
             'name' => 'required',
+            'short_name' => 'required',
             'brand_id' => 'required', 
             'description' => 'required',
             'links' => 'nullable'

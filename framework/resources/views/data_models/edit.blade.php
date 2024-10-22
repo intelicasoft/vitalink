@@ -33,6 +33,12 @@ Modelos
 						</div>
 
 						<div class="form-group col-md-6">
+							<label for="short_name"> Nombre corto</label>
+							<input type="text" name="short_name" class="form-control"
+							value="{{ $model->short_name }}" />
+						</div>
+
+						<div class="form-group col-md-6">
 							<label for="links"> Links de video </label>
 							<input type="url" name="links" class="form-control"
 							value="{{ $model->links }}" />
