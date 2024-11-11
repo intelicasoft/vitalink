@@ -210,7 +210,7 @@ class EquipmentController extends Controller
             $qr->assign_to = $equipment->id;
             $qr->uid = Str::random(11);
             $qr->save();
-            $url = 'http://34.133.51.29/equicare' . "/scan/qr/" . $qr->uid;
+            $url = 'vitalink.mx' . "/scan/qr/" . $qr->uid;
             // $url = url('/') . "/scan/qr/" . $qr->uid;
             Log::info('El valor de la variable es: ' . $url);
 
