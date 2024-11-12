@@ -69,7 +69,7 @@ class ReviewsController extends Controller
 
         // Verificar si la distancia es mayor a 1km y enviar correo al administrador
         if ($distance > 5) {
-            $adminEmail = 'yulin@intelica.com'; // Cambia esto al correo del administrador
+            $adminEmail = 'yulin@intelica.mx'; // Cambia esto al correo del administrador
             $user = Auth::user();
             
             Mail::to($adminEmail)->send(new DistanceAlert($user, $distance));
