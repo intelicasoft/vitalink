@@ -67,9 +67,9 @@ class ReviewsController extends Controller
         // Obtener la distancia antes de la validación
         $distance = $request->input('distance');
 
-        // Verificar si la distancia es mayor a 1 y enviar correo al administrador
-        if ($distance > 10) {
-            $adminEmail = 'lpipeavila1@gmail.com'; // Cambia esto al correo del administrador
+        // Verificar si la distancia es mayor a 1km y enviar correo al administrador
+        if ($distance > 5) {
+            $adminEmail = 'yulin@intelica.com'; // Cambia esto al correo del administrador
             $user = Auth::user();
             
             Mail::to($adminEmail)->send(new DistanceAlert($user, $distance));
