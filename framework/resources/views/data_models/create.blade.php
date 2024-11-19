@@ -27,6 +27,11 @@
 								<label for="name"> @lang('equicare.name') </label>
 								<input type="text" name="name" class="form-control" value="{{ old('name') }}" />
 							</div>
+							
+							<div class="form-group col-md-6">
+								<label for="short_name"> Nombre corto </label>
+								<input type="text" name="short_name" class="form-control" value="{{ old('short_name') }}" />
+							</div>
 
 							<div class="form-group col-md-6">
 								<label for="links"> Links de video </label>

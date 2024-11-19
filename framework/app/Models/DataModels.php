@@ -11,6 +11,7 @@ class DataModels extends Model
     use SoftDeletes;
     protected $fillable = [
         'name',
+        'short_name',
         'description',
         'links',
         'brand_id',

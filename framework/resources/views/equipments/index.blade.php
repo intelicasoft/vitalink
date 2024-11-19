@@ -102,7 +102,7 @@
 							@if (isset($equipments))
 							{{-- @dd($equipments) --}}
 							@foreach ($equipments as $key => $equipment)
-							<tr>
+							<tr style="{{ $equipment->status == 5 ? 'background-color: #a9a9a9;' : '' }}">
 								<td> {{ $key+1 }} </td>
 								@php
 								// dd( (\App\QrGenerate::where('id',$equipment->qr_id)->first() !=null) ? (\App\QrGenerate::where('id',$equipment->qr_id)->first()->uid) : '');

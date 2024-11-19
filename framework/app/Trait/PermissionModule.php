@@ -70,10 +70,10 @@ trait PermissionModule {
 			'Create providers',
 			'Edit providers',
 			'Delete providers',
-			'View zones',
-			'Create zones',
-			'Edit zones',
-			'Delete zones',
+			// 'View zones',
+			// 'Create zones',
+			// 'Edit zones',
+			// 'Delete zones',
       'View tickets',
       'Create tickets',
       'Edit tickets',
@@ -82,6 +82,10 @@ trait PermissionModule {
       'Create orders',
       'Edit orders',
       'Delete orders',
+      'View reviews',
+      'Create reviews',
+      'Edit reviews',
+      'Delete reviews',
     ];
     $index['module_names'] = array_unique(array_map(function ($permission) {
       // Extracting the module name by removing the action part

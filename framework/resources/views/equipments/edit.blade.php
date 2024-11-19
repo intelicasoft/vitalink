@@ -93,7 +93,8 @@
 								@endif
 							</select>
 						</div>
-	
+
+						
 						<div class="form-group col-md-6">
 							<label for="model_id"> @lang('equicare.model') </label>
 							<select name="model_id" class="form-control">
@@ -186,6 +187,27 @@
 							<input type="number" name="last_id" class="form-control"
 							value="{{ $equipment->last_id}}" />
 						</div>
+
+						<div class="form-check form-check-inline">
+							<input class="form-check-input" type="radio" name="status" id="status_habilitado" value="2"
+								<?php if ($equipment->status == 2) echo 'checked'; ?> required>
+							<label class="form-check-label" for="status_habilitado">
+								<span class="badge badge-pill" style="font-size: 1.5rem; background-color: rgb(0, 123, 255); color: white;">
+									Habilitado
+								</span>
+							</label>
+						</div>
+						
+						<div class="form-check form-check-inline">
+							<input class="form-check-input" type="radio" name="status" id="status_deshabilitado" value="5"
+								<?php if ($equipment->status == 5) echo 'checked'; ?> required>
+							<label class="form-check-label" for="status_deshabilitado">
+								<span class="badge badge-pill" style="font-size: 1.5rem; background-color: rgb(187, 81, 108); color: white;">
+									Deshabilitado
+								</span>
+							</label>
+						</div>
+	
 
 						<div class="form-group col-md-12">
 							<div id="map" style="width: 100%; height: 400px;"></div>

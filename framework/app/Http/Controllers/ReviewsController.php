@@ -23,19 +23,18 @@ class ReviewsController extends Controller
         $index['page'] = 'reviews';
     
     
-        $equipos = Equipment::with(['hospital'])
-            ->leftJoin('reviews', 'equipments.id', '=', 'reviews.equipment_id')
-            ->select('equipments.*', DB::raw('MAX(reviews.created_at) as ultima_fecha_revision'))
-            ->groupBy('equipments.id')
-            ->get();
+        $userId = auth()->user()->id; 
             
         $equipos = Equipment::with(['hospital'])
             ->leftJoin('reviews', 'equipments.id', '=', 'reviews.equipment_id')
+            ->join('hospital_user', 'equipments.hospital_id', '=', 'hospital_user.hospital_id') // Join con la tabla hospital_user
+            ->where('hospital_user.user_id', $userId) // Filtrado por el hospital asignado al usuario
             ->select('equipments.*', 
-                     DB::raw('MAX(reviews.created_at) as ultima_fecha_revision'),
-                     DB::raw('(SELECT description FROM reviews WHERE reviews.equipment_id = equipments.id ORDER BY reviews.created_at DESC LIMIT 1) as description'))
+                    DB::raw('MAX(reviews.created_at) as ultima_fecha_revision'),
+                    DB::raw('(SELECT description FROM reviews WHERE reviews.equipment_id = equipments.id ORDER BY reviews.created_at DESC LIMIT 1) as description'))
             ->groupBy('equipments.id')
             ->get();
+
         return view('reviews.index', $index,['equipos' => $equipos]);
     }
 
@@ -68,9 +67,9 @@ class ReviewsController extends Controller
         // Obtener la distancia antes de la validación
         $distance = $request->input('distance');
 
-        // Verificar si la distancia es mayor a 1 y enviar correo al administrador
-        if ($distance > 10) {
-            $adminEmail = 'lpipeavila1@gmail.com'; // Cambia esto al correo del administrador
+        // Verificar si la distancia es mayor a 1km y enviar correo al administrador
+        if ($distance > 5) {
+            $adminEmail = 'yulin@intelica.mx'; // Cambia esto al correo del administrador
             $user = Auth::user();
             
             Mail::to($adminEmail)->send(new DistanceAlert($user, $distance));
